@@ -1,12 +1,9 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import Main from "./components/a";
+import React, { ReactElement } from 'react';
+import './App.css';
 
-function App() {
+function App(): ReactElement {
   return (
     <div className="App">
-      <Main />
     </div>
   );
 }

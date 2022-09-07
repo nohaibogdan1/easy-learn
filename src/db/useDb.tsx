@@ -1,87 +1,60 @@
-import { useEffect } from "react";
-import useGetConnection from "./useGetConnection";
-
-// const openDb = async (): Promise<any> => {
-//   return new Promise((acc, reject) => {
-//     const request = window.indexedDB.open('Bla', 2);
-//     let db = null;
-//     request.onerror = (event) => {
-//         console.log('Error', event)
-//         reject('error')
-//     }
-
-//     request.onsuccess = (event) => {
-//         console.log("Susccess", event)
-//         // db = request.result;
-//         acc(request.result);
-//     }
-
-//     request.onupgradeneeded = (event: any) => {
-//         console.log("upgradee")
-
-//         event.currentTarget?.result?.createObjectStore('questions', {
-//             keyPath: "id",
-//             autoIncrement: true,
-//         });
-//     }
-//   })
-// }
+import { useEffect } from 'react';
+import useGetConnection from './useGetConnection';
+import { QuestionAnswer, QuestionAnswerStored } from '../types';
 
 const useDbMethods = () => {
   const db = useGetConnection();
 
   useEffect(() => {
-    console.log("useDbMethods", db);
+    console.log('useDbMethods', db);
   }, [db]);
 
-  const insert = (data: string) => {
+  const insert = (data: QuestionAnswer) => {
     if (db) {
       try {
-        const transaction = db.transaction("questions", "readwrite");
-        const store = transaction.objectStore("questions");
-        const request = store.add({ prop: data });
-        // const request = store.openCursor()
+        const transaction = db.transaction('questions', 'readwrite');
+        const store = transaction.objectStore('questions');
+        const request = store.add(data);
 
         request.onerror = () => {
-          console.log("Add to Store Error");
+          console.log('Add to Store Error');
         };
 
         request.onsuccess = (event: any) => {
-          console.log("Add on store : success", event);
-
-          // let cursor = event.target.result;
-
-          // console.log('cursor',cursor)
+          console.log('Add on store : success', event);
         };
       } catch (err) {
-        console.log("Error add on store", err);
+        console.log('Error add on store', err);
       }
     }
   };
 
-  const get = (): Promise<any> => {
+  const get = (): Promise<QuestionAnswerStored[]> => {
     return new Promise((acc, reject) => {
       if (db) {
         try {
-          const transaction = db.transaction("questions", "readwrite");
-          const store = transaction.objectStore("questions");
+          const data: QuestionAnswerStored[] = [];
+
+          const transaction = db.transaction('questions', 'readwrite');
+          const store = transaction.objectStore('questions');
           const request = store.openCursor();
 
           request.onerror = () => {
-            console.log("Add to Store Error");
+            console.log('Get From Store Error');
           };
 
           request.onsuccess = (event: any) => {
-            console.log("Add on storde : success", event);
-
+            console.log('event', event);
             let cursor = event.target.result;
-
-            acc(cursor.value);
-
-            // console.log('cursor',cursor)
+            if (cursor) {
+              data.push(cursor.value);
+              cursor.continue();
+            } else {
+              acc(data);
+            }
           };
         } catch (err) {
-          console.log("Error add on store", err);
+          console.log('Error add on store', err);
 
           reject(err);
         }
@@ -94,7 +67,7 @@ const useDbMethods = () => {
   return {
     insert,
     get,
-    update,
+    update // todo: implement this one
   };
 };
 
