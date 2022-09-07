@@ -1,0 +1,52 @@
+            Learning system
+
+1. Flash cards
+2. Import text files
+3. Export data
+4. Entirely offline application
+5. Based on indexDB
+
+At this moment it doesn't handle evaluation (like comparing user's answers with real answers)
+
+1. Flash cards
+ How a flash card is functioning ?
+ - it can be of a certain type :
+    - example a small pair of <question, answer>
+ - it has level of difficulty regarding learing
+ - it contains information regarding time
+    - next time it should be seen again
+    - last time when it was seen
+ - it belongs to a category
+ - it contain labels in order to group cards
+
+ System that will manage flash cards
+ - group cards based on some labels, keywords;
+ - group cards based on time, priority, difficulty
+
+
+ Define knowledge test that will be used by a flash card
+
+ How to generate testing data from some information:
+ - the file that will contain the information can be of form:
+    - keywords, certain phrases <=> some text, definition
+    - for example learning typescript:
+        - concepts, syntax, terminology
+
+ Can throw random tests 
+
+ How the information should look like ?
+ - in indexDB the information will be stored in form of key,value pair
+ - data will be processed in multiple object stores from multiple perspectives 
+ - categories, questions, answers, timings;
+ - can support users based on labels 
+    - in case of multiple users they can create a label that is the a username on a question , answer 
+      so that it grouped by that
+
+
+
+
+Make a plugin on chrome so that when I subliniate something on text it will save that text on local machine
+so that I can import this information into the learning system
+
+
+
