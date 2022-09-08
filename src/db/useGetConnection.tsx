@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { tables } from './tables';
+
 const useGetConnection = () => {
   const [db, setDb] = useState<IDBDatabase | null>(null);
 
@@ -12,13 +14,22 @@ const useGetConnection = () => {
     request.onsuccess = (event) => {
       console.log('Susccess', event);
       setDb(request.result);
-      // db = request.result;
     };
 
     request.onupgradeneeded = (event: any) => {
       console.log('upgradee');
 
-      event.currentTarget?.result?.createObjectStore('questions', {
+      event.currentTarget?.result?.createObjectStore(tables.QUESTIONS_ANSWERS, {
+        keyPath: 'id',
+        autoIncrement: true
+      });
+
+      event.currentTarget?.result?.createObjectStore(tables.LABELS, {
+        keyPath: 'id',
+        autoIncrement: true
+      });
+
+      event.currentTarget?.result?.createObjectStore(tables.QUESTIONS_ANSWERS_LABELS, {
         keyPath: 'id',
         autoIncrement: true
       });

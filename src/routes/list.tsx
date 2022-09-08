@@ -6,10 +6,10 @@ import useDb from '../db/useDb';
 const List = (): ReactElement => {
   const [data, setData] = useState<QuestionAnswerStored[]>([]);
 
-  const { get } = useDb();
+  const { getAllQuestionAnswers } = useDb();
 
   const getStoredData = (): void => {
-    const a = get();
+    const a = getAllQuestionAnswers();
     a.then((i) => {
       console.log('i', i);
       setData(i);
@@ -27,7 +27,7 @@ const List = (): ReactElement => {
               <li key={item.id}>
                 <div>Question: {item.question}</div>
                 <div>Answer: {item.answer}</div>
-                <div>Label: {item.label}</div>
+                {/* <div>Label: {item.label}</div> */}
               </li>
             );
           })}

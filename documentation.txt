@@ -41,6 +41,26 @@ At this moment it doesn't handle evaluation (like comparing user's answers with 
  - can support users based on labels 
     - in case of multiple users they can create a label that is the a username on a question , answer 
       so that it grouped by that
+- need to implement labels in database
+
+
+Timing: 
+   - last time when saw a question, 
+   - next time when I should see a question 
+      - is calculated when the level is selected by user
+
+Level of difficulty
+   - easy: 
+      - if the difference between the current date and last date is less
+      then 10 days the next date is calculated as current date plus 7 days
+      - if the difference between the current date and last date is bigger 
+      then 10 days the next date is calculated by multiplying the difference 
+      by 2
+   - medium: next time is next 3 days
+   - hard: next time is next 1 day
+   - needs to be stored only for the purpose of filtering
+     if the user wants to see at this moment all difficult questions
+   - can be stored as a label
 
 
 

@@ -1,61 +1,81 @@
 import React, { ReactElement, useState } from 'react';
 
-import { QuestionAnswer } from '../types';
+import { QuestionAnswerInsertion, Label } from '../types';
 import useDb from '../db/useDb';
+import LabelComponent from '../components/Label';
 
 const Insert = (): ReactElement => {
-  const [questionAnswer, setQuestionAnswer] = useState<QuestionAnswer>({
+  const [data, setData] = useState<QuestionAnswerInsertion>({
     question: '',
     answer: '',
-    label: ''
+    labels: [],
   });
 
-  const { insert } = useDb();
+  const { insertQuestionAnswer, insertLabels } = useDb();
+
+  const addLabel = (text: string) => {
+    setData((data) => {
+      const uniqueLabelsSet = Array.from(new Set([...data.labels.map(l => l.text), text]));
+      const uniqueLabels = uniqueLabelsSet.map(text => ({ text }));
+
+      console.log('uniqueLabels', uniqueLabels);
+
+      return {
+        ...data,
+        labels: uniqueLabels,
+      };
+    });
+  };
 
   const changeQuestionAnswer = (event: React.BaseSyntheticEvent) => {
     const { name, value } = event.target;
 
-    setQuestionAnswer((questionAnswer) => ({
-      ...questionAnswer,
+    setData((data) => ({
+      ...data,
       [name]: value
     }));
   };
 
   const addQuestionAnswer = (event: React.SyntheticEvent) => {
     event.preventDefault();
-    insert(questionAnswer);
+
+    insertQuestionAnswer({
+      question: data.question,
+      answer: data.answer
+    }).then((questionAnswerId: number)=> {
+      console.log('addQuestionAnswer: questionAnswerId', questionAnswerId);
+
+      insertLabels({
+        questionAnswerId,
+        labels: data.labels,
+      });
+    });
   };
 
   return (
     <div>
       <form>
         <input
-          value={questionAnswer.question}
+          value={data.question}
           type="text"
           name="question"
           id="question"
           onChange={changeQuestionAnswer}
         />
         <input
-          value={questionAnswer.answer}
+          value={data.answer}
           type="text"
           name="answer"
           id="answer"
           onChange={changeQuestionAnswer}
         />
-        <input
-          value={questionAnswer.label}
-          type="label"
-          name="label"
-          id="label"
-          onChange={changeQuestionAnswer}
-        />
+        Labels:
+        <ul>
+          {data.labels.map(l => (<li key={l.text}>{l.text}</li>))}
+        </ul>
+        <LabelComponent addLabel={addLabel}/>
         <input type="submit" onClick={addQuestionAnswer} value="Add" />
       </form>
-
-      <div>question: {questionAnswer.question}</div>
-      <div>answer: {questionAnswer.answer}</div>
-      <div>label: {questionAnswer.label}</div>
     </div>
   );
 };

@@ -5,6 +5,7 @@ import './index.css';
 import App from './App';
 import List from './routes/list';
 import Insert from './routes/insert';
+import Test from './routes/test';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
@@ -12,12 +13,14 @@ root.render(
     <BrowserRouter>
       <nav>
         <Link to="/insert"> Add Question Answer </Link>
-        <Link to="/list"> Questions Answers</Link>
+        <Link to="/list"> Questions Answers </Link>
+        <Link to="/test"> Test </Link>
       </nav>
       <Routes>
         <Route path="/" element={<App />}></Route>
         <Route path="list" element={<List />}></Route>
         <Route path="insert" element={<Insert />}></Route>
+        <Route path="test" element={<Test />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
