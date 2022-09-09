@@ -15,12 +15,12 @@ const DisplayCards = ({
   cards: Card[];
   onFinish: () => void;
 }): ReactElement => {
-  const { 
-    updateQuestionAnswer, 
-    insertLabels, 
-    findLabelByText, 
+  const {
+    updateQuestionAnswer,
+    insertLabels,
+    findLabelByText,
     addLabelToQuestionAnswer,
-    removeLabelsFromQA,
+    removeLabelsFromQA
   } = useDbMethods();
 
   const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
@@ -57,17 +57,9 @@ const DisplayCards = ({
     };
   };
 
-  const { 
-    nextSeeDate, 
-    nextSeeDateFormatted, 
-    lastSawDateFormatted
-  } = getFormatted();
+  const { nextSeeDate, nextSeeDateFormatted, lastSawDateFormatted } = getFormatted();
 
-  const showCard = 
-    currentCard && 
-    nextSeeDateFormatted && 
-    nextSeeDate && 
-    lastSawDateFormatted;
+  const showCard = currentCard && nextSeeDateFormatted && nextSeeDate && lastSawDateFormatted;
 
   const getNextCard = (level: LEVELS) => () => {
     if (!showCard) {
@@ -86,10 +78,10 @@ const DisplayCards = ({
         });
 
         // remove any level label
-        const otherLevels = Object.values(LEVELS).filter(l => l !== level);
-        await removeLabelsFromQA({ 
-          questionAnswerId: currentCard.id, 
-          labels: otherLevels 
+        const otherLevels = Object.values(LEVELS).filter((l) => l !== level);
+        await removeLabelsFromQA({
+          questionAnswerId: currentCard.id,
+          labels: otherLevels
         });
 
         // add the new level label
@@ -100,12 +92,13 @@ const DisplayCards = ({
             questionAnswerId: currentCard.id,
             labelId: foundLabelId
           });
-
         } else {
           await insertLabels({
-            labels: [{
-              text: level
-            }],
+            labels: [
+              {
+                text: level
+              }
+            ],
             questionAnswerId: currentCard.id
           });
         }
@@ -117,7 +110,6 @@ const DisplayCards = ({
         if (nextCardIndex === cards.length) {
           onFinish();
         }
-
       } catch (err) {
         // update state
         setCurrentCardIndex(currentCardIndex);
@@ -126,7 +118,7 @@ const DisplayCards = ({
   };
 
   const onShowAnswer = () => {
-    if (!showAnswer){
+    if (!showAnswer) {
       setShowAnswer(true);
     }
   };
@@ -134,20 +126,23 @@ const DisplayCards = ({
   return (
     <div>
       {showCard && (
-        <div className='card'>
-          <div className='question'>{currentCard.question} ?</div>
-          {showAnswer && <div className='answer'>{currentCard.answer}</div>}
+        <div className="card">
+          <div className="question">{currentCard.question} ?</div>
+          {showAnswer && <div className="answer">{currentCard.answer}</div>}
           {!showAnswer && <button onClick={onShowAnswer}>Show answer</button>}
-          <div className='last-seen'>Last seen {lastSawDateFormatted}</div>
-          <div className='buttons'>
+          <div className="last-seen">Last seen {lastSawDateFormatted}</div>
+          <div className="buttons">
             <button onClick={getNextCard(LEVELS.EASY)} disabled={!showAnswer}>
-              <div className='level'>{LEVELS.EASY}</div> <div className='next-see-date'>{nextSeeDateFormatted[LEVELS.EASY]}</div>
+              <div className="level">{LEVELS.EASY}</div>{' '}
+              <div className="next-see-date">{nextSeeDateFormatted[LEVELS.EASY]}</div>
             </button>
             <button onClick={getNextCard(LEVELS.MEDIUM)} disabled={!showAnswer}>
-              <div className='level'>{LEVELS.MEDIUM}</div> <div className='next-see-date'>{nextSeeDateFormatted[LEVELS.MEDIUM]}</div>
+              <div className="level">{LEVELS.MEDIUM}</div>{' '}
+              <div className="next-see-date">{nextSeeDateFormatted[LEVELS.MEDIUM]}</div>
             </button>
             <button onClick={getNextCard(LEVELS.HARD)} disabled={!showAnswer}>
-              <div className='level'>{LEVELS.HARD}</div> <div className='next-see-date'> {nextSeeDateFormatted[LEVELS.HARD]}</div>
+              <div className="level">{LEVELS.HARD}</div>{' '}
+              <div className="next-see-date"> {nextSeeDateFormatted[LEVELS.HARD]}</div>
             </button>
           </div>
         </div>

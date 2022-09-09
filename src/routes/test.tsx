@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { ReactElement, useState } from 'react';
 
 import useRandomTests from '../hooks/useRandomTests';
@@ -15,7 +17,7 @@ const Test = (): ReactElement => {
   const [levels, setLevels] = useState<SelectedLevels>({
     [LEVELS.EASY]: false,
     [LEVELS.MEDIUM]: false,
-    [LEVELS.HARD]: false,
+    [LEVELS.HARD]: false
   });
   const [start, setStart] = useState(true);
 
@@ -27,13 +29,13 @@ const Test = (): ReactElement => {
 
     (async () => {
       try {
-        const tests = await getQuestionAnswersByFilter({ today, levels })
+        const tests = await getQuestionAnswersByFilter({ today, levels });
         setCards(tests);
       } catch (err) {
         console.log('Err get qa for filter', err);
-        setCards(cards)
+        setCards(cards);
       }
-    })()
+    })();
   };
 
   const onFinish = (): void => {
@@ -42,8 +44,8 @@ const Test = (): ReactElement => {
   };
 
   return (
-    <div className='main'>
-      <Filters today={today} levels={levels} setToday={setToday} setLevels={setLevels}/>
+    <div className="main">
+      <Filters today={today} levels={levels} setToday={setToday} setLevels={setLevels} />
       <button onClick={getFilteredTests}>Get tests</button>
       {!finish && Boolean(cards.length) && <DisplayCards cards={cards} onFinish={onFinish} />}
       {finish && <div>Congrats</div>}

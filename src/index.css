@@ -48,7 +48,7 @@ a {
 
 a:hover {
   background-color: #8cb4ff70;
-  color:#8cb4ff
+  color: #8cb4ff;
 }
 
 @media screen and (max-width: 400px) {
@@ -58,4 +58,3 @@ a:hover {
     margin-bottom: 20px;
   }
 }
-

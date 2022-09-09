@@ -19,19 +19,18 @@ const useRandomTests = () => {
   };
 
   const getQuestionAnswersByFilter = ({
-    today, 
+    today,
     levels
   }: {
-    today: boolean, 
-    levels: SelectedLevels
+    today: boolean;
+    levels: SelectedLevels;
   }): Promise<QuestionAnswerStored[]> => {
-
     let nextSeeDate = undefined;
     const labels: string[] = [];
 
     if (today) {
-      const t = new Date().getTime()
-      const tomorrow = t +  1000 * 60 * 60 * 24;
+      const t = new Date().getTime();
+      const tomorrow = t + 1000 * 60 * 60 * 24;
       nextSeeDate = tomorrow.toString();
     }
 
@@ -44,7 +43,7 @@ const useRandomTests = () => {
 
   return {
     getRandomTests,
-    getQuestionAnswersByFilter,
+    getQuestionAnswersByFilter
   };
 };
 

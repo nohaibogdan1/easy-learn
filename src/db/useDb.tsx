@@ -245,7 +245,7 @@ const useDbMethods = () => {
   };
 
   const filterQuestionAnswersByLabels = async (
-    qaList: QuestionAnswerStored[], 
+    qaList: QuestionAnswerStored[],
     labels?: string[]
   ): Promise<QuestionAnswerStored[]> => {
     if (!labels || !labels?.length) {
@@ -256,19 +256,20 @@ const useDbMethods = () => {
     const qaLabels = await getAllQuestionAnswersLabels();
 
     const filteredLabels = storedLabels.filter((label) => labels.includes(label.text));
-    const filteredQALabels = qaLabels.filter(
-      (qal) => filteredLabels.map(label => label.id).includes(qal.labelId));
-    const filteredQAList = qaList.filter(
-      (qa) => filteredQALabels.map(qal => qal.questionAnswerId).includes(qa.id));
+    const filteredQALabels = qaLabels.filter((qal) =>
+      filteredLabels.map((label) => label.id).includes(qal.labelId)
+    );
+    const filteredQAList = qaList.filter((qa) =>
+      filteredQALabels.map((qal) => qal.questionAnswerId).includes(qa.id)
+    );
 
     return filteredQAList;
   };
 
   const filterQuestionAnswersByNextSeeDate = async (
-    qaList: QuestionAnswerStored[], 
+    qaList: QuestionAnswerStored[],
     nextSeeDate?: string | null
   ): Promise<QuestionAnswerStored[]> => {
-
     if (typeof nextSeeDate === 'undefined') {
       return qaList;
     }
@@ -277,35 +278,29 @@ const useDbMethods = () => {
       return qaList.filter((qa) => !qa.nextSeeDate);
     }
 
-    return qaList.filter((qa) => 
-      qa.nextSeeDate && 
-      getDifferenceInDays(nextSeeDate, qa.nextSeeDate) === 0);
+    return qaList.filter(
+      (qa) => qa.nextSeeDate && getDifferenceInDays(nextSeeDate, qa.nextSeeDate) === 0
+    );
   };
 
   const getAllQuestionAnswersByFilter = async (filter: Filter) => {
     const { labels, nextSeeDate } = filter;
     const qaList = await getAllQuestionAnswers();
-    
-    const qaListFilteredByLabels = 
-      await filterQuestionAnswersByLabels(qaList, labels);
 
-    const qaListFilteredByNextSeeDate = 
-      await filterQuestionAnswersByNextSeeDate(qaListFilteredByLabels, nextSeeDate);
-  
+    const qaListFilteredByLabels = await filterQuestionAnswersByLabels(qaList, labels);
+
+    const qaListFilteredByNextSeeDate = await filterQuestionAnswersByNextSeeDate(
+      qaListFilteredByLabels,
+      nextSeeDate
+    );
+
     return qaListFilteredByNextSeeDate;
   };
 
-  const deleteEntry = ({
-    id,
-    table,
-  }: {
-    id: number, 
-    table: tables
-  }): Promise<void> => {
+  const deleteEntry = ({ id, table }: { id: number; table: tables }): Promise<void> => {
     return new Promise((acc, reject) => {
       try {
         if (db) {
-
           const transaction = db.transaction(table, 'readwrite');
           const store = transaction.objectStore(table);
           const request = store.delete(id);
@@ -328,20 +323,20 @@ const useDbMethods = () => {
   };
 
   const removeLabelsFromQA = async ({
-    questionAnswerId, 
+    questionAnswerId,
     labels
   }: {
-    questionAnswerId: number, 
-    labels: string[]
+    questionAnswerId: number;
+    labels: string[];
   }): Promise<void> => {
-
     const labelsStored = await getAllLabels();
     const filteredLabels = labelsStored.filter((l) => labels.includes(l.text));
     const qaLabels = await getAllQuestionAnswersLabels();
     const qaLabelsFiltered = qaLabels.filter(
-      (qal) => 
-        qal.questionAnswerId === questionAnswerId && 
-        filteredLabels.map(l => l.id).includes(qal.labelId));
+      (qal) =>
+        qal.questionAnswerId === questionAnswerId &&
+        filteredLabels.map((l) => l.id).includes(qal.labelId)
+    );
 
     // remove qaLabelsFiltered from store
     for (const qaLabel of qaLabelsFiltered) {
@@ -361,7 +356,7 @@ const useDbMethods = () => {
     findLabelByText,
     addLabelToQuestionAnswer,
     getAllQuestionAnswersByFilter,
-    removeLabelsFromQA,
+    removeLabelsFromQA
   };
 };
 

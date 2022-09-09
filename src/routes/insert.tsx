@@ -55,8 +55,7 @@ const Insert = (): ReactElement => {
           question: '',
           answer: '',
           labels: []
-        })
-
+        });
       } catch (err) {}
     })();
   };
@@ -64,22 +63,17 @@ const Insert = (): ReactElement => {
   return (
     <div>
       <form>
-        <div className='label'>Question: </div>
+        <div className="label">Question: </div>
         <textarea
           value={data.question}
           name="question"
           id="question"
           onChange={changeQuestionAnswer}
         />
-        <div className='label'>Answer: </div>
-        <textarea
-          value={data.answer}
-          name="answer"
-          id="answer"
-          onChange={changeQuestionAnswer}
-        />
-        <div className='label'>Labels:</div>
-        <ul className='labels'>
+        <div className="label">Answer: </div>
+        <textarea value={data.answer} name="answer" id="answer" onChange={changeQuestionAnswer} />
+        <div className="label">Labels:</div>
+        <ul className="labels">
           {data.labels.map((l) => (
             <li key={l.text}>{l.text}</li>
           ))}

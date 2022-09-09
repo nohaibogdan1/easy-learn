@@ -61,9 +61,9 @@ type SelectedLevels = {
 };
 
 interface Filter {
-  labels?: string[],
-  nextSeeDate?: string,
-};
+  labels?: string[];
+  nextSeeDate?: string;
+}
 
 export type {
   QuestionAnswer,
@@ -80,5 +80,5 @@ export type {
   QuestionAnswerLabelStored,
   NextSeeDate,
   Filter,
-  SelectedLevels,
+  SelectedLevels
 };
