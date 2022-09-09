@@ -1,5 +1,6 @@
-import { LEVELS } from "../constants";
-import { NextSeeDate } from "../types";
+/* eslint-disable */
+import { LEVELS } from '../constants';
+import { NextSeeDate } from '../types';
 
 const calculateNewLastSawDate = (): string => {
   const date = new Date();
@@ -7,13 +8,13 @@ const calculateNewLastSawDate = (): string => {
   return date.getTime().toString();
 };
 
-/** 
+/**
  * date1: milliseconds
  * date2: milliseconds
  */
 const getDifferenceInDays = (date1: string, date2: string): number => {
   const differenceInTime = Math.abs(parseInt(date1) - parseInt(date2));
-  const differenceInDays = Math.ceil(differenceInTime/ (1000*60*60*24));
+  const differenceInDays = Math.ceil(differenceInTime / (1000 * 60 * 60 * 24));
   return differenceInDays;
 };
 
@@ -22,7 +23,7 @@ const calculateNextSeeDate = (lastSawDate: string | null): NextSeeDate => {
   const currentDate = date.getTime();
   const lastSawDateValue = lastSawDate || currentDate.toString();
   const differenceInDays = getDifferenceInDays(currentDate.toString(), lastSawDateValue);
-  const day = 1000*60*60*24;
+  const day = 1000 * 60 * 60 * 24;
 
   const getDaysUntilNextForEasy = (): number => {
     if (differenceInDays < 10) {
@@ -51,13 +52,10 @@ const calculateNextSeeDate = (lastSawDate: string | null): NextSeeDate => {
   const result = {
     [LEVELS.EASY]: calculateNextSeeDateEasy(),
     [LEVELS.MEDIUM]: calculateNextSeeDateMedium(),
-    [LEVELS.HARD]: calculateNextSeeDateHard(),
+    [LEVELS.HARD]: calculateNextSeeDateHard()
   };
 
   return result;
 };
 
-export {
-  calculateNewLastSawDate,
-  calculateNextSeeDate,
-};
+export { calculateNewLastSawDate, calculateNextSeeDate };

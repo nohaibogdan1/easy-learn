@@ -1,10 +1,7 @@
+/* eslint-disable */
 import React, { BaseSyntheticEvent, ReactElement, useState } from 'react';
 
-const LabelComponent = ({
-  addLabel
-}: {
-  addLabel: (value: string) => void;
-}): ReactElement=> {
+const LabelComponent = ({ addLabel }: { addLabel: (value: string) => void }): ReactElement => {
   const [text, setText] = useState('');
 
   const textChange = (event: BaseSyntheticEvent) => {
@@ -17,14 +14,13 @@ const LabelComponent = ({
   };
 
   return (
-  <div>
-    <form>
-      <input type="text" name="text" onChange={textChange} value={text}></input>
-      <input type="submit" onClick={insertLabel} value="Add Label"/>
-    </form>
-  </div>
-  )
-
+    <div>
+      <form>
+        <input type="text" name="text" onChange={textChange} value={text}></input>
+        <input type="submit" onClick={insertLabel} value="Add Label" />
+      </form>
+    </div>
+  );
 };
 
 export default LabelComponent;

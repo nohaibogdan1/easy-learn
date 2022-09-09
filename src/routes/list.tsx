@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, ReactElement } from 'react';
 
 import { QuestionAnswerStored } from '../types';
@@ -22,7 +23,7 @@ const List = (): ReactElement => {
       <div>
         Data:
         <ul>
-          {data.map((item) => {
+          {data.map((item): ReactElement => {
             return (
               <li key={item.id}>
                 <div>Question: {item.question}</div>

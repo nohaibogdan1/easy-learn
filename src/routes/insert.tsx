@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { ReactElement, useState } from 'react';
 
 import { QuestionAnswerInsertion, Label } from '../types';
@@ -8,21 +9,21 @@ const Insert = (): ReactElement => {
   const [data, setData] = useState<QuestionAnswerInsertion>({
     question: '',
     answer: '',
-    labels: [],
+    labels: []
   });
 
   const { insertQuestionAnswer, insertLabels } = useDb();
 
   const addLabel = (text: string) => {
     setData((data) => {
-      const uniqueLabelsSet = Array.from(new Set([...data.labels.map(l => l.text), text]));
-      const uniqueLabels = uniqueLabelsSet.map(text => ({ text }));
+      const uniqueLabelsSet = Array.from(new Set([...data.labels.map((l) => l.text), text]));
+      const uniqueLabels = uniqueLabelsSet.map((text) => ({ text }));
 
       console.log('uniqueLabels', uniqueLabels);
 
       return {
         ...data,
-        labels: uniqueLabels,
+        labels: uniqueLabels
       };
     });
   };
@@ -42,12 +43,12 @@ const Insert = (): ReactElement => {
     insertQuestionAnswer({
       question: data.question,
       answer: data.answer
-    }).then((questionAnswerId: number)=> {
+    }).then((questionAnswerId: number) => {
       console.log('addQuestionAnswer: questionAnswerId', questionAnswerId);
 
       insertLabels({
         questionAnswerId,
-        labels: data.labels,
+        labels: data.labels
       });
     });
   };
@@ -71,9 +72,11 @@ const Insert = (): ReactElement => {
         />
         Labels:
         <ul>
-          {data.labels.map(l => (<li key={l.text}>{l.text}</li>))}
+          {data.labels.map((l) => (
+            <li key={l.text}>{l.text}</li>
+          ))}
         </ul>
-        <LabelComponent addLabel={addLabel}/>
+        <LabelComponent addLabel={addLabel} />
         <input type="submit" onClick={addQuestionAnswer} value="Add" />
       </form>
     </div>

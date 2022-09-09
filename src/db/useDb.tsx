@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useEffect } from 'react';
 import useGetConnection from './useGetConnection';
 import {
@@ -11,35 +12,37 @@ import {
   AssociatedLabels,
   QuestionAnswerLabel,
   QuestionAnswerModification,
-  QuestionAnswerLabelStored,
+  QuestionAnswerLabelStored
 } from '../types';
 import { tables } from './tables';
 
 const useDbMethods = () => {
   const db = useGetConnection();
 
-  const insertData = (data: QuestionAnswer | Label | QuestionAnswerLabel, table: tables): Promise<number> => {
+  const insertData = (
+    data: QuestionAnswer | Label | QuestionAnswerLabel,
+    table: tables
+  ): Promise<number> => {
     return new Promise((acc, reject) => {
       if (db) {
         try {
           const transaction = db.transaction(table, 'readwrite');
           const store = transaction.objectStore(table);
           const request = store.add(data);
-  
+
           request.onerror = () => {
             console.log('Add to Store Error');
-            reject('Add to Store Error')
+            reject('Add to Store Error');
           };
-  
+
           request.onsuccess = (event: any) => {
             console.log('Add on store : success', request.result);
             const storedDataId = parseInt(request.result.toString());
             if (isNaN(storedDataId)) {
-              reject('stored data id is not number')
+              reject('stored data id is not number');
             }
             acc(storedDataId as number);
           };
-
         } catch (err) {
           console.log('Error add on store', err);
           reject('Add to store error');
@@ -61,13 +64,15 @@ const useDbMethods = () => {
           nextSeeDate: null
         },
         tables.QUESTIONS_ANSWERS
-      ).then(insertedData => {
-        console.log('insertQuestionAnswer: insertedData', insertedData);
-        acc(insertedData);
-      }).catch((err) => {
-        console.log('insertQuestionAnswer erro', err)
-        reject(`Error: ${err}`)
-      });
+      )
+        .then((insertedData) => {
+          console.log('insertQuestionAnswer: insertedData', insertedData);
+          acc(insertedData);
+        })
+        .catch((err) => {
+          console.log('insertQuestionAnswer erro', err);
+          reject(`Error: ${err}`);
+        });
     });
   };
 
@@ -75,25 +80,31 @@ const useDbMethods = () => {
     return new Promise((acc, reject) => {
       const { questionAnswerId, text } = data;
 
-      insertData({
-        text
-      }, tables.LABELS)
-      .then(labelId => {
-        insertData({
-          questionAnswerId,
-          labelId,
-        }, tables.QUESTIONS_ANSWERS_LABELS)
-        .then(() => {
-          acc();
+      insertData(
+        {
+          text
+        },
+        tables.LABELS
+      )
+        .then((labelId) => {
+          insertData(
+            {
+              questionAnswerId,
+              labelId
+            },
+            tables.QUESTIONS_ANSWERS_LABELS
+          )
+            .then(() => {
+              acc();
+            })
+            .catch(() => {
+              reject();
+            });
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log('Error Insert Label', err);
           reject();
         });
-      })
-      .catch(err => {
-        console.log('Error Insert Label', err);
-        reject();
-      })
     });
   };
 
@@ -103,15 +114,19 @@ const useDbMethods = () => {
       for (const l of data.labels) {
         const promise = insertLabel({
           questionAnswerId: data.questionAnswerId,
-          text: l.text,
+          text: l.text
         });
         promises.push(promise);
       }
-      Promise.all(promises).then(() => acc()).catch(() => reject());
+      Promise.all(promises)
+        .then(() => acc())
+        .catch(() => reject());
     });
   };
 
-  const getAll = (table: tables): Promise<(QuestionAnswerStored | LabelStored | QuestionAnswerLabelStored)[]> => {
+  const getAll = (
+    table: tables
+  ): Promise<(QuestionAnswerStored | LabelStored | QuestionAnswerLabelStored)[]> => {
     return new Promise((acc, reject) => {
       if (db) {
         try {
@@ -127,7 +142,7 @@ const useDbMethods = () => {
           };
 
           request.onsuccess = (event: any) => {
-            console.log('res', request.result)
+            console.log('res', request.result);
             acc(request.result);
           };
         } catch (err) {
@@ -157,18 +172,18 @@ const useDbMethods = () => {
           const transaction = db.transaction(tables.QUESTIONS_ANSWERS, 'readwrite');
           const store = transaction.objectStore(tables.QUESTIONS_ANSWERS);
           const request = store.put(data);
-  
+
           request.onerror = () => {
             console.log('Err in update');
             reject();
           };
-    
+
           request.onsuccess = (event: any) => {
             console.log('Update on store : success', request.result);
             acc();
           };
         }
-      } catch(err) {
+      } catch (err) {
         console.log('Err in update', err);
         reject();
       }
@@ -178,55 +193,54 @@ const useDbMethods = () => {
   const findLabelByText = (text: string): Promise<number | undefined> => {
     return new Promise((acc, reject) => {
       getAllLabels()
-      .then((labels) => {
-        const foundLabel = labels.find(label => label.text === text);
-        acc(foundLabel?.id);
-      })
-      .catch((err) => {
-        console.log('Error findLabelByText', err);
-        reject('Err');
-      });
+        .then((labels) => {
+          const foundLabel = labels.find((label) => label.text === text);
+          acc(foundLabel?.id);
+        })
+        .catch((err) => {
+          console.log('Error findLabelByText', err);
+          reject('Err');
+        });
     });
   };
 
   const existQuestionAnswerLabel = (data: QuestionAnswerLabel): Promise<Boolean> => {
     return new Promise((acc, reject) => {
       getAllQuestionAnswersLabels()
-      .then((questionAnswersLabels) => {
-        const exist = questionAnswersLabels.some(qal => 
-          qal.labelId === data.labelId &&
-          qal.questionAnswerId === data.questionAnswerId
-        );
-        acc(exist);
-      })
-      .catch((err) => {
-        reject(err);
-      })
+        .then((questionAnswersLabels) => {
+          const exist = questionAnswersLabels.some(
+            (qal) => qal.labelId === data.labelId && qal.questionAnswerId === data.questionAnswerId
+          );
+          acc(exist);
+        })
+        .catch((err) => {
+          reject(err);
+        });
     });
   };
 
   const addLabelToQuestionAnswer = (data: QuestionAnswerLabel): Promise<void> => {
     return new Promise((acc, reject) => {
       existQuestionAnswerLabel(data)
-      .then((exists) => {
-        if (exists) {
-          acc();
-          return;
-        }
-        
-        insertData(data, tables.QUESTIONS_ANSWERS_LABELS)
-        .then(() => {
-          acc();
+        .then((exists) => {
+          if (exists) {
+            acc();
+            return;
+          }
+
+          insertData(data, tables.QUESTIONS_ANSWERS_LABELS)
+            .then(() => {
+              acc();
+            })
+            .catch((err) => {
+              console.log('err addLabelToQuestionAnswer', err);
+              reject(err);
+            });
         })
         .catch((err) => {
           console.log('err addLabelToQuestionAnswer', err);
           reject(err);
         });
-      })
-      .catch((err) => {
-        console.log('err addLabelToQuestionAnswer', err)
-        reject(err);
-      });
     });
   };
 
@@ -237,7 +251,7 @@ const useDbMethods = () => {
     getAllQuestionAnswers,
     updateQuestionAnswer,
     findLabelByText,
-    addLabelToQuestionAnswer,
+    addLabelToQuestionAnswer
   };
 };
 

@@ -1,9 +1,7 @@
 enum LEVELS {
   HARD = 'hard',
   MEDIUM = 'medium',
-  EASY = 'easy',
-};
+  EASY = 'easy'
+}
 
-export {
-  LEVELS,
-};
+export { LEVELS };

@@ -1,4 +1,5 @@
-import { LEVELS } from "./constants";
+/* eslint-disable */
+import { LEVELS } from './constants';
 
 interface QuestionAnswer {
   question: string;
@@ -7,12 +8,11 @@ interface QuestionAnswer {
   nextSeeDate: string | null;
 }
 
-type QuestionAnswerAdd =
-  Omit<QuestionAnswer, 'lastSawDate' | 'nextSeeDate'>;
+type QuestionAnswerAdd = Omit<QuestionAnswer, 'lastSawDate' | 'nextSeeDate'>;
 
 type QuestionAnswerInsertion = QuestionAnswerAdd & {
-    labels: Label[]
-  }
+  labels: Label[];
+};
 
 type QuestionAnswerStored = QuestionAnswer & {
   id: number;
@@ -27,7 +27,7 @@ type AssociatedLabel = Label & {
 };
 
 type AssociatedLabels = {
-  labels: Label[],
+  labels: Label[];
   questionAnswerId: number;
 };
 
@@ -49,23 +49,23 @@ type Card = QuestionAnswerStored;
 type QuestionAnswerModification = QuestionAnswerStored;
 
 type NextSeeDate = {
-  [LEVELS.EASY]: string,
-  [LEVELS.MEDIUM]: string,
-  [LEVELS.HARD]: string
+  [LEVELS.EASY]: string;
+  [LEVELS.MEDIUM]: string;
+  [LEVELS.HARD]: string;
 };
 
-export type { 
-  QuestionAnswer, 
-  QuestionAnswerStored, 
-  Label, 
-  LabelStored, 
+export type {
+  QuestionAnswer,
+  QuestionAnswerStored,
+  Label,
+  LabelStored,
   AssociatedLabel,
-  QuestionAnswerInsertion, 
+  QuestionAnswerInsertion,
   QuestionAnswerAdd,
   AssociatedLabels,
   QuestionAnswerLabel,
   Card,
   QuestionAnswerModification,
   QuestionAnswerLabelStored,
-  NextSeeDate,
+  NextSeeDate
 };
