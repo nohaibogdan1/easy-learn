@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/learn-system/static/css/main.073c9b0a.css",
-    "main.js": "/learn-system/static/js/main.1b035586.js",
+    "main.css": "/learn-system/static/css/main.1ffdf35f.css",
+    "main.js": "/learn-system/static/js/main.95f719ef.js",
     "service-worker.js": "/learn-system/service-worker.js",
     "index.html": "/learn-system/index.html",
-    "main.073c9b0a.css.map": "/learn-system/static/css/main.073c9b0a.css.map",
-    "main.1b035586.js.map": "/learn-system/static/js/main.1b035586.js.map"
+    "main.1ffdf35f.css.map": "/learn-system/static/css/main.1ffdf35f.css.map",
+    "main.95f719ef.js.map": "/learn-system/static/js/main.95f719ef.js.map"
   },
   "entrypoints": [
-    "static/css/main.073c9b0a.css",
-    "static/js/main.1b035586.js"
+    "static/css/main.1ffdf35f.css",
+    "static/js/main.95f719ef.js"
   ]
 }
