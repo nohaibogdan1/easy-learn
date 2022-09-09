@@ -13,8 +13,8 @@ const calculateNewLastSawDate = (): string => {
  * date2: milliseconds
  */
 const getDifferenceInDays = (date1: string, date2: string): number => {
-  const differenceInTime = Math.abs(parseInt(date1) - parseInt(date2));
-  const differenceInDays = Math.ceil(differenceInTime / (1000 * 60 * 60 * 24));
+  const differenceInTime = Math.abs(parseFloat(date1) - parseFloat(date2));
+  const differenceInDays = Math.floor(differenceInTime / (1000 * 60 * 60 * 24));
   return differenceInDays;
 };
 
@@ -58,4 +58,4 @@ const calculateNextSeeDate = (lastSawDate: string | null): NextSeeDate => {
   return result;
 };
 
-export { calculateNewLastSawDate, calculateNextSeeDate };
+export { calculateNewLastSawDate, calculateNextSeeDate, getDifferenceInDays };

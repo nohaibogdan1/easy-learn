@@ -14,8 +14,13 @@ const DisplayCards = ({
   cards: Card[];
   onFinish: () => void;
 }): ReactElement => {
-  const { updateQuestionAnswer, insertLabels, findLabelByText, addLabelToQuestionAnswer } =
-    useDbMethods();
+  const { 
+    updateQuestionAnswer, 
+    insertLabels, 
+    findLabelByText, 
+    addLabelToQuestionAnswer,
+    removeLabelsFromQA,
+  } = useDbMethods();
 
   const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
 
@@ -50,9 +55,17 @@ const DisplayCards = ({
     };
   };
 
-  const { nextSeeDate, nextSeeDateFormatted, lastSawDateFormatted } = getFormatted();
+  const { 
+    nextSeeDate, 
+    nextSeeDateFormatted, 
+    lastSawDateFormatted
+  } = getFormatted();
 
-  const showCard = currentCard && nextSeeDateFormatted && nextSeeDate && lastSawDateFormatted;
+  const showCard = 
+    currentCard && 
+    nextSeeDateFormatted && 
+    nextSeeDate && 
+    lastSawDateFormatted;
 
   const getNextCard = (level: LEVELS) => () => {
     if (!showCard) {
@@ -62,57 +75,53 @@ const DisplayCards = ({
 
     const newLastSawDate = calculateNewLastSawDate();
 
-    updateQuestionAnswer({
-      ...currentCard,
-      lastSawDate: newLastSawDate,
-      nextSeeDate: nextSeeDate[level]
-    })
-      .then(() => {
-        findLabelByText(level)
-          .then((foundLabelId) => {
-            if (foundLabelId) {
-              addLabelToQuestionAnswer({
-                questionAnswerId: currentCard.id,
-                labelId: foundLabelId
-              })
-                .then(() => {
-                  const nextCardIndex = currentCardIndex + 1;
-                  setCurrentCardIndex(nextCardIndex);
-                  if (nextCardIndex === cards.length) {
-                    onFinish();
-                  }
-                })
-                .catch(() => {
-                  setCurrentCardIndex(currentCardIndex);
-                });
-            } else {
-              insertLabels({
-                labels: [
-                  {
-                    text: level
-                  }
-                ],
-                questionAnswerId: currentCard.id
-              })
-                .then(() => {
-                  const nextCardIndex = currentCardIndex + 1;
-                  setCurrentCardIndex(nextCardIndex);
-                  if (nextCardIndex === cards.length) {
-                    onFinish();
-                  }
-                })
-                .catch(() => {
-                  setCurrentCardIndex(currentCardIndex);
-                });
-            }
-          })
-          .catch(() => {
-            setCurrentCardIndex(currentCardIndex);
+    (async () => {
+      try {
+        await updateQuestionAnswer({
+          ...currentCard,
+          lastSawDate: newLastSawDate,
+          nextSeeDate: nextSeeDate[level]
+        });
+
+        // remove any level label
+        const otherLevels = Object.values(LEVELS).filter(l => l !== level);
+        await removeLabelsFromQA({ 
+          questionAnswerId: currentCard.id, 
+          labels: otherLevels 
+        });
+
+        // add the new level label
+        const foundLabelId = await findLabelByText(level);
+
+        if (foundLabelId) {
+          await addLabelToQuestionAnswer({
+            questionAnswerId: currentCard.id,
+            labelId: foundLabelId
           });
-      })
-      .catch(() => {
+
+        } else {
+          await insertLabels({
+            labels: [
+              {
+                text: level
+              }
+            ],
+            questionAnswerId: currentCard.id
+          });
+        }
+
+        // update state
+        const nextCardIndex = currentCardIndex + 1;
+        setCurrentCardIndex(nextCardIndex);
+        if (nextCardIndex === cards.length) {
+          onFinish();
+        }
+
+      } catch (err) {
+        // update state
         setCurrentCardIndex(currentCardIndex);
-      });
+      }
+    })();
   };
 
   return (

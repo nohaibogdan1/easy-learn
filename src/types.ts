@@ -54,6 +54,17 @@ type NextSeeDate = {
   [LEVELS.HARD]: string;
 };
 
+type SelectedLevels = {
+  [LEVELS.EASY]: boolean;
+  [LEVELS.MEDIUM]: boolean;
+  [LEVELS.HARD]: boolean;
+};
+
+interface Filter {
+  labels?: string[],
+  nextSeeDate?: string,
+};
+
 export type {
   QuestionAnswer,
   QuestionAnswerStored,
@@ -67,5 +78,7 @@ export type {
   Card,
   QuestionAnswerModification,
   QuestionAnswerLabelStored,
-  NextSeeDate
+  NextSeeDate,
+  Filter,
+  SelectedLevels,
 };

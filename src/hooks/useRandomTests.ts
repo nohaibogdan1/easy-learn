@@ -1,9 +1,9 @@
 /* eslint-disable */
 import useDbMethods from '../db/useDb';
-import { QuestionAnswerStored } from '../types';
+import { QuestionAnswerStored, SelectedLevels } from '../types';
 
 const useRandomTests = () => {
-  const { getAllQuestionAnswers } = useDbMethods();
+  const { getAllQuestionAnswers, getAllQuestionAnswersByFilter } = useDbMethods();
 
   const getRandomTests = (): Promise<QuestionAnswerStored[]> => {
     return new Promise((acc, reject) => {
@@ -18,8 +18,33 @@ const useRandomTests = () => {
     });
   };
 
+  const getQuestionAnswersByFilter = ({
+    today, 
+    levels
+  }: {
+    today: boolean, 
+    levels: SelectedLevels
+  }): Promise<QuestionAnswerStored[]> => {
+
+    let nextSeeDate = undefined;
+    const labels: string[] = [];
+
+    if (today) {
+      const t = new Date().getTime()
+      const tomorrow = t +  1000 * 60 * 60 * 24;
+      nextSeeDate = tomorrow.toString();
+    }
+
+    Object.entries(levels)
+      .filter(([_, checked]) => checked)
+      .map(([level]) => labels.push(level));
+
+    return getAllQuestionAnswersByFilter({ nextSeeDate, labels });
+  };
+
   return {
-    getRandomTests
+    getRandomTests,
+    getQuestionAnswersByFilter,
   };
 };
 

@@ -12,9 +12,11 @@ import {
   AssociatedLabels,
   QuestionAnswerLabel,
   QuestionAnswerModification,
-  QuestionAnswerLabelStored
+  QuestionAnswerLabelStored,
+  Filter
 } from '../types';
 import { tables } from './tables';
+import { getDifferenceInDays } from '../logic/questionAnswer';
 
 const useDbMethods = () => {
   const db = useGetConnection();
@@ -66,7 +68,7 @@ const useDbMethods = () => {
         tables.QUESTIONS_ANSWERS
       )
         .then((insertedData) => {
-          console.log('insertQuestionAnswer: insertedData', insertedData);
+          // console.log('insertQuestionAnswer: insertedData', insertedData);
           acc(insertedData);
         })
         .catch((err) => {
@@ -130,8 +132,6 @@ const useDbMethods = () => {
     return new Promise((acc, reject) => {
       if (db) {
         try {
-          const data: QuestionAnswerStored[] = [];
-
           const transaction = db.transaction(table, 'readwrite');
           const store = transaction.objectStore(table);
           const request = store.getAll();
@@ -142,7 +142,7 @@ const useDbMethods = () => {
           };
 
           request.onsuccess = (event: any) => {
-            console.log('res', request.result);
+            // console.log('res', request.result);
             acc(request.result);
           };
         } catch (err) {
@@ -244,6 +244,117 @@ const useDbMethods = () => {
     });
   };
 
+  const filterQuestionAnswersByLabels = async (
+    qaList: QuestionAnswerStored[], 
+    labels?: string[]
+  ): Promise<QuestionAnswerStored[]> => {
+    if (!labels || !labels?.length) {
+      return qaList;
+    }
+
+    const storedLabels = await getAllLabels();
+    const qaLabels = await getAllQuestionAnswersLabels();
+
+    const filteredLabels = storedLabels.filter((label) => labels.includes(label.text));
+    const filteredQALabels = qaLabels.filter(
+      (qal) => filteredLabels.map(label => label.id).includes(qal.labelId));
+    const filteredQAList = qaList.filter(
+      (qa) => filteredQALabels.map(qal => qal.questionAnswerId).includes(qa.id));
+
+    return filteredQAList;
+  };
+
+  const filterQuestionAnswersByNextSeeDate = async (
+    qaList: QuestionAnswerStored[], 
+    nextSeeDate?: string | null
+  ): Promise<QuestionAnswerStored[]> => {
+
+    if (typeof nextSeeDate === 'undefined') {
+      return qaList;
+    }
+
+    if (nextSeeDate === null) {
+      return qaList.filter((qa) => !qa.nextSeeDate);
+    }
+
+    return qaList.filter((qa) => 
+      qa.nextSeeDate && 
+      getDifferenceInDays(nextSeeDate, qa.nextSeeDate) === 0);
+  };
+
+  const getAllQuestionAnswersByFilter = async (filter: Filter) => {
+    const { labels, nextSeeDate } = filter;
+    const qaList = await getAllQuestionAnswers();
+    console.log('qaList', qaList)
+    
+    const qaListFilteredByLabels = 
+      await filterQuestionAnswersByLabels(qaList, labels);
+    console.log('qaListFilteredByLabels', qaListFilteredByLabels)
+
+    const qaListFilteredByNextSeeDate = 
+      await filterQuestionAnswersByNextSeeDate(qaListFilteredByLabels, nextSeeDate);
+    console.log('qaListFilteredByNextSeeDate', qaListFilteredByNextSeeDate)
+  
+    return qaListFilteredByNextSeeDate;
+  };
+
+  const deleteEntry = ({
+    id,
+    table,
+  }: {
+    id: number, 
+    table: tables
+  }): Promise<void> => {
+    return new Promise((acc, reject) => {
+      try {
+        if (db) {
+
+          const transaction = db.transaction(table, 'readwrite');
+          const store = transaction.objectStore(table);
+          const request = store.delete(id);
+
+          request.onerror = () => {
+            console.log('Error at delete entry');
+            reject('Error at delete entry');
+          };
+
+          request.onsuccess = (event: any) => {
+            console.log('Success at delete entry');
+            acc();
+          };
+        }
+      } catch (err) {
+        console.log('Error at delete entry', err);
+        reject('Error at delete entry');
+      }
+    });
+  };
+
+  const removeLabelsFromQA = async ({
+    questionAnswerId, 
+    labels
+  }: {
+    questionAnswerId: number, 
+    labels: string[]
+  }): Promise<void> => {
+
+    const labelsStored = await getAllLabels();
+    const filteredLabels = labelsStored.filter((l) => labels.includes(l.text));
+    const qaLabels = await getAllQuestionAnswersLabels();
+    const qaLabelsFiltered = qaLabels.filter(
+      (qal) => 
+        qal.questionAnswerId === questionAnswerId && 
+        filteredLabels.map(l => l.id).includes(qal.labelId));
+
+    // remove qaLabelsFiltered from store
+    for (const qaLabel of qaLabelsFiltered) {
+      await deleteEntry({
+        id: qaLabel.id,
+        table: tables.QUESTIONS_ANSWERS_LABELS
+      });
+    }
+  };
+
   return {
     insertQuestionAnswer,
     insertLabels,
@@ -251,7 +362,9 @@ const useDbMethods = () => {
     getAllQuestionAnswers,
     updateQuestionAnswer,
     findLabelByText,
-    addLabelToQuestionAnswer
+    addLabelToQuestionAnswer,
+    getAllQuestionAnswersByFilter,
+    removeLabelsFromQA,
   };
 };
 
