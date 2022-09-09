@@ -11,12 +11,13 @@ const LabelComponent = ({ addLabel }: { addLabel: (value: string) => void }): Re
   const insertLabel = (event: BaseSyntheticEvent) => {
     event.preventDefault();
     addLabel(text);
+    setText('');
   };
 
   return (
     <div>
       <form>
-        <input type="text" name="text" onChange={textChange} value={text}></input>
+        <input type="text" name="text" onChange={textChange} value={text} placeholder="label"></input>
         <input type="submit" onClick={insertLabel} value="Add Label" />
       </form>
     </div>

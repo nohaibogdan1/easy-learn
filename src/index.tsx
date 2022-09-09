@@ -14,7 +14,7 @@ root.render(
     <BrowserRouter>
       <nav>
         <Link to="/insert"> Add Question Answer </Link>
-        <Link to="/list"> Questions Answers </Link>
+        <Link to="/list"> Questions Answers (Disabled)</Link>
         <Link to="/test"> Test </Link>
       </nav>
       <Routes>

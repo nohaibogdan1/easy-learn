@@ -6,6 +6,7 @@ import { LEVELS } from '../constants';
 import { calculateNewLastSawDate, calculateNextSeeDate } from '../logic/questionAnswer';
 import { formatDate, isTruthyValue } from '../logic/utils';
 import useDbMethods from '../db/useDb';
+import './DisplayCards.css';
 
 const DisplayCards = ({
   cards,
@@ -23,6 +24,7 @@ const DisplayCards = ({
   } = useDbMethods();
 
   const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
+  const [showAnswer, setShowAnswer] = useState(false);
 
   const currentCard: Card | undefined = cards[currentCardIndex];
 
@@ -101,11 +103,9 @@ const DisplayCards = ({
 
         } else {
           await insertLabels({
-            labels: [
-              {
-                text: level
-              }
-            ],
+            labels: [{
+              text: level
+            }],
             questionAnswerId: currentCard.id
           });
         }
@@ -113,6 +113,7 @@ const DisplayCards = ({
         // update state
         const nextCardIndex = currentCardIndex + 1;
         setCurrentCardIndex(nextCardIndex);
+        setShowAnswer(false);
         if (nextCardIndex === cards.length) {
           onFinish();
         }
@@ -124,22 +125,31 @@ const DisplayCards = ({
     })();
   };
 
+  const onShowAnswer = () => {
+    if (!showAnswer){
+      setShowAnswer(true);
+    }
+  };
+
   return (
     <div>
       {showCard && (
-        <div>
-          <div>Question: {currentCard.question}</div>
-          <div>Answer: {currentCard.answer}</div>
-          <div>Last seen {lastSawDateFormatted}</div>
-          <button onClick={getNextCard(LEVELS.EASY)}>
-            {LEVELS.EASY} - {nextSeeDateFormatted[LEVELS.EASY]}
-          </button>
-          <button onClick={getNextCard(LEVELS.MEDIUM)}>
-            {LEVELS.MEDIUM} - {nextSeeDateFormatted[LEVELS.MEDIUM]}
-          </button>
-          <button onClick={getNextCard(LEVELS.HARD)}>
-            {LEVELS.HARD} - {nextSeeDateFormatted[LEVELS.HARD]}
-          </button>
+        <div className='card'>
+          <div className='question'>{currentCard.question} ?</div>
+          {showAnswer && <div className='answer'>{currentCard.answer}</div>}
+          {!showAnswer && <button onClick={onShowAnswer}>Show answer</button>}
+          <div className='last-seen'>Last seen {lastSawDateFormatted}</div>
+          <div className='buttons'>
+            <button onClick={getNextCard(LEVELS.EASY)} disabled={!showAnswer}>
+              <div className='level'>{LEVELS.EASY}</div> <div className='next-see-date'>{nextSeeDateFormatted[LEVELS.EASY]}</div>
+            </button>
+            <button onClick={getNextCard(LEVELS.MEDIUM)} disabled={!showAnswer}>
+              <div className='level'>{LEVELS.MEDIUM}</div> <div className='next-see-date'>{nextSeeDateFormatted[LEVELS.MEDIUM]}</div>
+            </button>
+            <button onClick={getNextCard(LEVELS.HARD)} disabled={!showAnswer}>
+              <div className='level'>{LEVELS.HARD}</div> <div className='next-see-date'> {nextSeeDateFormatted[LEVELS.HARD]}</div>
+            </button>
+          </div>
         </div>
       )}
     </div>

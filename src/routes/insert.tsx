@@ -4,6 +4,7 @@ import React, { ReactElement, useState } from 'react';
 import { QuestionAnswerInsertion, Label } from '../types';
 import useDb from '../db/useDb';
 import LabelComponent from '../components/Label';
+import './insert.css';
 
 const Insert = (): ReactElement => {
   const [data, setData] = useState<QuestionAnswerInsertion>({
@@ -18,8 +19,6 @@ const Insert = (): ReactElement => {
     setData((data) => {
       const uniqueLabelsSet = Array.from(new Set([...data.labels.map((l) => l.text), text]));
       const uniqueLabels = uniqueLabelsSet.map((text) => ({ text }));
-
-      console.log('uniqueLabels', uniqueLabels);
 
       return {
         ...data,
@@ -40,38 +39,47 @@ const Insert = (): ReactElement => {
   const addQuestionAnswer = (event: React.SyntheticEvent) => {
     event.preventDefault();
 
-    insertQuestionAnswer({
-      question: data.question,
-      answer: data.answer
-    }).then((questionAnswerId: number) => {
-      console.log('addQuestionAnswer: questionAnswerId', questionAnswerId);
+    (async () => {
+      try {
+        const questionAnswerId = await insertQuestionAnswer({
+          question: data.question,
+          answer: data.answer
+        });
 
-      insertLabels({
-        questionAnswerId,
-        labels: data.labels
-      });
-    });
+        await insertLabels({
+          questionAnswerId,
+          labels: data.labels
+        });
+
+        setData({
+          question: '',
+          answer: '',
+          labels: []
+        })
+
+      } catch (err) {}
+    })();
   };
 
   return (
     <div>
       <form>
-        <input
+        <div className='label'>Question: </div>
+        <textarea
           value={data.question}
-          type="text"
           name="question"
           id="question"
           onChange={changeQuestionAnswer}
         />
-        <input
+        <div className='label'>Answer: </div>
+        <textarea
           value={data.answer}
-          type="text"
           name="answer"
           id="answer"
           onChange={changeQuestionAnswer}
         />
-        Labels:
-        <ul>
+        <div className='label'>Labels:</div>
+        <ul className='labels'>
           {data.labels.map((l) => (
             <li key={l.text}>{l.text}</li>
           ))}

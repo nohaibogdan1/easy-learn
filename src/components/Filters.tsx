@@ -2,6 +2,7 @@ import { BaseSyntheticEvent, ReactElement, useState } from "react";
 import { LEVELS } from "../constants";
 
 import { Filter, SelectedLevels } from "../types";
+import './Filters.css';
 
 const Filters = ({
   today,
@@ -27,13 +28,12 @@ const Filters = ({
   };
 
   return (
-    <>
-      <div>
+    <div className="filters margin-bottom-small">
+      <div className="today margin-bottom-small">
         <label htmlFor='today'>Today</label>
         <input type="checkbox" name='today' id='today' checked={today} onChange={onChangeToday}/>
       </div>
-      <div>
-        <div>level</div>
+      <div className="level margin-bottom-small">
         <div>
           <label htmlFor='easy'>Easy</label>
           <input type="checkbox" name={LEVELS.EASY} id={LEVELS.EASY} checked={levels[LEVELS.EASY]} onChange={onChangeLevels}/>
@@ -47,7 +47,7 @@ const Filters = ({
           <input type="checkbox" name={LEVELS.HARD} id={LEVELS.HARD} checked={levels[LEVELS.HARD]} onChange={onChangeLevels}/>
         </div>
       </div>
-    </>
+    </div>
   )
 };
 

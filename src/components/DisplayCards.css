@@ -1,0 +1,61 @@
+.card {
+    margin-top: 20px;
+    font-size: 2em;
+    border: solid 2px grey;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.question {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.answer {
+    margin-bottom: 40px;
+    padding-left: 20px;
+    padding-right: 20px; 
+}
+
+.last-seen {
+    margin-bottom: 20px;
+}
+
+.buttons {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+
+
+button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.level {
+    text-transform: uppercase;
+    font-weight: bolder;
+}
+
+.next-see-date {
+
+}
+
+
+@media screen and (max-width: 400px) {
+    .last-seen {
+        /* font-size: 0.6em; */
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    button {
+        margin-bottom: 20px;
+    }
+  }

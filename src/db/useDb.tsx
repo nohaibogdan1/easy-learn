@@ -285,15 +285,12 @@ const useDbMethods = () => {
   const getAllQuestionAnswersByFilter = async (filter: Filter) => {
     const { labels, nextSeeDate } = filter;
     const qaList = await getAllQuestionAnswers();
-    console.log('qaList', qaList)
     
     const qaListFilteredByLabels = 
       await filterQuestionAnswersByLabels(qaList, labels);
-    console.log('qaListFilteredByLabels', qaListFilteredByLabels)
 
     const qaListFilteredByNextSeeDate = 
       await filterQuestionAnswersByNextSeeDate(qaListFilteredByLabels, nextSeeDate);
-    console.log('qaListFilteredByNextSeeDate', qaListFilteredByNextSeeDate)
   
     return qaListFilteredByNextSeeDate;
   };
