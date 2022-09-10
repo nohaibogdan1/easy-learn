@@ -4,4 +4,6 @@ enum LEVELS {
   EASY = 'easy'
 }
 
-export { LEVELS };
+const LABELS_SEPARATOR = ',';
+
+export { LEVELS, LABELS_SEPARATOR };

@@ -110,6 +110,18 @@ const useDbMethods = () => {
     });
   };
 
+  const insertOnlyLabel = async (data: Label): Promise<number> => {
+    const { text } = data;
+    return insertData({ text }, tables.LABELS);
+  };
+
+  const insertQALabel = async (data: {
+    questionAnswerId: number;
+    labelId: number;
+  }): Promise<number> => {
+    return insertData(data, tables.QUESTIONS_ANSWERS_LABELS);
+  };
+
   const insertLabels = (data: AssociatedLabels): Promise<void> => {
     return new Promise((acc, reject) => {
       const promises: Promise<void>[] = [];
@@ -356,7 +368,10 @@ const useDbMethods = () => {
     findLabelByText,
     addLabelToQuestionAnswer,
     getAllQuestionAnswersByFilter,
-    removeLabelsFromQA
+    removeLabelsFromQA,
+    getAllLabels,
+    insertOnlyLabel,
+    insertQALabel
   };
 };
 

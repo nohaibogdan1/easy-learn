@@ -8,7 +8,12 @@ interface QuestionAnswer {
   nextSeeDate: string | null;
 }
 
-type QuestionAnswerAdd = Omit<QuestionAnswer, 'lastSawDate' | 'nextSeeDate'>;
+type QuestionAnswerAdd = {
+  question: string;
+  answer: string;
+  lastSawDate?: string | null;
+  nextSeeDate?: string | null;
+};
 
 type QuestionAnswerInsertion = QuestionAnswerAdd & {
   labels: Label[];
@@ -65,6 +70,18 @@ interface Filter {
   nextSeeDate?: string;
 }
 
+interface Obj {
+  [key: string]: string | number;
+}
+
+type ExcelRow = Partial<QuestionAnswer> & {
+  labels?: string;
+};
+
+type ExcelRowSanitized = QuestionAnswer & {
+  labels?: string;
+};
+
 export type {
   QuestionAnswer,
   QuestionAnswerStored,
@@ -80,5 +97,8 @@ export type {
   QuestionAnswerLabelStored,
   NextSeeDate,
   Filter,
-  SelectedLevels
+  SelectedLevels,
+  Obj,
+  ExcelRow,
+  ExcelRowSanitized
 };

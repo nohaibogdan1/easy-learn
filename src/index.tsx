@@ -7,6 +7,7 @@ import List from './routes/list';
 import Insert from './routes/insert';
 import Test from './routes/test';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import Data from './routes/data';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
@@ -16,12 +17,14 @@ root.render(
         <Link to="/insert"> Add Question Answer </Link>
         <Link to="/list"> Questions Answers (Disabled)</Link>
         <Link to="/test"> Test </Link>
+        <Link to="/data"> Import Export </Link>
       </nav>
       <Routes>
         <Route path="/" element={<App />}></Route>
         <Route path="list" element={<List />}></Route>
         <Route path="insert" element={<Insert />}></Route>
         <Route path="test" element={<Test />}></Route>
+        <Route path="data" element={<Data />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
