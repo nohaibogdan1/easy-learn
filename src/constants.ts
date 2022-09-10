@@ -6,4 +6,6 @@ enum LEVELS {
 
 const LABELS_SEPARATOR = ',';
 
-export { LEVELS, LABELS_SEPARATOR };
+const ROOT_NAME = 'easy-learn';
+
+export { LEVELS, LABELS_SEPARATOR, ROOT_NAME };

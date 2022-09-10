@@ -8,23 +8,23 @@ import Insert from './routes/insert';
 import Test from './routes/test';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import Data from './routes/data';
+import { ROOT_NAME } from './constants';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <nav>
-        <Link to="/insert"> Add Question Answer </Link>
-        <Link to="/list"> Questions Answers (Disabled)</Link>
-        <Link to="/test"> Test </Link>
-        <Link to="/data"> Import Export </Link>
+        <Link to={ROOT_NAME + '/insert'}> Add Question Answer </Link>
+        <Link to={ROOT_NAME + '/test'}> Test </Link>
+        <Link to={ROOT_NAME + '/data'}> Import </Link>
       </nav>
       <Routes>
-        <Route path="/" element={<App />}></Route>
-        <Route path="list" element={<List />}></Route>
-        <Route path="insert" element={<Insert />}></Route>
-        <Route path="test" element={<Test />}></Route>
-        <Route path="data" element={<Data />}></Route>
+        <Route path={ROOT_NAME + '/'} element={<App />}></Route>
+        <Route path={ROOT_NAME + '/list'} element={<List />}></Route>
+        <Route path={ROOT_NAME + '/insert'} element={<Insert />}></Route>
+        <Route path={ROOT_NAME + '/test'} element={<Test />}></Route>
+        <Route path={ROOT_NAME + '/data'} element={<Data />}></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

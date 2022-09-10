@@ -1,0 +1,10 @@
+.message,
+.error,
+.success {
+  font-size: 2em;
+  margin-bottom: 40px;
+}
+
+.message {
+  max-width: 400px;
+}

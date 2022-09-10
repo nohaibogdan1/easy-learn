@@ -1,6 +1,5 @@
 /* eslint-disable */
 
-
 import { ExcelRow, ExcelRowSanitized } from '../types';
 import useDbMethods from '../db/useDb';
 import { LABELS_SEPARATOR } from '../constants';
