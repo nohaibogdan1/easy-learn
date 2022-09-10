@@ -1,3 +1,6 @@
+/* eslint-disable */
+
+
 import { ExcelRow, ExcelRowSanitized } from '../types';
 import useDbMethods from '../db/useDb';
 import { LABELS_SEPARATOR } from '../constants';
@@ -64,11 +67,7 @@ const useSaveData = () => {
   } = useDbMethods();
 
   const saveData = async (jsonSheet: Object[]): Promise<void> => {
-    console.log('saveData');
-
     const jsonSheetSanitized = sanitize(jsonSheet);
-
-    console.log('jsonSheetSanitized', jsonSheetSanitized);
 
     if (!jsonSheetSanitized.length) {
       return;
@@ -78,10 +77,6 @@ const useSaveData = () => {
     const labelsList = await getAllLabels();
     const parsedLabels = parseLabels(jsonSheetSanitized);
     const completedLabelsList = [...labelsList];
-
-    console.log('qaList', qaList);
-    console.log('labelsList', labelsList);
-    console.log('parsedLabels', parsedLabels);
 
     // insert all labels
     for (const parsedLabel of parsedLabels) {
@@ -93,8 +88,6 @@ const useSaveData = () => {
       const labelId = await insertOnlyLabel({ text: parsedLabel });
       completedLabelsList.push({ text: parsedLabel, id: labelId });
     }
-
-    console.log('completedLabelsList', completedLabelsList);
 
     // insert all questions and answers
     for (const row of jsonSheetSanitized) {

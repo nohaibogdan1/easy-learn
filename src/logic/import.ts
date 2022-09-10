@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import * as xlsx from 'xlsx';
 
 import { ExcelRow } from '../types';

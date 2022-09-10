@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { ReactElement, useState } from 'react';
 
 import { parseXLSToJson } from '../logic/import';
@@ -18,6 +19,7 @@ const Data = (): ReactElement => {
       if (text) {
         // parse the text
         await saveData(parseXLSToJson(text));
+        setImportFinished(true);
       }
     };
   };
