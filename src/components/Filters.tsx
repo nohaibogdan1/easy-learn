@@ -3,7 +3,7 @@
 import React, { BaseSyntheticEvent, ReactElement, useState } from 'react';
 import { LEVELS } from '../constants';
 
-import { Filter, SelectedLevels } from '../types';
+import { Filter, LabelStored, SelectedLevels } from '../types';
 import './Filters.css';
 import LabelsFilter from './LabelsFilter';
 
@@ -11,12 +11,16 @@ const Filters = ({
   today,
   setToday,
   levels,
-  setLevels
+  setLevels,
+  labels,
+  onSelectLabel,
 }: {
   today: boolean;
   setToday: (arg: boolean) => void;
   levels: SelectedLevels;
   setLevels: (arg: (levels: SelectedLevels) => SelectedLevels) => void;
+  labels: LabelStored[],
+  onSelectLabel: (arg: number) => void,
 }): ReactElement => {
   const onChangeToday = (event: BaseSyntheticEvent) => {
     setToday(event.target.checked);
@@ -67,7 +71,7 @@ const Filters = ({
           />
         </div>
       </div>
-      <LabelsFilter/>
+      <LabelsFilter labels={labels} onSelectLabel={onSelectLabel}/>
     </div>
   );
 };

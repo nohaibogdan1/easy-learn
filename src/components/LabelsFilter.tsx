@@ -5,23 +5,8 @@ import { Label, LabelStored } from '../types';
 import './LabelsFilter.css';
 import { useDbStore } from '../stores/db-store/store';
 
-const LabelsFilter = (): ReactElement => {
-  const [labels, setLabels] = useState<LabelStored[]>([]);
-  const [selectedLabels, setSelectedLabels] = useState<Label[]>([]);
+const LabelsFilter = ({labels, onSelectLabel}: {labels: LabelStored[], onSelectLabel: (arg: number) => void}): ReactElement => {
   const [expanded, setExpanded] = useState<boolean>(false);
-
-  const {state: {db}, getAllLabels} = useDbStore();
-
-  useEffect(() => {
-    (async () => {
-      if (db) {
-        const storedLabels = await getAllLabels();
-        setLabels(storedLabels);
-        return;
-      }
-      setLabels([]);
-    })();
-  }, [db]);
 
   const onInputClick = () => {
     setExpanded(true);

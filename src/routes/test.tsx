@@ -4,9 +4,10 @@ import React, { ReactElement, useEffect, useState } from 'react';
 
 import useRandomTests from '../hooks/useRandomTests';
 import DisplayCards from '../components/DisplayCards';
-import { Card, Filter, QuestionAnswerStored, SelectedLevels } from '../types';
+import { Card, Filter, LabelStored, QuestionAnswerStored, SelectedLevels } from '../types';
 import Filters from '../components/Filters';
 import { LEVELS } from '../constants';
+import { useDbStore } from '../stores/db-store/store';
 
 import './test.css';
 
@@ -20,8 +21,27 @@ const Test = (): ReactElement => {
     [LEVELS.HARD]: false
   });
   const [start, setStart] = useState(true);
+  const [labels, setLabels] = useState<LabelStored[]>([]);
+
+  const {state: {db}, getAllLabels} = useDbStore();
 
   const { getQuestionAnswersByFilter } = useRandomTests();
+
+  useEffect(() => {
+    (async () => {
+      if (db) {
+        console.log("BLAAA")
+        const storedLabels = await getAllLabels();
+        setLabels(storedLabels);
+        return;
+      }
+      setLabels([]);
+    })();
+  }, [Boolean(db)]);
+
+  useEffect(() => {
+    console.log('REMDER');
+  }, [])
 
   const getFilteredTests = (): void => {
     setFinish(false);
@@ -42,10 +62,21 @@ const Test = (): ReactElement => {
     setFinish(true);
     setStart(true);
   };
+  
+  const onSelectLabel = (labelId: number): void => {
+
+  };
 
   return (
     <div className="main">
-      <Filters today={today} levels={levels} setToday={setToday} setLevels={setLevels} />
+      <Filters 
+        today={today} 
+        levels={levels} 
+        labels={labels} 
+        setToday={setToday} 
+        setLevels={setLevels} 
+        onSelectLabel={onSelectLabel}
+      />
       <button onClick={getFilteredTests}>Get tests</button>
       {!finish && Boolean(cards.length) && <DisplayCards cards={cards} onFinish={onFinish} />}
       {finish && <div>Congrats</div>}
