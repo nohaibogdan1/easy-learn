@@ -5,8 +5,8 @@ import { Card, NextSeeDate } from '../types';
 import { LEVELS } from '../constants';
 import { calculateNewLastSawDate, calculateNextSeeDate } from '../logic/questionAnswer';
 import { formatDate, isTruthyValue } from '../logic/utils';
-import useDbMethods from '../db/useDb';
 import './DisplayCards.css';
+import { useDbStore } from '../stores/db-store/store';
 
 const DisplayCards = ({
   cards,
@@ -21,7 +21,7 @@ const DisplayCards = ({
     findLabelByText,
     addLabelToQuestionAnswer,
     removeLabelsFromQA
-  } = useDbMethods();
+  } = useDbStore();
 
   const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
   const [showAnswer, setShowAnswer] = useState(false);

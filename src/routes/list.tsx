@@ -2,12 +2,12 @@
 import React, { useState, ReactElement } from 'react';
 
 import { QuestionAnswerStored } from '../types';
-import useDb from '../db/useDb';
+import { useDbStore } from '../stores/db-store/store';
 
 const List = (): ReactElement => {
   const [data, setData] = useState<QuestionAnswerStored[]>([]);
 
-  const { getAllQuestionAnswers } = useDb();
+  const { getAllQuestionAnswers } = useDbStore();
 
   const getStoredData = (): void => {
     const a = getAllQuestionAnswers();

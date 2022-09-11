@@ -1,9 +1,10 @@
 /* eslint-disable */
 import useDbMethods from '../db/useDb';
 import { QuestionAnswerStored, SelectedLevels } from '../types';
+import { useDbStore } from '../stores/db-store/store';
 
 const useRandomTests = () => {
-  const { getAllQuestionAnswers, getAllQuestionAnswersByFilter } = useDbMethods();
+  const { getAllQuestionAnswers, getAllQuestionAnswersByFilter } = useDbStore();
 
   const getRandomTests = (): Promise<QuestionAnswerStored[]> => {
     return new Promise((acc, reject) => {

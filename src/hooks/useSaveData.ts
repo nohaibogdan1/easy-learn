@@ -1,8 +1,8 @@
 /* eslint-disable */
 
 import { ExcelRow, ExcelRowSanitized } from '../types';
-import useDbMethods from '../db/useDb';
 import { LABELS_SEPARATOR } from '../constants';
+import { useDbStore } from '../stores/db-store/store';
 
 const sanitize = (jsonSheet: ExcelRow[]): ExcelRowSanitized[] => {
   const sanitizedData: ExcelRowSanitized[] = [];
@@ -63,7 +63,7 @@ const useSaveData = () => {
     getAllLabels,
     insertOnlyLabel,
     insertQALabel
-  } = useDbMethods();
+  } = useDbStore();
 
   const saveData = async (jsonSheet: Object[]): Promise<void> => {
     const jsonSheetSanitized = sanitize(jsonSheet);

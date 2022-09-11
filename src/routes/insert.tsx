@@ -5,6 +5,7 @@ import { QuestionAnswerInsertion, Label } from '../types';
 import useDb from '../db/useDb';
 import LabelComponent from '../components/Label';
 import './insert.css';
+import { useDbStore } from '../stores/db-store/store';
 
 const Insert = (): ReactElement => {
   const [data, setData] = useState<QuestionAnswerInsertion>({
@@ -13,7 +14,7 @@ const Insert = (): ReactElement => {
     labels: []
   });
 
-  const { insertQuestionAnswer, insertLabels } = useDb();
+  const { insertQuestionAnswer, insertLabels } = useDbStore();
 
   const addLabel = (text: string) => {
     setData((data) => {

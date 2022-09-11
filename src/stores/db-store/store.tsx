@@ -30,7 +30,7 @@ export type IDbContext = {
   updateQuestionAnswer: (data: QuestionAnswerModification) => Promise<void>,
   findLabelByText: (text: string) => Promise<number | undefined>,
   addLabelToQuestionAnswer: (data: QuestionAnswerLabel) => Promise<void> ,
-  getAllQuestionAnswersByFilter: (filter: Filter) => void,
+  getAllQuestionAnswersByFilter: (filter: Filter) => Promise<QuestionAnswerStored[]>,
   removeLabelsFromQA: ({
     questionAnswerId,
     labels
@@ -217,12 +217,9 @@ export const DbStoreProvider = ({
   const getAll = (
     table: tables
   ): Promise<(QuestionAnswerStored | LabelStored | QuestionAnswerLabelStored)[]> => {
-
-    console.log('getAll')
-
-
     return new Promise((acc, reject) => {
       const { db } = state;
+
       if (db) {
         try {
           const transaction = db.transaction(table, 'readwrite');
@@ -383,7 +380,7 @@ export const DbStoreProvider = ({
     );
   };
 
-  const getAllQuestionAnswersByFilter = async (filter: Filter) => {
+  const getAllQuestionAnswersByFilter = async (filter: Filter): Promise<QuestionAnswerStored[]> => {
     const { labels, nextSeeDate } = filter;
     const qaList = await getAllQuestionAnswers();
 
