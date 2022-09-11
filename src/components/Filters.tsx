@@ -5,6 +5,7 @@ import { LEVELS } from '../constants';
 
 import { Filter, SelectedLevels } from '../types';
 import './Filters.css';
+import LabelsFilter from './LabelsFilter';
 
 const Filters = ({
   today,
@@ -66,6 +67,7 @@ const Filters = ({
           />
         </div>
       </div>
+      <LabelsFilter/>
     </div>
   );
 };

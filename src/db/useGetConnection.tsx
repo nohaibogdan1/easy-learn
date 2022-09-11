@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 
 import { tables } from './tables';
 
-const useGetConnection = () => {
-  const [db, setDb] = useState<IDBDatabase | null>(null);
+const useGetConnection = (f: (arg: any) => void) => {
+  // const [db, setDb] = useState<IDBDatabase | null>(null);
 
   const openDb = () => {
     const request = window.indexedDB.open('Bla1', 2);
@@ -14,7 +14,8 @@ const useGetConnection = () => {
 
     request.onsuccess = (event) => {
       console.log('Susccess', event);
-      setDb(request.result);
+      // setDb(request.result);
+      f(request.result)
     };
 
     request.onupgradeneeded = (event: any) => {
@@ -41,7 +42,7 @@ const useGetConnection = () => {
     openDb();
   }, []);
 
-  return db;
+  return openDb;
 };
 
 export default useGetConnection;

@@ -9,24 +9,27 @@ import Test from './routes/test';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import Data from './routes/data';
 import { ROOT_NAME } from './constants';
+import { DbStoreProvider } from './stores/db-store/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <nav>
-        <Link to={ROOT_NAME + '/insert'}> Add Question Answer </Link>
-        <Link to={ROOT_NAME + '/test'}> Test </Link>
-        <Link to={ROOT_NAME + '/data'}> Import </Link>
-      </nav>
-      <Routes>
-        <Route path={ROOT_NAME + '/'} element={<App />}></Route>
-        <Route path={ROOT_NAME + '/list'} element={<List />}></Route>
-        <Route path={ROOT_NAME + '/insert'} element={<Insert />}></Route>
-        <Route path={ROOT_NAME + '/test'} element={<Test />}></Route>
-        <Route path={ROOT_NAME + '/data'} element={<Data />}></Route>
-      </Routes>
-    </BrowserRouter>
+    <DbStoreProvider>
+      <BrowserRouter>
+        <nav>
+          <Link to={ROOT_NAME + '/insert'}> Add Question Answer </Link>
+          <Link to={ROOT_NAME + '/test'}> Test </Link>
+          <Link to={ROOT_NAME + '/data'}> Import </Link>
+        </nav>
+        <Routes>
+          <Route path={ROOT_NAME + '/'} element={<App />}></Route>
+          <Route path={ROOT_NAME + '/list'} element={<List />}></Route>
+          <Route path={ROOT_NAME + '/insert'} element={<Insert />}></Route>
+          <Route path={ROOT_NAME + '/test'} element={<Test />}></Route>
+          <Route path={ROOT_NAME + '/data'} element={<Data />}></Route>
+        </Routes>
+      </BrowserRouter>
+    </DbStoreProvider>
   </React.StrictMode>
 );
 

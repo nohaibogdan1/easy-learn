@@ -1,8 +1,7 @@
-/* eslint-disable */
-import { useEffect, useState } from 'react';
-import useGetConnection from './useGetConnection';
-import {
-  QuestionAnswer,
+import React, { createContext, useContext, PropsWithChildren, useState, ReactElement, useEffect } from 'react';
+
+import { tables } from '../../db/tables';
+import {  QuestionAnswer,
   QuestionAnswerStored,
   Label,
   LabelStored,
@@ -13,31 +12,96 @@ import {
   QuestionAnswerLabel,
   QuestionAnswerModification,
   QuestionAnswerLabelStored,
-  Filter
-} from '../types';
-import { tables } from './tables';
-import { getDifferenceInDays } from '../logic/questionAnswer';
+  Filter } from '../../types';
 
-import { useDbStore } from '../stores/db-store/store';
+import { getDifferenceInDays } from '../../logic/questionAnswer';
 
-// const useDbMethods = (db?: IDBDatabase | null) => {
-const useDbMethods = (f?: () => void) => {
 
-  const { state: {db}} = useDbStore();
+type DbState = {
+  db: IDBDatabase | null;
+}
 
-  console.log('blaaaa', db)
+export type IDbContext = {
+  state: DbState,
+  insertQuestionAnswer: (data: QuestionAnswerAdd) => Promise<number>,
+  insertLabels: (data: AssociatedLabels) => Promise<void> ,
+  insertLabel: (data: AssociatedLabel) => Promise<void>,
+  getAllQuestionAnswers: () => Promise<QuestionAnswerStored[]>,
+  updateQuestionAnswer: (data: QuestionAnswerModification) => Promise<void>,
+  findLabelByText: (text: string) => Promise<number | undefined>,
+  addLabelToQuestionAnswer: (data: QuestionAnswerLabel) => Promise<void> ,
+  getAllQuestionAnswersByFilter: (filter: Filter) => void,
+  removeLabelsFromQA: ({
+    questionAnswerId,
+    labels
+  }: {
+    questionAnswerId: number;
+    labels: string[];
+  }) => Promise<void>,
+  getAllLabels: () => Promise<LabelStored[]>,
+  insertOnlyLabel: (data: Label) => Promise<number>,
+  insertQALabel: (data: {
+    questionAnswerId: number;
+    labelId: number;
+  }) => Promise<number>
+};
 
-  // useEffect(() => {
-  //   if (db) {
-  //     f?.();
-  //   }
-  // }, [Boolean(db)]);
+const initialDbState = {
+  db: null
+}
+
+const defaultValue = {
+  state: initialDbState
+}
+
+export const DbContext = createContext(defaultValue as IDbContext);
+
+export const useDbStore = (): IDbContext => useContext(DbContext);
+
+export const DbStoreProvider = ({
+  children,
+}: PropsWithChildren<Record<string, unknown>>): ReactElement => {
+
+  const [state, setState] = useState<DbState>(initialDbState);
+
+  const openDb = () => {
+    const request = window.indexedDB.open('Bla1', 2);
+    request.onerror = (event) => {
+      console.log('Error', event);
+    };
+
+    request.onsuccess = (event) => {
+      console.log('Here Susccess', event);
+      setState((state) => ({...state, db: request.result}));
+    };
+
+    request.onupgradeneeded = (event: any) => {
+      console.log('upgradee');
+
+      event.currentTarget?.result?.createObjectStore(tables.QUESTIONS_ANSWERS, {
+        keyPath: 'id',
+        autoIncrement: true
+      });
+
+      event.currentTarget?.result?.createObjectStore(tables.LABELS, {
+        keyPath: 'id',
+        autoIncrement: true
+      });
+
+      event.currentTarget?.result?.createObjectStore(tables.QUESTIONS_ANSWERS_LABELS, {
+        keyPath: 'id',
+        autoIncrement: true
+      });
+    };
+  };
+
 
   const insertData = (
     data: QuestionAnswer | Label | QuestionAnswerLabel,
     table: tables
   ): Promise<number> => {
     return new Promise((acc, reject) => {
+      const { db } = state;
       if (db) {
         try {
           const transaction = db.transaction(table, 'readwrite');
@@ -158,7 +222,7 @@ const useDbMethods = (f?: () => void) => {
 
 
     return new Promise((acc, reject) => {
-      console.log('db', db)
+      const { db } = state;
       if (db) {
         try {
           const transaction = db.transaction(table, 'readwrite');
@@ -201,6 +265,7 @@ const useDbMethods = (f?: () => void) => {
   };
 
   const updateQuestionAnswer = (data: QuestionAnswerModification): Promise<void> => {
+    const { db } = state;
     return new Promise((acc, reject) => {
       try {
         if (db) {
@@ -333,6 +398,7 @@ const useDbMethods = (f?: () => void) => {
   };
 
   const deleteEntry = ({ id, table }: { id: number; table: tables }): Promise<void> => {
+    const { db } = state;
     return new Promise((acc, reject) => {
       try {
         if (db) {
@@ -382,8 +448,12 @@ const useDbMethods = (f?: () => void) => {
     }
   };
 
-  return {
-    insertQuestionAnswer,
+
+  useEffect(() => {
+    openDb();
+  }, []);
+  
+  return <DbContext.Provider value={{state,  insertQuestionAnswer,
     insertLabels,
     insertLabel,
     getAllQuestionAnswers,
@@ -394,8 +464,7 @@ const useDbMethods = (f?: () => void) => {
     removeLabelsFromQA,
     getAllLabels,
     insertOnlyLabel,
-    insertQALabel
-  };
-};
+    insertQALabel}}>{children}</DbContext.Provider>
+}
 
-export default useDbMethods;
+

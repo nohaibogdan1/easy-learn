@@ -7,6 +7,7 @@ import DisplayCards from '../components/DisplayCards';
 import { Card, Filter, QuestionAnswerStored, SelectedLevels } from '../types';
 import Filters from '../components/Filters';
 import { LEVELS } from '../constants';
+import { useDbStore } from '../stores/db-store/store';
 
 import './test.css';
 
@@ -20,6 +21,10 @@ const Test = (): ReactElement => {
     [LEVELS.HARD]: false
   });
   const [start, setStart] = useState(true);
+
+  // const a = useDbStore();
+
+  // console.log('a', a)
 
   const { getQuestionAnswersByFilter } = useRandomTests();
 

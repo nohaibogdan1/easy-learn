@@ -1,0 +1,17 @@
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
+.labels-wrapper {
+  height: 100px;
+  overflow: auto;
+}
+
+.labels-container {
+  background-color: red;
+  width: 200px;
+}
