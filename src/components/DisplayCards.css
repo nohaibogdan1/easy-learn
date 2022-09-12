@@ -4,6 +4,8 @@
   border: solid 2px grey;
   border-radius: 20px;
   padding: 20px;
+  height: 55vh;
+  position: relative;
 }
 
 .question {
@@ -22,16 +24,19 @@
 }
 
 .buttons {
+  margin-top: 20px;
   display: flex;
-  width: 100%;
-  justify-content: center;
+  width: 200px;
+  justify-content: left;
+  position: absolute;
+  bottom: 10px;
 }
 
-button {
+.buttons button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 20px;
+  margin-right: 10px;
 }
 
 .level {
@@ -39,19 +44,20 @@ button {
   font-weight: bolder;
 }
 
-.next-see-date {
+.visible {
+  visibility: visible;
 }
 
-@media screen and (max-width: 400px) {
-  .last-seen {
-    /* font-size: 0.6em; */
-  }
+.hidden {
+  visibility: hidden;
+}
 
+@media screen and (max-width: 300px) {
   .buttons {
     flex-direction: column;
+    width: auto;
   }
-
-  button {
-    margin-bottom: 20px;
+  .buttons button {
+    margin-bottom: 10px;
   }
 }

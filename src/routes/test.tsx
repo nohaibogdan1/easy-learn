@@ -4,6 +4,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 
 import useRandomTests from '../hooks/useRandomTests';
 import DisplayCards from '../components/DisplayCards';
+import FiltersSummary from '../components/FiltersSummary';
 import { Card, Filter, LabelStored, QuestionAnswerStored, SelectedLevels } from '../types';
 import Filters from '../components/Filters';
 import { LEVELS } from '../constants';
@@ -13,7 +14,6 @@ import './test.css';
 
 const Test = (): ReactElement => {
   const [cards, setCards] = useState<Card[]>([]);
-  const [finish, setFinish] = useState(false);
   const [today, setToday] = useState(false);
   const [levels, setLevels] = useState<SelectedLevels>({
     [LEVELS.EASY]: false,
@@ -21,16 +21,18 @@ const Test = (): ReactElement => {
     [LEVELS.HARD]: false
   });
   const [start, setStart] = useState(true);
+  const [finish, setFinish] = useState(false);
   const [labels, setLabels] = useState<LabelStored[]>([]);
+  const [selectedLabels, setSelectedLabels] = useState<LabelStored[]>([]);
+  const [questionsFinished, setQuestionsFinished] = useState<number>(0);
 
-  const {state: {db}, getAllLabels} = useDbStore();
+  const { state: { db }, getAllLabels } = useDbStore();
 
   const { getQuestionAnswersByFilter } = useRandomTests();
 
   useEffect(() => {
     (async () => {
       if (db) {
-        console.log("BLAAA")
         const storedLabels = await getAllLabels();
         setLabels(storedLabels);
         return;
@@ -39,9 +41,7 @@ const Test = (): ReactElement => {
     })();
   }, [Boolean(db)]);
 
-  useEffect(() => {
-    console.log('REMDER');
-  }, [])
+  const inProgress = !start && !finish;
 
   const getFilteredTests = (): void => {
     setFinish(false);
@@ -64,23 +64,70 @@ const Test = (): ReactElement => {
   };
   
   const onSelectLabel = (labelId: number): void => {
+    const label = labels.find((l) => l.id === labelId);
 
+    if (label) {
+      setSelectedLabels((labels) => [...labels, label]);
+    } else {
+      setSelectedLabels((labels) => [...labels]);
+    }
+  };
+
+  const onEndTesting = () => {
+    setFinish(true);
+  };
+
+  const onOk = () => {
+    setFinish(true);
+    setStart(true);
+  };
+
+  const onAnswerQuestion = (): void => {
+    setQuestionsFinished((questionsFinished) => 
+      questionsFinished + 1);
   };
 
   return (
     <div className="main">
-      <Filters 
-        today={today} 
-        levels={levels} 
-        labels={labels} 
-        setToday={setToday} 
-        setLevels={setLevels} 
-        onSelectLabel={onSelectLabel}
-      />
-      <button onClick={getFilteredTests}>Get tests</button>
-      {!finish && Boolean(cards.length) && <DisplayCards cards={cards} onFinish={onFinish} />}
-      {finish && <div>Congrats</div>}
-      {!start && !Boolean(cards.length) && <div>There are no tests</div>}
+      {inProgress && 
+        <FiltersSummary 
+          labels={selectedLabels}
+          levels={levels}
+          today={today}
+        />
+      }
+      {inProgress && 
+        <button onClick={onEndTesting}>End testing</button>
+      }
+      {start && 
+        <Filters 
+          today={today} 
+          levels={levels} 
+          labels={labels} 
+          setToday={setToday} 
+          setLevels={setLevels} 
+          onSelectLabel={onSelectLabel}
+        />
+      }
+      {start && 
+        <button onClick={getFilteredTests}>Get tests</button>
+      }
+      {!finish && Boolean(cards.length) && 
+        <DisplayCards 
+          cards={cards} 
+          onFinish={onFinish}
+          onAnswerQuestion={onAnswerQuestion}
+        />
+      }
+      {!start && finish && 
+        <div>
+          Congrats: you answered at {questionsFinished} questions
+          <button onClick={onOk}>ok</button>
+        </div>
+      }
+      {!start && !Boolean(cards.length) && 
+        <div>There are no tests</div>
+      }
     </div>
   );
 };

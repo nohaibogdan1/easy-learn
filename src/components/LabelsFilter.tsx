@@ -1,9 +1,9 @@
 /* eslint-disable */
 import React, { BaseSyntheticEvent, ReactElement, useEffect, useState } from 'react';
 
-import { Label, LabelStored } from '../types';
+import { LabelStored } from '../types';
 import './LabelsFilter.css';
-import { useDbStore } from '../stores/db-store/store';
+import { sortLabelsAlphabetically } from '../logic/utils';
 
 const LabelsFilter = ({
   labels, 
@@ -18,7 +18,7 @@ const LabelsFilter = ({
   const [displayedLabels, setDisplayedLabels] = useState<LabelStored[]>([]);
 
   useEffect(() => {
-    setDisplayedLabels(labels);
+    setDisplayedLabels(labels.sort(sortLabelsAlphabetically));
   }, [labels.length]);
 
   useEffect(() => {
@@ -28,24 +28,16 @@ const LabelsFilter = ({
   }, [searchValue]);
 
   useEffect(() => {
+    const filteredLabels = labels.filter((l) => 
+      !selectedLabels.find((sl) => sl.id === l.id))
 
-    const filteredLabelsOrdered = labels.filter((l) => 
-      !selectedLabels.find((sl) => sl.id === l.id)).sort();
-
-    console.log('filteredLabelsOrdered', filteredLabelsOrdered)
-
-    const selectedLabelsOrdered = selectedLabels.sort();
-
-    console.log('selectedLabelsOrdered', selectedLabelsOrdered)
-
-
+    filteredLabels.sort(sortLabelsAlphabetically);
+    selectedLabels.sort(sortLabelsAlphabetically);
 
     const displayedLabelsReordered = [
-      ...selectedLabelsOrdered, 
-      ...filteredLabelsOrdered,
+      ...selectedLabels, 
+      ...filteredLabels,
     ];
-
-    console.log('displayedLabelsReordered', displayedLabelsReordered)
 
     setDisplayedLabels(displayedLabelsReordered);
 
@@ -60,18 +52,25 @@ const LabelsFilter = ({
   };
 
   const onSelectCheckbox = (event: BaseSyntheticEvent) => {
+    const selectedId = parseInt(event.target.value);
+
     const currentSelected = labels.find((l) => 
-      l.id === parseInt(event.target.value));
+      l.id === selectedId);
 
     if (currentSelected) {
+      onSelectLabel(selectedId)
+
       setSelectedLabels((selectedLabels) => {
-        const exist = selectedLabels.find(l => l.id === currentSelected.id);
+        const exist = selectedLabels.find((l) => 
+          l.id === currentSelected.id);
         if (!exist) {
           return [...selectedLabels, currentSelected]
         } else {
-          return selectedLabels;
+          return [...selectedLabels.filter((sl) => 
+            sl.id !== currentSelected.id)];
         }
       });
+
     } else {
       setSelectedLabels((selectedLabels) => selectedLabels);
     }
@@ -81,15 +80,28 @@ const LabelsFilter = ({
     <div className='labels-container'>
       Labels: 
       <div className='select'>
-        <input type="text" onClick={onInputClick} onChange={onSearchChange} value={searchValue}/>
+        <input type="text" 
+          onClick={onInputClick} 
+          onChange={onSearchChange} 
+          value={searchValue}
+        />
         <div className={`labels-wrapper ${expanded ? 'show' : 'hide'}`}>
           {displayedLabels.map((label) => {
-            const checked = Boolean(selectedLabels.find(l => l.id === label.id));
+            const checked = Boolean(
+              selectedLabels.find((l) => l.id === label.id));
 
             return (
               <div key={label.id}>
-                <input type="checkbox" name={label.text} value={label.id} checked={checked} onChange={onSelectCheckbox} />
-                <label>{label.text}</label>
+                <label>
+                  <input 
+                    type="checkbox" 
+                    name={label.text}
+                    value={label.id} 
+                    checked={checked} 
+                    onChange={onSelectCheckbox} 
+                  />
+                    {label.text}
+                  </label>
               </div>
             );
           })}

@@ -10,10 +10,12 @@ import { useDbStore } from '../stores/db-store/store';
 
 const DisplayCards = ({
   cards,
-  onFinish
+  onFinish,
+  onAnswerQuestion,
 }: {
   cards: Card[];
   onFinish: () => void;
+  onAnswerQuestion: () => void;
 }): ReactElement => {
   const {
     updateQuestionAnswer,
@@ -66,6 +68,8 @@ const DisplayCards = ({
       setCurrentCardIndex(currentCardIndex);
       return;
     }
+
+    onAnswerQuestion();
 
     const newLastSawDate = calculateNewLastSawDate();
 
@@ -123,26 +127,26 @@ const DisplayCards = ({
     }
   };
 
+
+
   return (
     <div>
       {showCard && (
         <div className="card">
           <div className="question">{currentCard.question} ?</div>
-          {showAnswer && <div className="answer">{currentCard.answer}</div>}
+          <div className={`answer ${showAnswer ? 'visible' : 'hidden'}`}>
+            {currentCard.answer}
+          </div>
           {!showAnswer && <button onClick={onShowAnswer}>Show answer</button>}
-          <div className="last-seen">Last seen {lastSawDateFormatted}</div>
           <div className="buttons">
             <button onClick={getNextCard(LEVELS.EASY)} disabled={!showAnswer}>
-              <div className="level">{LEVELS.EASY}</div>{' '}
-              <div className="next-see-date">{nextSeeDateFormatted[LEVELS.EASY]}</div>
+              {LEVELS.EASY}
             </button>
             <button onClick={getNextCard(LEVELS.MEDIUM)} disabled={!showAnswer}>
-              <div className="level">{LEVELS.MEDIUM}</div>{' '}
-              <div className="next-see-date">{nextSeeDateFormatted[LEVELS.MEDIUM]}</div>
+              {LEVELS.MEDIUM}
             </button>
             <button onClick={getNextCard(LEVELS.HARD)} disabled={!showAnswer}>
-              <div className="level">{LEVELS.HARD}</div>{' '}
-              <div className="next-see-date"> {nextSeeDateFormatted[LEVELS.HARD]}</div>
+              {LEVELS.HARD}
             </button>
           </div>
         </div>
