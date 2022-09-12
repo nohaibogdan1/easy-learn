@@ -130,25 +130,29 @@ const DisplayCards = ({
 
 
   return (
-    <div>
+    <div className='wrapper'>
       {showCard && (
         <div className="card">
-          <div className="question">{currentCard.question} ?</div>
-          <div className={`answer ${showAnswer ? 'visible' : 'hidden'}`}>
-            {currentCard.answer}
-          </div>
-          {!showAnswer && <button onClick={onShowAnswer}>Show answer</button>}
           <div className="buttons">
-            <button onClick={getNextCard(LEVELS.EASY)} disabled={!showAnswer}>
+            {!showAnswer && <button onClick={onShowAnswer}>Show answer</button>}
+            {showAnswer && <button onClick={getNextCard(LEVELS.EASY)} disabled={!showAnswer}> 
               {LEVELS.EASY}
             </button>
-            <button onClick={getNextCard(LEVELS.MEDIUM)} disabled={!showAnswer}>
+            }
+            {showAnswer &&<button onClick={getNextCard(LEVELS.MEDIUM)} disabled={!showAnswer}>
               {LEVELS.MEDIUM}
-            </button>
-            <button onClick={getNextCard(LEVELS.HARD)} disabled={!showAnswer}>
+            </button>}
+            {showAnswer &&<button onClick={getNextCard(LEVELS.HARD)} disabled={!showAnswer}>
               {LEVELS.HARD}
-            </button>
+            </button>}
           </div>
+          <div className='qa-wrapper'>
+            <div className="question">{currentCard.question} ?</div>
+            <div className={`answer ${showAnswer ? 'visible' : 'hidden'}`}>
+              {currentCard.answer}
+            </div>
+          </div>
+         
         </div>
       )}
     </div>

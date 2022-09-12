@@ -1,3 +1,26 @@
 .margin-bottom-small {
   margin-bottom: 10px;
 }
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.close-btn-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.close-btn {
+  background-color: rgba(0,0,0,0);
+  color: #cdcdcd;
+  font-size: 5em;
+  border: none;
+}
+
+.close-btn:after {
+  display: inline-block;
+  content: "\00d7"; /* This will render the 'X' */
+}

@@ -1,6 +1,6 @@
 enum LEVELS {
   HARD = 'hard',
-  MEDIUM = 'medium',
+  MEDIUM = 'good',
   EASY = 'easy'
 }
 

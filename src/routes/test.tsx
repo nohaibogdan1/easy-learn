@@ -97,7 +97,9 @@ const Test = (): ReactElement => {
         />
       }
       {inProgress && 
-        <button onClick={onEndTesting}>End testing</button>
+        <div className='close-btn-wrapper'>
+          <button className='close-btn' onClick={onEndTesting}></button>
+        </div>
       }
       {start && 
         <Filters 

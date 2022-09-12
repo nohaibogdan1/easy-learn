@@ -20,7 +20,7 @@ const FiltersSummary = ({
     .filter((key) => levels[key as LEVELS]);
 
   return (
-    <div className='wrapper'>
+    <div className='filters-summary'>
       {today && <div>Today</div>}
       {selectedLevels.length && 
         <div>
