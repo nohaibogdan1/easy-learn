@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/easy-learn/static/css/main.fdcfa9b6.css",
-    "main.js": "/easy-learn/static/js/main.b0b0f3ed.js",
+    "main.css": "/easy-learn/static/css/main.1d33b738.css",
+    "main.js": "/easy-learn/static/js/main.5492f5e3.js",
     "service-worker.js": "/easy-learn/service-worker.js",
     "index.html": "/easy-learn/index.html",
-    "main.fdcfa9b6.css.map": "/easy-learn/static/css/main.fdcfa9b6.css.map",
-    "main.b0b0f3ed.js.map": "/easy-learn/static/js/main.b0b0f3ed.js.map"
+    "main.1d33b738.css.map": "/easy-learn/static/css/main.1d33b738.css.map",
+    "main.5492f5e3.js.map": "/easy-learn/static/js/main.5492f5e3.js.map"
   },
   "entrypoints": [
-    "static/css/main.fdcfa9b6.css",
-    "static/js/main.b0b0f3ed.js"
+    "static/css/main.1d33b738.css",
+    "static/js/main.5492f5e3.js"
   ]
 }
