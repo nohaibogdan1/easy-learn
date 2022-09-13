@@ -11,7 +11,7 @@ import { useDbStore } from '../stores/db-store/store';
 const DisplayCards = ({
   cards,
   onFinish,
-  onAnswerQuestion,
+  onAnswerQuestion
 }: {
   cards: Card[];
   onFinish: () => void;
@@ -127,32 +127,34 @@ const DisplayCards = ({
     }
   };
 
-
-
   return (
-    <div className='wrapper'>
+    <div className="wrapper">
       {showCard && (
         <div className="card">
           <div className="buttons">
             {!showAnswer && <button onClick={onShowAnswer}>Show answer</button>}
-            {showAnswer && <button onClick={getNextCard(LEVELS.EASY)} disabled={!showAnswer}> 
-              {LEVELS.EASY}
-            </button>
-            }
-            {showAnswer &&<button onClick={getNextCard(LEVELS.MEDIUM)} disabled={!showAnswer}>
-              {LEVELS.MEDIUM}
-            </button>}
-            {showAnswer &&<button onClick={getNextCard(LEVELS.HARD)} disabled={!showAnswer}>
-              {LEVELS.HARD}
-            </button>}
+            {showAnswer && (
+              <button onClick={getNextCard(LEVELS.EASY)} disabled={!showAnswer}>
+                {LEVELS.EASY}
+              </button>
+            )}
+            {showAnswer && (
+              <button onClick={getNextCard(LEVELS.MEDIUM)} disabled={!showAnswer}>
+                {LEVELS.MEDIUM}
+              </button>
+            )}
+            {showAnswer && (
+              <button onClick={getNextCard(LEVELS.HARD)} disabled={!showAnswer}>
+                {LEVELS.HARD}
+              </button>
+            )}
           </div>
-          <div className='qa-wrapper'>
-            <div className="question">{currentCard.question} ?</div>
+          <div className={`qa-wrapper ${showAnswer ? '' : 'question-center'}`}>
+            <div className={'question'}>{currentCard.question} ?</div>
             <div className={`answer ${showAnswer ? 'visible' : 'hidden'}`}>
               {currentCard.answer}
             </div>
           </div>
-         
         </div>
       )}
     </div>

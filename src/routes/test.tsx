@@ -26,7 +26,10 @@ const Test = (): ReactElement => {
   const [selectedLabels, setSelectedLabels] = useState<LabelStored[]>([]);
   const [questionsFinished, setQuestionsFinished] = useState<number>(0);
 
-  const { state: { db }, getAllLabels } = useDbStore();
+  const {
+    state: { db },
+    getAllLabels
+  } = useDbStore();
 
   const { getQuestionAnswersByFilter } = useRandomTests();
 
@@ -62,7 +65,7 @@ const Test = (): ReactElement => {
     setFinish(true);
     setStart(true);
   };
-  
+
   const onSelectLabel = (labelId: number): void => {
     const label = labels.find((l) => l.id === labelId);
 
@@ -83,53 +86,38 @@ const Test = (): ReactElement => {
   };
 
   const onAnswerQuestion = (): void => {
-    setQuestionsFinished((questionsFinished) => 
-      questionsFinished + 1);
+    setQuestionsFinished((questionsFinished) => questionsFinished + 1);
   };
 
   return (
     <div className="main">
-      {inProgress && 
-        <FiltersSummary 
-          labels={selectedLabels}
-          levels={levels}
-          today={today}
-        />
-      }
-      {inProgress && 
-        <div className='close-btn-wrapper'>
-          <button className='close-btn' onClick={onEndTesting}></button>
+      {false && <FiltersSummary labels={selectedLabels} levels={levels} today={today} />}
+      {inProgress && (
+        <div className="close-btn-wrapper">
+          <button className="close-btn" onClick={onEndTesting}></button>
         </div>
-      }
-      {start && 
-        <Filters 
-          today={today} 
-          levels={levels} 
-          labels={labels} 
-          setToday={setToday} 
-          setLevels={setLevels} 
+      )}
+      {start && (
+        <Filters
+          today={today}
+          levels={levels}
+          labels={labels}
+          setToday={setToday}
+          setLevels={setLevels}
           onSelectLabel={onSelectLabel}
         />
-      }
-      {start && 
-        <button onClick={getFilteredTests}>Get tests</button>
-      }
-      {!finish && Boolean(cards.length) && 
-        <DisplayCards 
-          cards={cards} 
-          onFinish={onFinish}
-          onAnswerQuestion={onAnswerQuestion}
-        />
-      }
-      {!start && finish && 
+      )}
+      {start && <button onClick={getFilteredTests}>Get tests</button>}
+      {!finish && Boolean(cards.length) && (
+        <DisplayCards cards={cards} onFinish={onFinish} onAnswerQuestion={onAnswerQuestion} />
+      )}
+      {!start && finish && (
         <div>
           Congrats: you answered at {questionsFinished} questions
           <button onClick={onOk}>ok</button>
         </div>
-      }
-      {!start && !Boolean(cards.length) && 
-        <div>There are no tests</div>
-      }
+      )}
+      {!start && !Boolean(cards.length) && <div>There are no tests</div>}
     </div>
   );
 };

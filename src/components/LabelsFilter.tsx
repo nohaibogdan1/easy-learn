@@ -6,11 +6,11 @@ import './LabelsFilter.css';
 import { sortLabelsAlphabetically } from '../logic/utils';
 
 const LabelsFilter = ({
-  labels, 
+  labels,
   onSelectLabel
 }: {
-  labels: LabelStored[], 
-  onSelectLabel: (arg: number) => void
+  labels: LabelStored[];
+  onSelectLabel: (arg: number) => void;
 }): ReactElement => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [selectedLabels, setSelectedLabels] = useState<LabelStored[]>([]);
@@ -22,25 +22,19 @@ const LabelsFilter = ({
   }, [labels.length]);
 
   useEffect(() => {
-    const filteredLabels = labels.filter((l) => 
-      l.text.startsWith(searchValue));
+    const filteredLabels = labels.filter((l) => l.text.startsWith(searchValue));
     setDisplayedLabels(filteredLabels);
   }, [searchValue]);
 
   useEffect(() => {
-    const filteredLabels = labels.filter((l) => 
-      !selectedLabels.find((sl) => sl.id === l.id))
+    const filteredLabels = labels.filter((l) => !selectedLabels.find((sl) => sl.id === l.id));
 
     filteredLabels.sort(sortLabelsAlphabetically);
     selectedLabels.sort(sortLabelsAlphabetically);
 
-    const displayedLabelsReordered = [
-      ...selectedLabels, 
-      ...filteredLabels,
-    ];
+    const displayedLabelsReordered = [...selectedLabels, ...filteredLabels];
 
     setDisplayedLabels(displayedLabelsReordered);
-
   }, [JSON.stringify(selectedLabels)]);
 
   const onInputClick = () => {
@@ -54,54 +48,45 @@ const LabelsFilter = ({
   const onSelectCheckbox = (event: BaseSyntheticEvent) => {
     const selectedId = parseInt(event.target.value);
 
-    const currentSelected = labels.find((l) => 
-      l.id === selectedId);
+    const currentSelected = labels.find((l) => l.id === selectedId);
 
     if (currentSelected) {
-      onSelectLabel(selectedId)
+      onSelectLabel(selectedId);
 
       setSelectedLabels((selectedLabels) => {
-        const exist = selectedLabels.find((l) => 
-          l.id === currentSelected.id);
+        const exist = selectedLabels.find((l) => l.id === currentSelected.id);
         if (!exist) {
-          return [...selectedLabels, currentSelected]
+          return [...selectedLabels, currentSelected];
         } else {
-          return [...selectedLabels.filter((sl) => 
-            sl.id !== currentSelected.id)];
+          return [...selectedLabels.filter((sl) => sl.id !== currentSelected.id)];
         }
       });
-
     } else {
       setSelectedLabels((selectedLabels) => selectedLabels);
     }
   };
 
   return (
-    <div className='labels-container'>
-      Labels: 
-      <div className='select'>
-        <input type="text" 
-          onClick={onInputClick} 
-          onChange={onSearchChange} 
-          value={searchValue}
-        />
+    <div className="labels-container">
+      Labels:
+      <div className="select">
+        <input type="text" onClick={onInputClick} onChange={onSearchChange} value={searchValue} />
         <div className={`labels-wrapper ${expanded ? 'show' : 'hide'}`}>
           {displayedLabels.map((label) => {
-            const checked = Boolean(
-              selectedLabels.find((l) => l.id === label.id));
+            const checked = Boolean(selectedLabels.find((l) => l.id === label.id));
 
             return (
               <div key={label.id}>
                 <label>
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     name={label.text}
-                    value={label.id} 
-                    checked={checked} 
-                    onChange={onSelectCheckbox} 
+                    value={label.id}
+                    checked={checked}
+                    onChange={onSelectCheckbox}
                   />
-                    {label.text}
-                  </label>
+                  {label.text}
+                </label>
               </div>
             );
           })}

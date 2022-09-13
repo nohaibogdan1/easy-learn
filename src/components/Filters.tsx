@@ -13,14 +13,14 @@ const Filters = ({
   levels,
   setLevels,
   labels,
-  onSelectLabel,
+  onSelectLabel
 }: {
   today: boolean;
   setToday: (arg: boolean) => void;
   levels: SelectedLevels;
   setLevels: (arg: (levels: SelectedLevels) => SelectedLevels) => void;
-  labels: LabelStored[],
-  onSelectLabel: (arg: number) => void,
+  labels: LabelStored[];
+  onSelectLabel: (arg: number) => void;
 }): ReactElement => {
   const onChangeToday = (event: BaseSyntheticEvent) => {
     setToday(event.target.checked);
@@ -71,7 +71,7 @@ const Filters = ({
           />
         </div>
       </div>
-      <LabelsFilter labels={labels} onSelectLabel={onSelectLabel}/>
+      <LabelsFilter labels={labels} onSelectLabel={onSelectLabel} />
     </div>
   );
 };

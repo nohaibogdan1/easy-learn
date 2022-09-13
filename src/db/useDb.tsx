@@ -22,10 +22,11 @@ import { useDbStore } from '../stores/db-store/store';
 
 // const useDbMethods = (db?: IDBDatabase | null) => {
 const useDbMethods = (f?: () => void) => {
+  const {
+    state: { db }
+  } = useDbStore();
 
-  const { state: {db}} = useDbStore();
-
-  console.log('blaaaa', db)
+  console.log('blaaaa', db);
 
   // useEffect(() => {
   //   if (db) {
@@ -153,12 +154,10 @@ const useDbMethods = (f?: () => void) => {
   const getAll = (
     table: tables
   ): Promise<(QuestionAnswerStored | LabelStored | QuestionAnswerLabelStored)[]> => {
-
-    console.log('getAll')
-
+    console.log('getAll');
 
     return new Promise((acc, reject) => {
-      console.log('db', db)
+      console.log('db', db);
       if (db) {
         try {
           const transaction = db.transaction(table, 'readwrite');
@@ -187,10 +186,10 @@ const useDbMethods = (f?: () => void) => {
   };
 
   const getAllLabels = async (): Promise<LabelStored[]> => {
-    console.log('getAllLabels')
+    console.log('getAllLabels');
     const a = await getAll(tables.LABELS);
 
-    console.log('a', a)
+    console.log('a', a);
 
     return a as LabelStored[];
     // return getAll(tables.LABELS) as Promise<LabelStored[]>;

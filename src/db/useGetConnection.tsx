@@ -15,7 +15,7 @@ const useGetConnection = (f: (arg: any) => void) => {
     request.onsuccess = (event) => {
       console.log('Susccess', event);
       // setDb(request.result);
-      f(request.result)
+      f(request.result);
     };
 
     request.onupgradeneeded = (event: any) => {

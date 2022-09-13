@@ -1,7 +1,17 @@
-import React, { createContext, useContext, PropsWithChildren, useState, ReactElement, useEffect } from 'react';
+/* eslint-disable */
+
+import React, {
+  createContext,
+  useContext,
+  PropsWithChildren,
+  useState,
+  ReactElement,
+  useEffect
+} from 'react';
 
 import { tables } from '../../db/tables';
-import {  QuestionAnswer,
+import {
+  QuestionAnswer,
   QuestionAnswerStored,
   Label,
   LabelStored,
@@ -12,56 +22,52 @@ import {  QuestionAnswer,
   QuestionAnswerLabel,
   QuestionAnswerModification,
   QuestionAnswerLabelStored,
-  Filter } from '../../types';
+  Filter
+} from '../../types';
 
 import { getDifferenceInDays } from '../../logic/questionAnswer';
 
-
 type DbState = {
   db: IDBDatabase | null;
-}
+};
 
 export type IDbContext = {
-  state: DbState,
-  insertQuestionAnswer: (data: QuestionAnswerAdd) => Promise<number>,
-  insertLabels: (data: AssociatedLabels) => Promise<void> ,
-  insertLabel: (data: AssociatedLabel) => Promise<void>,
-  getAllQuestionAnswers: () => Promise<QuestionAnswerStored[]>,
-  updateQuestionAnswer: (data: QuestionAnswerModification) => Promise<void>,
-  findLabelByText: (text: string) => Promise<number | undefined>,
-  addLabelToQuestionAnswer: (data: QuestionAnswerLabel) => Promise<void> ,
-  getAllQuestionAnswersByFilter: (filter: Filter) => Promise<QuestionAnswerStored[]>,
+  state: DbState;
+  insertQuestionAnswer: (data: QuestionAnswerAdd) => Promise<number>;
+  insertLabels: (data: AssociatedLabels) => Promise<void>;
+  insertLabel: (data: AssociatedLabel) => Promise<void>;
+  getAllQuestionAnswers: () => Promise<QuestionAnswerStored[]>;
+  updateQuestionAnswer: (data: QuestionAnswerModification) => Promise<void>;
+  findLabelByText: (text: string) => Promise<number | undefined>;
+  addLabelToQuestionAnswer: (data: QuestionAnswerLabel) => Promise<void>;
+  getAllQuestionAnswersByFilter: (filter: Filter) => Promise<QuestionAnswerStored[]>;
   removeLabelsFromQA: ({
     questionAnswerId,
     labels
   }: {
     questionAnswerId: number;
     labels: string[];
-  }) => Promise<void>,
-  getAllLabels: () => Promise<LabelStored[]>,
-  insertOnlyLabel: (data: Label) => Promise<number>,
-  insertQALabel: (data: {
-    questionAnswerId: number;
-    labelId: number;
-  }) => Promise<number>
+  }) => Promise<void>;
+  getAllLabels: () => Promise<LabelStored[]>;
+  insertOnlyLabel: (data: Label) => Promise<number>;
+  insertQALabel: (data: { questionAnswerId: number; labelId: number }) => Promise<number>;
 };
 
 const initialDbState = {
   db: null
-}
+};
 
 const defaultValue = {
   state: initialDbState
-}
+};
 
 export const DbContext = createContext(defaultValue as IDbContext);
 
 export const useDbStore = (): IDbContext => useContext(DbContext);
 
 export const DbStoreProvider = ({
-  children,
+  children
 }: PropsWithChildren<Record<string, unknown>>): ReactElement => {
-
   const [state, setState] = useState<DbState>(initialDbState);
 
   const openDb = () => {
@@ -72,7 +78,7 @@ export const DbStoreProvider = ({
 
     request.onsuccess = (event) => {
       console.log('Here Susccess', event);
-      setState((state) => ({...state, db: request.result}));
+      setState((state) => ({ ...state, db: request.result }));
     };
 
     request.onupgradeneeded = (event: any) => {
@@ -94,7 +100,6 @@ export const DbStoreProvider = ({
       });
     };
   };
-
 
   const insertData = (
     data: QuestionAnswer | Label | QuestionAnswerLabel,
@@ -248,10 +253,10 @@ export const DbStoreProvider = ({
   };
 
   const getAllLabels = async (): Promise<LabelStored[]> => {
-    console.log('getAllLabels')
+    console.log('getAllLabels');
     const a = await getAll(tables.LABELS);
 
-    console.log('a', a)
+    console.log('a', a);
 
     return a as LabelStored[];
     // return getAll(tables.LABELS) as Promise<LabelStored[]>;
@@ -445,23 +450,29 @@ export const DbStoreProvider = ({
     }
   };
 
-
   useEffect(() => {
     openDb();
   }, []);
-  
-  return <DbContext.Provider value={{state,  insertQuestionAnswer,
-    insertLabels,
-    insertLabel,
-    getAllQuestionAnswers,
-    updateQuestionAnswer,
-    findLabelByText,
-    addLabelToQuestionAnswer,
-    getAllQuestionAnswersByFilter,
-    removeLabelsFromQA,
-    getAllLabels,
-    insertOnlyLabel,
-    insertQALabel}}>{children}</DbContext.Provider>
-}
 
-
+  return (
+    <DbContext.Provider
+      value={{
+        state,
+        insertQuestionAnswer,
+        insertLabels,
+        insertLabel,
+        getAllQuestionAnswers,
+        updateQuestionAnswer,
+        findLabelByText,
+        addLabelToQuestionAnswer,
+        getAllQuestionAnswersByFilter,
+        removeLabelsFromQA,
+        getAllLabels,
+        insertOnlyLabel,
+        insertQALabel
+      }}
+    >
+      {children}
+    </DbContext.Provider>
+  );
+};

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
@@ -16,10 +18,23 @@ root.render(
   <React.StrictMode>
     <DbStoreProvider>
       <BrowserRouter>
-        <nav>
-          <Link to={ROOT_NAME + '/insert'}> Add Question Answer </Link>
-          <Link to={ROOT_NAME + '/test'}> Test </Link>
-          <Link to={ROOT_NAME + '/data'}> Import </Link>
+        <nav className='top-nav'>
+          <div className='logo'>easy learn</div>
+          <input id="menu-toggle" type="checkbox" />
+          <label className="menu-button-container" htmlFor="menu-toggle">
+            <div className="menu-button"></div>
+          </label>
+          <ul className="menu">
+            <li>
+              <Link to={ROOT_NAME + '/insert'}> Add Question Answer </Link>
+            </li>
+            <li>
+              <Link to={ROOT_NAME + '/test'}> Test </Link>
+            </li>
+            <li>
+              <Link to={ROOT_NAME + '/data'}> Import </Link>
+            </li>
+          </ul>
         </nav>
         <Routes>
           <Route path={ROOT_NAME + '/'} element={<App />}></Route>
