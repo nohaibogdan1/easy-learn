@@ -54,3 +54,289 @@
     font-size: 2em;
   }
 }
+
+
+
+
+/*  -----------------NEW DESIGN ----------------*/
+
+body {
+  background-color: black;
+}
+
+
+/*  -----------------DEFAULT FOR DESKTOP ----------------*/
+.bottom-menu {
+  display: none;
+}
+
+/*  ------------ PAGE WRAPPER -------------- */
+
+.test-page-wrapper {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+
+/*  ------------ TOP SECTION -------------- */
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+/*  ------------ TOP SECTION BUTTONS -------------- */
+
+.options-btns-wrapper {
+  align-items: flex-start;
+  display: flex;
+}
+
+.options-btns-wrapper button {
+  background: none;
+  border: 1px solid #0171FF;
+  border-radius: 10px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 50px;
+  padding: 10px 20px;
+}
+
+/*  ------------ TOP SECTION PROGRESS INFORMATION -------------- */
+
+.progress-wrapper > div {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-wrapper .description {
+  color: #696C76;
+  font-size: 15px;
+  margin-right: 40px;
+}
+
+.progress-wrapper .value {
+  color: #DA9191;
+  font-size: 25px;
+}
+
+
+/* ------------ BOTTOM SECTION --------------  */
+
+.bottom-section {
+  position: relative;
+  background-image: url('../ta/a.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: top;
+  height: 100vh;
+  box-shadow: inset 0 0 0 2000px rgb(0 0 0 / 90%);
+  padding-bottom: 50px;
+  margin-bottom: 50px;
+  background-position: 55% 21%;
+}
+
+.bottom-section .primary-btn {
+  background-color: #0171FF;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 0 5px;
+}
+
+.question-btns {
+
+}
+
+.nav-card-btn {
+  border: none;
+  background: none;
+  color: #0171FF;
+  font-size: 51px;
+}
+
+.test-wrapper {
+  font-size: 15px;
+  line-height: 40px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.test-buttons-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 0 auto;
+  margin-bottom: 40px;
+  align-items: center;
+  width: 410px;
+}
+
+.question, 
+.answer {
+  text-align: center;
+}
+
+.question {
+  margin-bottom: 40px;
+}
+
+.answer {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 40px;
+}
+
+
+/* ------------ MOBILE --------------  */
+
+@media (max-width: 500px) {
+
+/* ------------ PAGE --------------  */
+
+  .test-page-wrapper {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+/* ------------ TOP SECTION --------------  */
+
+  .top-section {
+    margin-bottom: 70px;
+    margin-top: 5px;
+  }
+
+  .options-btns-wrapper {
+    display: none;
+  }
+
+  .progress-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .progress-wrapper .description {
+    font-size: 12px;
+    margin-right: 5px;
+  }
+
+  .progress-wrapper .value {
+    font-size: 19px;
+  }
+
+/* ------------ BOTTOM SECTION --------------  */
+
+  .bottom-section {
+    background-position: 55% 0%;
+  }
+
+  .test-wrapper {
+    font-size: 14px;
+    line-height: 32px;
+    margin-bottom: 100px;
+    padding-bottom: 100px;
+  }
+
+  .test-buttons-wrapper {
+    display: none;
+  }
+
+/* ------------ BOTTOM MENU --------------  */
+
+  .bottom-menu {
+    background-color: black;
+    bottom: 0;
+    display: block;
+    left: 0;
+    position: fixed;
+    width: 100vw;
+  }
+
+
+/* ------------ BOTTOM SECTION BUTTONS --------------  */
+
+  .deck-answer-btns {
+    display: flex;
+  }
+
+  .deck-answer-btns button {
+    background: none;
+    border: none;
+    color: #0171FF;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0 25px;
+  }
+
+  .deck-answer-btns,
+  .nav-btns {
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    height: 50px;
+    justify-content: space-around;
+  }
+
+/* ------------ NAV BUTTONS --------------  */
+
+  .nav-btns button {
+    background: none;
+    border: none;
+    box-sizing: content-box;
+    color: #0171FF;
+    height: 20px;
+    position: relative;
+    width: 24px;
+  }
+
+  .nav-btns button::before {
+    background-size: cover;
+    content: '';
+    height: 15px;
+    left: 12px;
+    position: absolute;
+    width: 15px;
+    top: 0;
+  }
+
+  .nav-btns .prev-nav-card-btn::before,
+  .nav-btns .next-nav-card-btn::before {
+    height: 20px;
+    width: 10px;
+  }
+
+/* ------------ NAVIGATION BUTTONS ADDING SVG --------------  */
+
+  .customize-btn::before {
+    background:url('../icons/settings.svg');
+  }
+
+  .prev-nav-card-btn::before {
+    background:url('../icons/prev.svg');
+  }
+
+  .next-nav-card-btn::before {
+    background:url('../icons/next.svg');
+  }
+
+  .back-btn::before {
+    background:url('../icons/back.svg');
+  }
+}
+
+
+@media (max-width: 305px) {
+  /* ------------ TOP SECTION --------------  */
+
+  .progress-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+  }
+}

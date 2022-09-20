@@ -12,30 +12,14 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import Data from './routes/data';
 import { ROOT_NAME } from './constants';
 import { DbStoreProvider } from './stores/db-store/store';
+import NavBar from './components/NavBar';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <DbStoreProvider>
       <BrowserRouter>
-        <nav className='top-nav'>
-          <div className='logo'>easy learn</div>
-          <input id="menu-toggle" type="checkbox" />
-          <label className="menu-button-container" htmlFor="menu-toggle">
-            <div className="menu-button"></div>
-          </label>
-          <ul className="menu">
-            <li>
-              <Link to={ROOT_NAME + '/insert'}> Add Question Answer </Link>
-            </li>
-            <li>
-              <Link to={ROOT_NAME + '/test'}> Test </Link>
-            </li>
-            <li>
-              <Link to={ROOT_NAME + '/data'}> Import </Link>
-            </li>
-          </ul>
-        </nav>
+        <NavBar/>
         <Routes>
           <Route path={ROOT_NAME + '/'} element={<App />}></Route>
           <Route path={ROOT_NAME + '/list'} element={<List />}></Route>
