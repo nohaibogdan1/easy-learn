@@ -1,0 +1,13 @@
+.reorder-btn {
+  background: none;
+  background-color: rgba(1, 113, 255, 0.1);
+  border: 1px #0171ff dotted;
+  border-left: none;
+  border-right: none;
+  height: 20px;
+  width: 100%;
+}
+
+.reorder-btn:hover {
+  background-color: rgba(1, 113, 255, 0.3);
+}

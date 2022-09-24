@@ -57,13 +57,7 @@ const parseLabels = (jsonSheet: ExcelRowSanitized[]): string[] => {
 };
 
 const useSaveData = () => {
-  const {
-    getAllQuestionAnswers,
-    insertQuestionAnswer,
-    getAllLabels,
-    insertOnlyLabel,
-    insertQALabel
-  } = useDbStore();
+  const { getAllCards, insertCard } = useDbStore();
 
   const saveData = async (jsonSheet: Object[]): Promise<void> => {
     const jsonSheetSanitized = sanitize(jsonSheet);
@@ -72,21 +66,7 @@ const useSaveData = () => {
       return;
     }
 
-    const qaList = await getAllQuestionAnswers();
-    const labelsList = await getAllLabels();
-    const parsedLabels = parseLabels(jsonSheetSanitized);
-    const completedLabelsList = [...labelsList];
-
-    // insert all labels
-    for (const parsedLabel of parsedLabels) {
-      // skip if already stored
-      if (labelsList.some((l) => l.text.toLowerCase().trim() === parsedLabel)) {
-        continue;
-      }
-
-      const labelId = await insertOnlyLabel({ text: parsedLabel });
-      completedLabelsList.push({ text: parsedLabel, id: labelId });
-    }
+    const qaList = await getAllCards();
 
     // insert all questions and answers
     for (const row of jsonSheetSanitized) {
@@ -104,32 +84,12 @@ const useSaveData = () => {
       }
 
       // insert question and answer
-      const questionAnswerId = await insertQuestionAnswer({
+      const questionAnswerId = await insertCard({
         question,
         answer,
         lastSawDate,
         nextSeeDate
       });
-
-      if (!labels) {
-        continue;
-      }
-
-      // insert association between <question,answer> and labels
-      const labelsListIds = labels
-        .split(LABELS_SEPARATOR)
-        .map((l) => {
-          const label = l.toLowerCase().trim();
-          const savedLabel = completedLabelsList.find((l) => l.text === label);
-          if (savedLabel) {
-            return savedLabel.id;
-          }
-        })
-        .filter((labelId) => typeof labelId !== 'undefined') as number[];
-
-      for (const labelId of labelsListIds) {
-        await insertQALabel({ questionAnswerId, labelId });
-      }
     }
   };
 

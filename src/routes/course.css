@@ -1,0 +1,24 @@
+/*  ------------ TOP SECTION -------------- */
+.course-page-wrapper .top-section {
+  flex-direction: column;
+}
+
+.top-section .course-description {
+  display: flex;
+}
+
+.top-section .course-description .text {
+  font-size: 14px;
+  line-height: 32px;
+  width: 87%;
+}
+
+/* ------------ MOBILE --------------  */
+
+@media (max-width: 500px) {
+  /* ------------ BOTTOM SECTION --------------  */
+
+  .course-page-wrapper .bottom-section {
+    margin-bottom: 100px;
+  }
+}

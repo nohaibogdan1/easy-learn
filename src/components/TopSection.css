@@ -1,0 +1,19 @@
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  width: auto;
+}
+
+.direction-column {
+  flex-direction: column;
+}
+
+/* ------------ MOBILE --------------  */
+
+@media (max-width: 500px) {
+  .top-section {
+    margin-bottom: 70px;
+    margin-top: 5px;
+  }
+}

@@ -1,57 +1,6 @@
 /* eslint-disable */
 import { LEVELS } from './constants';
-
-interface QuestionAnswer {
-  question: string;
-  answer: string;
-  lastSawDate: string | null;
-  nextSeeDate: string | null;
-}
-
-type QuestionAnswerAdd = {
-  question: string;
-  answer: string;
-  lastSawDate?: string | null;
-  nextSeeDate?: string | null;
-};
-
-type QuestionAnswerInsertion = QuestionAnswerAdd & {
-  labels: Label[];
-};
-
-type QuestionAnswerStored = QuestionAnswer & {
-  id: number;
-};
-
-interface Label {
-  text: string;
-}
-
-type AssociatedLabel = Label & {
-  questionAnswerId: number;
-};
-
-type AssociatedLabels = {
-  labels: Label[];
-  questionAnswerId: number;
-};
-
-type LabelStored = Label & {
-  id: number;
-};
-
-interface QuestionAnswerLabel {
-  questionAnswerId: number;
-  labelId: number;
-}
-
-type QuestionAnswerLabelStored = QuestionAnswerLabel & {
-  id: number;
-};
-
-type Card = QuestionAnswerStored;
-
-type QuestionAnswerModification = QuestionAnswerStored;
+import { Card } from './data/interfaces';
 
 type NextSeeDate = {
   [LEVELS.EASY]: string;
@@ -74,31 +23,12 @@ interface Obj {
   [key: string]: string | number;
 }
 
-type ExcelRow = Partial<QuestionAnswer> & {
+type ExcelRow = Partial<Card> & {
   labels?: string;
 };
 
-type ExcelRowSanitized = QuestionAnswer & {
+type ExcelRowSanitized = Card & {
   labels?: string;
 };
 
-export type {
-  QuestionAnswer,
-  QuestionAnswerStored,
-  Label,
-  LabelStored,
-  AssociatedLabel,
-  QuestionAnswerInsertion,
-  QuestionAnswerAdd,
-  AssociatedLabels,
-  QuestionAnswerLabel,
-  Card,
-  QuestionAnswerModification,
-  QuestionAnswerLabelStored,
-  NextSeeDate,
-  Filter,
-  SelectedLevels,
-  Obj,
-  ExcelRow,
-  ExcelRowSanitized
-};
+export type { NextSeeDate, Filter, SelectedLevels, Obj, ExcelRow, ExcelRowSanitized };

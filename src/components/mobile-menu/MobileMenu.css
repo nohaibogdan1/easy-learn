@@ -1,0 +1,19 @@
+/* ------------ DESKTOP --------------  */
+
+.mobile-menu-wrapper {
+  background-color: black;
+  bottom: 0;
+  color: #0171ff;
+  display: none;
+  left: 0;
+  position: fixed;
+  width: 100vw;
+}
+
+/* ------------ MOBILE --------------  */
+
+@media (max-width: 500px) {
+  .mobile-menu-wrapper {
+    display: block;
+  }
+}

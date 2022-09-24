@@ -1,16 +1,16 @@
 /* eslint-disable */
 import React, { useState, ReactElement } from 'react';
 
-import { QuestionAnswerStored } from '../types';
+import { CardStored } from '../data/interfaces';
 import { useDbStore } from '../stores/db-store/store';
 
 const List = (): ReactElement => {
-  const [data, setData] = useState<QuestionAnswerStored[]>([]);
+  const [data, setData] = useState<CardStored[]>([]);
 
-  const { getAllQuestionAnswers } = useDbStore();
+  const { getAllCards } = useDbStore();
 
   const getStoredData = (): void => {
-    const a = getAllQuestionAnswers();
+    const a = getAllCards();
     a.then((i) => {
       console.log('i', i);
       setData(i);

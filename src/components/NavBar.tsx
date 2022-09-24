@@ -8,15 +8,15 @@ import './NavBar.css';
 
 const NavBar = () => {
   return (
-    <nav className='nav-wrapper'>
-      <div className='logo'>easy learn</div>
+    <nav className="nav-wrapper">
+      <div className="logo">easy learn</div>
       <input id="menu-toggle" type="checkbox" />
       <label className="menu-button-container" htmlFor="menu-toggle">
         <div className="menu-button"></div>
       </label>
       <ul className="menu">
         <li>
-          <Link to={ROOT_NAME + '/'}> Dashboard </Link>
+          <Link to={ROOT_NAME + '/home'}> Home </Link>
         </li>
         <li>
           <Link to={ROOT_NAME + '/cards'}> Cards </Link>
@@ -29,7 +29,7 @@ const NavBar = () => {
         </li>
       </ul>
     </nav>
-  )
+  );
 };
 
 export default NavBar;

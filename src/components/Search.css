@@ -1,0 +1,20 @@
+.search {
+  background: none;
+  background-color: rgba(1, 113, 255, 0.3);
+  border: 1px solid #0171ff;
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  margin-bottom: 0;
+  margin-top: 20px;
+  max-width: 400px;
+  padding: 10px;
+}
+
+.search:focus {
+  outline: 2px solid rgba(1, 113, 255, 0.8);
+}
+
+.search:focus-visible {
+  outline: 2px solid rgba(1, 113, 255, 0.8);
+}

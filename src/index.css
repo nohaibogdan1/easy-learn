@@ -23,7 +23,7 @@ code {
 
 /* Add dark theme */
 body {
-  background-color: #0b121c;
+  background-color: black;
   color: #fff;
   font-size: 10px;
   margin: 0 auto;
@@ -43,3 +43,54 @@ a {
   text-decoration: none;
 }
 
+/* ------------ COMMONS --------------  */
+
+@media (max-width: 500px) {
+  .mobile-margin-exterior {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+
+/* ------------ PAGE WRAPPER --------------  */
+
+.page-wrapper {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+@media (max-width: 500px) {
+  .page-wrapper {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* ------------ TOP SECTION --------------  */
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  width: auto;
+}
+
+@media (max-width: 500px) {
+  .top-section {
+    margin-bottom: 30px;
+    margin-top: 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .bottom-section {
+    height: auto;
+    margin-bottom: 50px;
+    position: relative;
+  }
+}
+
+/* ------------ MOBILE BOTTOM MENU --------------  */
+
+.bottom-menu {
+  display: none;
+}

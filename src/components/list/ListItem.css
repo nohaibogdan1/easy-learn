@@ -1,0 +1,62 @@
+/* ------------ WRAPPER --------------  */
+
+.list-item-wrapper {
+  align-items: center;
+  background-color: #1b1e23;
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  display: flex;
+  line-height: 32px;
+  margin: 5px 0;
+  padding: 7px 20px;
+  position: relative;
+}
+
+/* ------------ ARROW --------------  */
+
+.list-item-wrapper .arrow {
+  height: 20px;
+  margin-left: 10px;
+  position: relative;
+  width: 20px;
+}
+
+.list-item-wrapper .arrow::before {
+  background-image: url('../../icons/next.svg');
+  background-size: cover;
+  color: #0171ff;
+  content: '';
+  height: 20px;
+  position: absolute;
+  width: 10px;
+}
+
+/* ------------ CHECKBOX --------------  */
+
+.list-item-wrapper .checkbox {
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+
+/* ------------ SETTING UP THE ORDER --------------  */
+
+.list-item-wrapper .text {
+  order: 2;
+}
+.list-item-wrapper .arrow {
+  order: 3;
+}
+.list-item-wrapper .check {
+  order: 1;
+}
+
+/* ------------ MOBILE --------------  */
+
+@media (max-width: 500px) {
+  /* ------------ WRAPPER --------------  */
+
+  .list-item-wrapper {
+    border-radius: 0;
+  }
+}

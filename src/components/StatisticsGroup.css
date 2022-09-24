@@ -1,0 +1,17 @@
+@media (max-width: 500px) {
+  .statistics-group-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .statistics-group-wrapper.direction-column {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 305px) {
+  .statistics-group-wrapper {
+    flex-direction: column;
+  }
+}

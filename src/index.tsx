@@ -13,19 +13,25 @@ import Data from './routes/data';
 import { ROOT_NAME } from './constants';
 import { DbStoreProvider } from './stores/db-store/store';
 import NavBar from './components/NavBar';
+import HomePage from './routes/home';
+import CoursePage from './routes/course';
+import DeckPage from './routes/deck';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <DbStoreProvider>
       <BrowserRouter>
-        <NavBar/>
+        <NavBar />
         <Routes>
           <Route path={ROOT_NAME + '/'} element={<App />}></Route>
           <Route path={ROOT_NAME + '/list'} element={<List />}></Route>
           <Route path={ROOT_NAME + '/insert'} element={<Insert />}></Route>
           <Route path={ROOT_NAME + '/test'} element={<Test />}></Route>
           <Route path={ROOT_NAME + '/data'} element={<Data />}></Route>
+          <Route path={ROOT_NAME + '/home'} element={<HomePage />}></Route>
+          <Route path={ROOT_NAME + '/course/:id'} element={<CoursePage />}></Route>
+          <Route path={ROOT_NAME + '/deck'} element={<DeckPage />}></Route>
         </Routes>
       </BrowserRouter>
     </DbStoreProvider>

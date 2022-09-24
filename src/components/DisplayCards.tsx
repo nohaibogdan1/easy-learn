@@ -1,7 +1,8 @@
 /* eslint-disable */
 import React, { ReactElement, useState } from 'react';
 
-import { Card, NextSeeDate } from '../types';
+import { NextSeeDate } from '../types';
+import { CardStored } from '../data/interfaces';
 import { LEVELS } from '../constants';
 import { calculateNewLastSawDate, calculateNextSeeDate } from '../logic/questionAnswer';
 import { formatDate, isTruthyValue } from '../logic/utils';
@@ -13,22 +14,16 @@ const DisplayCards = ({
   onFinish,
   onAnswerQuestion
 }: {
-  cards: Card[];
+  cards: CardStored[];
   onFinish: () => void;
   onAnswerQuestion: () => void;
 }): ReactElement => {
-  const {
-    updateQuestionAnswer,
-    insertLabels,
-    findLabelByText,
-    addLabelToQuestionAnswer,
-    removeLabelsFromQA
-  } = useDbStore();
+  const { updateCard } = useDbStore();
 
   const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
   const [showAnswer, setShowAnswer] = useState(false);
 
-  const currentCard: Card | undefined = cards[currentCardIndex];
+  const currentCard: CardStored | undefined = cards[currentCardIndex];
 
   const getFormatted = (): {
     nextSeeDate: NextSeeDate | null;
@@ -75,39 +70,13 @@ const DisplayCards = ({
 
     (async () => {
       try {
-        await updateQuestionAnswer({
+        await updateCard({
           ...currentCard,
+          id: 1,
           lastSawDate: newLastSawDate,
           nextSeeDate: nextSeeDate[level]
         });
 
-        // remove any level label
-        const otherLevels = Object.values(LEVELS).filter((l) => l !== level);
-        await removeLabelsFromQA({
-          questionAnswerId: currentCard.id,
-          labels: otherLevels
-        });
-
-        // add the new level label
-        const foundLabelId = await findLabelByText(level);
-
-        if (foundLabelId) {
-          await addLabelToQuestionAnswer({
-            questionAnswerId: currentCard.id,
-            labelId: foundLabelId
-          });
-        } else {
-          await insertLabels({
-            labels: [
-              {
-                text: level
-              }
-            ],
-            questionAnswerId: currentCard.id
-          });
-        }
-
-        // update state
         const nextCardIndex = currentCardIndex + 1;
         setCurrentCardIndex(nextCardIndex);
         setShowAnswer(false);

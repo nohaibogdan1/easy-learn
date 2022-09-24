@@ -1,0 +1,24 @@
+/*  ------------ TOP SECTION -------------- */
+.deck-page-wrapper .top-section {
+  flex-direction: column;
+}
+
+.top-section .deck-description {
+  display: flex;
+}
+
+.top-section .deck-description .text {
+  font-size: 14px;
+  line-height: 32px;
+  width: 87%;
+}
+
+/* ------------ MOBILE --------------  */
+
+@media (max-width: 500px) {
+  /* ------------ BOTTOM SECTION --------------  */
+
+  .deck-page-wrapper .bottom-section {
+    margin-bottom: 100px;
+  }
+}

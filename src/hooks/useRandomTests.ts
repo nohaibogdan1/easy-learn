@@ -1,15 +1,15 @@
 /* eslint-disable */
-import useDbMethods from '../db/useDb';
-import { QuestionAnswerStored, SelectedLevels } from '../types';
+import { SelectedLevels } from '../types';
+import { CardStored } from '../data/interfaces';
 import { useDbStore } from '../stores/db-store/store';
 
 const useRandomTests = () => {
-  const { getAllQuestionAnswers, getAllQuestionAnswersByFilter } = useDbStore();
+  const { getAllCards, getAllCardsByFilter } = useDbStore();
 
-  const getRandomTests = (): Promise<QuestionAnswerStored[]> => {
+  const getRandomTests = (): Promise<CardStored[]> => {
     return new Promise((acc, reject) => {
-      getAllQuestionAnswers()
-        .then((data: QuestionAnswerStored[]) => {
+      getAllCards()
+        .then((data: CardStored[]) => {
           acc(data);
         })
         .catch((err) => {
@@ -25,7 +25,7 @@ const useRandomTests = () => {
   }: {
     today: boolean;
     levels: SelectedLevels;
-  }): Promise<QuestionAnswerStored[]> => {
+  }): Promise<CardStored[]> => {
     let nextSeeDate = undefined;
     const labels: string[] = [];
 
@@ -39,7 +39,7 @@ const useRandomTests = () => {
       .filter(([_, checked]) => checked)
       .map(([level]) => labels.push(level));
 
-    return getAllQuestionAnswersByFilter({ nextSeeDate, labels });
+    return getAllCardsByFilter({ nextSeeDate, labels });
   };
 
   return {

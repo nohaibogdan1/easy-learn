@@ -4,11 +4,18 @@ import React, { ReactElement, useEffect, useState } from 'react';
 
 import useRandomTests from '../hooks/useRandomTests';
 import DisplayCards from '../components/DisplayCards';
-import FiltersSummary from '../components/FiltersSummary';
-import { Card, Filter, LabelStored, QuestionAnswerStored, SelectedLevels } from '../types';
-import Filters from '../components/Filters';
-import { LEVELS } from '../constants';
+import { Filter, SelectedLevels } from '../types';
+import { CardStored, Card } from '../data/interfaces';
+import { LEVELS, ICON_BUTTONS_CLASSES, BUTTONS_TEXT } from '../constants';
 import { useDbStore } from '../stores/db-store/store';
+import Statistics from '../components/Statistics';
+import StatisticsGroup from '../components/StatisticsGroup';
+import PrimaryButton from '../components/buttons/PrimaryButton';
+import SecondaryButton from '../components/buttons/SecondaryButton';
+import ButtonsGroup from '../components/buttons/ButtonsGroup';
+import MobileMenu from '../components/mobile-menu/MobileMenu';
+import MobileSubmenu from '../components/mobile-menu/MobileSubmenu';
+import MobileMenuItem from '../components/mobile-menu/MobileMenuItem';
 
 import './test.css';
 
@@ -22,8 +29,6 @@ const Test = (): ReactElement => {
   });
   const [start, setStart] = useState(true);
   const [finish, setFinish] = useState(false);
-  const [labels, setLabels] = useState<LabelStored[]>([]);
-  const [selectedLabels, setSelectedLabels] = useState<LabelStored[]>([]);
   const [questionsFinished, setQuestionsFinished] = useState<number>(0);
 
   // const {
@@ -90,63 +95,56 @@ const Test = (): ReactElement => {
   //   setQuestionsFinished((questionsFinished) => questionsFinished + 1);
   // };
 
-
   return (
-    <div className='test-page-wrapper'>
-      <div className='top-section'>
-        <div className='options-btns-wrapper'>
-          <button>
-            customize
-          </button>
-          <button>
-            cancel
-          </button>
-        </div>
-        <div className='progress-wrapper'>
-            <div>
-              <div className='description'>total</div>
-              <div className='value'>39</div>
+    <div className="page-wrapper test-page-wrapper">
+      <div className="top-section">
+        <ButtonsGroup>
+          <SecondaryButton text="customize" />
+          <SecondaryButton text="cancel" />
+        </ButtonsGroup>
+        <StatisticsGroup>
+          <Statistics description="total" value="39" />
+          <Statistics description="current" value="10" />
+          <Statistics description="answered" value="27" />
+        </StatisticsGroup>
+      </div>
+      <div className="bottom-section mobile-margin-exterior">
+        <div className="test-wrapper">
+          <div className="test-buttons-wrapper">
+            <button className="nav-card-btn">{'<'}</button>
+            <div className="question-btns">
+              <PrimaryButton text={BUTTONS_TEXT.SHOW_ANSWER} />
+              {/* <PrimaryButton text={BUTTONS_TEXT.EASY}/> 
+              <PrimaryButton text={BUTTONS_TEXT.GOOD}/>
+              <PrimaryButton text={BUTTONS_TEXT.HARD}/> */}
             </div>
-            <div>
-              <div className='description'>current</div>
-              <div className='value'>10</div>
-            </div>
-            <div>
-              <div className='description'>answered</div>
-              <div className='value'>27</div>
-            </div>
+            <button className="nav-card-btn">{'>'}</button>
           </div>
-      </div>
-      <div className='bottom-section'>
-        <div className='test-wrapper'>
-          <div className='test-buttons-wrapper'>
-            <button className='nav-card-btn'>{'<'}</button>
-            <div className='question-btns'>
-              <button className='primary-btn'>Show answer</button>
-              {/* <button className='primary-btn'>Easy</button>
-              <button className='primary-btn'>Good</button>
-              <button className='primary-btn'>Hard</button> */}
-            </div>
-            <button className='nav-card-btn'>{'>'}</button>
+          <div className="question">
+            It is a ersions have evolved over the years, sometimes by accident, sometimes on purpose
+            (injected humour and the like).
           </div>
-          <div className='question'>It is a ersions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</div>
-          <div className='answer'>ill uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purose (injected humour and the like.</div>
+          <div className="answer">
+            ill uncover many web sites still in their infancy. Various versions have evolved over
+            the years, sometimes by accident, sometimes on purose (injected humour and the like.
+          </div>
         </div>
       </div>
-      <div className='bottom-menu'>
-        <div className='deck-answer-btns'>
-          {/* <button>Show answer</button> */}
-          <button>Easy</button>
-          <button>Good</button>
-          <button>Hard</button>
-        </div>
-        <div className='nav-btns'>
-          <button className='customize-btn'></button>
-          <button className='prev-nav-card-btn'></button>
-          <button className='next-nav-card-btn'></button>
-          <button className='back-btn'></button>
-        </div>
-      </div>
+
+      <MobileMenu>
+        <MobileSubmenu className="space-evenly">
+          {/* <MobileMenuItem text={BUTTONS_TEXT.SHOW_ANSWER}/> */}
+          <MobileMenuItem text={BUTTONS_TEXT.EASY} />
+          <MobileMenuItem text={BUTTONS_TEXT.GOOD} />
+          <MobileMenuItem text={BUTTONS_TEXT.HARD} />
+        </MobileSubmenu>
+        <MobileSubmenu className="space-evenly">
+          <MobileMenuItem className={`icon-btn ${ICON_BUTTONS_CLASSES.CUSTOMIZE}`} />
+          <MobileMenuItem className={`icon-btn ${ICON_BUTTONS_CLASSES.PREV}`} />
+          <MobileMenuItem className={`icon-btn ${ICON_BUTTONS_CLASSES.NEXT}`} />
+          <MobileMenuItem className={`icon-btn ${ICON_BUTTONS_CLASSES.BACK}`} />
+        </MobileSubmenu>
+      </MobileMenu>
     </div>
   );
 };

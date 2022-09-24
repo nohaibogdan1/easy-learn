@@ -1,0 +1,67 @@
+/* ------------ MOBILE MENU BUTTON --------------  */
+
+.mobile-menu-item-wrapper {
+  background: none;
+  border: none;
+  box-sizing: content-box;
+  color: #0171ff;
+  font-size: 14px;
+  font-weight: bold;
+  height: 20px;
+  margin: 0 25px;
+  position: relative;
+  white-space: nowrap;
+}
+
+/* ------------ MOBILE MENU ICON BUTTON --------------  */
+
+.mobile-menu-item-wrapper.icon-btn {
+  padding: 0;
+  width: 15px;
+}
+
+.mobile-menu-item-wrapper.icon-btn::before {
+  background-size: cover;
+  content: '';
+  height: 15px;
+  left: 0;
+  position: absolute;
+  width: 15px;
+  top: 0;
+}
+
+.mobile-menu-item-wrapper.icon-btn.prev-nav-card-btn::before,
+.mobile-menu-item-wrapper.icon-btn.next-nav-card-btn::before {
+  height: 20px;
+  width: 10px;
+}
+
+/* ------------ MOBILE MENU ICON BUTTONS ADDING SVG --------------  */
+
+.mobile-menu-item-wrapper.icon-btn.customize-btn::before {
+  background-image: url('../../icons/settings.svg');
+}
+
+.mobile-menu-item-wrapper.icon-btn.prev-nav-card-btn::before {
+  background-image: url('../../icons/prev.svg');
+}
+
+.mobile-menu-item-wrapper.icon-btn.next-nav-card-btn::before {
+  background-image: url('../../icons/next.svg');
+}
+
+.mobile-menu-item-wrapper.icon-btn.back-btn::before {
+  background-image: url('../../icons/back.svg');
+}
+
+.mobile-menu-item-wrapper.mobile-menu-item-wrapper.icon-btn.edit-btn::before {
+  background-image: url('../../icons/edit.svg');
+}
+
+.mobile-menu-item-wrapper.mobile-menu-item-wrapper.icon-btn.ok-btn::before {
+  background-image: url('../../icons/ok.svg');
+}
+
+.mobile-menu-item-wrapper.mobile-menu-item-wrapper.icon-btn.cancel-btn::before {
+  background-image: url('../../icons/cancel.svg');
+}

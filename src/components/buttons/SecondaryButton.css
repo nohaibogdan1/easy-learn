@@ -1,0 +1,10 @@
+.secondary-btn {
+  background: none;
+  border: 1px solid #0171ff;
+  border-radius: 10px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 10px;
+  padding: 10px 20px;
+}
