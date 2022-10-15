@@ -2,7 +2,7 @@
 
 import { tables } from '../db/tables';
 import { DbState } from '../stores/db-store/store';
-import { CardStored } from './interfaces';
+import { CardStored, CourseStored, DeckStored, CardDeckStored } from './interfaces';
 
 const getAllGeneralData = ({
   table,
@@ -10,7 +10,7 @@ const getAllGeneralData = ({
 }: {
   table: tables;
   state: DbState;
-}): Promise<CardStored[]> => {
+}): Promise<(CardStored | CourseStored | DeckStored | CardDeckStored)[]> => {
   return new Promise((acc, reject) => {
     const { db } = state;
 

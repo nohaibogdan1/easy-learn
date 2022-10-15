@@ -16,10 +16,44 @@ import {
   insertCardData,
   updateCardData,
   getAllCardsData,
-  getAllCardsByFilterData
+  getAllCardsByFilterData,
+  getDeckFilterdCardsData,
+  deleteCardsData,
+  getAllCardsForTestData
 } from '../../data/card';
 import deleteGeneralEntry from '../../data/deleteGeneralEntry';
-import { CardAdd, CardStored, CardModification } from '../../data/interfaces';
+import {
+  CardAdd,
+  CardStored,
+  CardModification,
+  CourseStored,
+  CourseAdd,
+  CourseWithDecks,
+  DeckAdd,
+  DeckStored,
+  CourseModification,
+  DeckWithCards,
+  DeckModification,
+  Sort,
+  CardAndDeckStored
+} from '../../data/interfaces';
+import {
+  getAllCoursesData,
+  insertCourseData,
+  getCourseData,
+  updateCourseData,
+  deleteCourseData
+} from '../../data/course';
+import {
+  deleteDecksData,
+  getAllDecksData,
+  insertDeckData,
+  getDeckData,
+  updateDeckData,
+  removeCardsFromDeckData,
+  deleteDeckData,
+  insertCardDeckData
+} from '../../data/deck';
 
 export type DbState = {
   db: IDBDatabase | null;
@@ -29,8 +63,40 @@ export type IDbContext = {
   state: DbState;
   insertCard: (data: CardAdd) => Promise<number>;
   getAllCards: () => Promise<CardStored[]>;
+  getAllCardsForTest: (arg: {
+    cardsIds?: number[], 
+    decksIds?: number[], 
+    coursesIds?: number[] 
+  }) => Promise<CardAndDeckStored[]>;
   updateCard: (data: CardModification) => Promise<void>;
-  getAllCardsByFilter: (filter: Filter) => Promise<CardStored[]>;
+  getAllCardsByFilter: (data?: { filter?: Filter; sort?: Sort }) => Promise<CardStored[]>;
+  getAllCourses: () => Promise<CourseStored[]>;
+  insertCourse: (data: CourseAdd) => Promise<number | null>;
+  updateCourse: (data: CourseModification) => Promise<void>;
+  updateDeck: (data: DeckModification) => Promise<void>;
+  getCourse: (data: { id: number; includeDecks?: boolean }) => Promise<CourseWithDecks | null>;
+  getDeck: (data: { id: number; includeCards?: boolean }) => Promise<DeckWithCards | null>;
+  getAllDecks: () => Promise<DeckStored[]>;
+  insertDeck: (data: DeckAdd) => Promise<number | null>;
+  deleteDecks: (decksIds: number[]) => Promise<void>;
+  deleteDeck: (deckId: number) => Promise<void>;
+  deleteCourse: (id: number) => Promise<void>;
+  removeCardsFromDeck: ({
+    cardsIds,
+    deckId
+  }: {
+    cardsIds: number[];
+    deckId: number;
+  }) => Promise<void>;
+  getDeckFilteredCards: ({
+    deckId,
+    text
+  }: {
+    deckId: number;
+    text: string;
+  }) => Promise<CardAndDeckStored[]>;
+  deleteCards: (cardsIds: number[]) => Promise<void>;
+  insertCardDeck: (arg: { deckId: number; cardId: number }) => Promise<void>;
 };
 
 const initialDbState = {
@@ -68,10 +134,22 @@ export const DbStoreProvider = ({
     return getAllCardsData(state);
   };
 
-  const getAllCardsByFilter = async (filter: Filter): Promise<CardStored[]> => {
+  const getAllCardsForTest = async (arg: {
+    cardsIds?: number[],
+    decksIds?: number[],
+    coursesIds?: number[],
+  }): Promise<CardAndDeckStored[]> => {
+    return getAllCardsForTestData({ ...arg, state });
+  };
+
+  const getAllCardsByFilter = async (data?: {
+    filter?: Filter;
+    sort?: Sort;
+  }): Promise<CardStored[]> => {
     return getAllCardsByFilterData({
       state,
-      filter
+      filter: data?.filter,
+      sort: data?.sort
     });
   };
 
@@ -81,6 +159,113 @@ export const DbStoreProvider = ({
       table,
       state
     });
+  };
+
+  const getAllCourses = async (): Promise<CourseStored[]> => {
+    return getAllCoursesData(state);
+  };
+
+  const insertCourse = async (data: CourseAdd): Promise<number | null> => {
+    return insertCourseData({ state, data });
+  };
+
+  const updateCourse = async (data: CourseModification): Promise<void> => {
+    updateCourseData({
+      state,
+      data
+    });
+  };
+
+  const getCourse = ({
+    id,
+    includeDecks
+  }: {
+    id: number;
+    includeDecks?: boolean;
+  }): Promise<CourseWithDecks | null> => {
+    return getCourseData({
+      id,
+      includeDecks,
+      state
+    });
+  };
+
+  const deleteCourse = async (id: number): Promise<void> => {
+    return await deleteCourseData({
+      id,
+      state
+    });
+  };
+
+  const getAllDecks = async (): Promise<DeckStored[]> => {
+    return getAllDecksData(state);
+  };
+
+  const getDeck = ({
+    id,
+    includeCards
+  }: {
+    id: number;
+    includeCards?: boolean;
+  }): Promise<DeckWithCards | null> => {
+    return getDeckData({
+      id,
+      includeCards,
+      state
+    });
+  };
+
+  const updateDeck = async (data: DeckModification): Promise<void> => {
+    updateDeckData({
+      state,
+      data
+    });
+  };
+
+  const insertDeck = async (data: DeckAdd): Promise<number | null> => {
+    return insertDeckData({ state, data });
+  };
+
+  const deleteDecks = async (decksIds: number[]): Promise<void> => {
+    return await deleteDecksData({ ids: decksIds, state });
+  };
+
+  const deleteDeck = async (deckId: number): Promise<void> => {
+    return await deleteDeckData({ id: deckId, state });
+  };
+
+  const removeCardsFromDeck = async ({
+    cardsIds,
+    deckId
+  }: {
+    cardsIds: number[];
+    deckId: number;
+  }): Promise<void> => {
+    return await removeCardsFromDeckData({ cardsIds, deckId, state });
+  };
+
+  const getDeckFilteredCards = async ({
+    deckId,
+    text
+  }: {
+    deckId: number;
+    text: string;
+  }): Promise<CardAndDeckStored[]> => {
+    return await getDeckFilterdCardsData({ deckId, text, state });
+  };
+
+  const deleteCards = async (cardsIds: number[]) => {
+    return await deleteCardsData({ cardsIds, state });
+  };
+
+  const insertCardDeck = async ({
+    cardId,
+    deckId
+  }: {
+    cardId: number;
+    deckId: number;
+  }): Promise<void> => {
+    return await insertCardDeckData({ cardId, deckId, state });
   };
 
   useEffect(() => {
@@ -93,8 +278,24 @@ export const DbStoreProvider = ({
         state,
         insertCard,
         getAllCards,
+        getAllCardsForTest,
         updateCard,
-        getAllCardsByFilter
+        getAllCardsByFilter,
+        getAllCourses,
+        insertCourse,
+        updateCourse,
+        getCourse,
+        getAllDecks,
+        insertDeck,
+        deleteDecks,
+        deleteDeck,
+        deleteCourse,
+        getDeck,
+        updateDeck,
+        removeCardsFromDeck,
+        getDeckFilteredCards,
+        deleteCards,
+        insertCardDeck
       }}
     >
       {children}

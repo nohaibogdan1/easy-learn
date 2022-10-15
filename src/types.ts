@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { LEVELS } from './constants';
-import { Card } from './data/interfaces';
 
 type NextSeeDate = {
   [LEVELS.EASY]: string;
@@ -17,18 +16,11 @@ type SelectedLevels = {
 interface Filter {
   labels?: string[];
   nextSeeDate?: string;
+  questionSearch?: string;
 }
 
 interface Obj {
-  [key: string]: string | number;
+  [key: string]: string | number | undefined;
 }
 
-type ExcelRow = Partial<Card> & {
-  labels?: string;
-};
-
-type ExcelRowSanitized = Card & {
-  labels?: string;
-};
-
-export type { NextSeeDate, Filter, SelectedLevels, Obj, ExcelRow, ExcelRowSanitized };
+export type { NextSeeDate, Filter, SelectedLevels, Obj };

@@ -3,8 +3,18 @@ import React, { ReactElement } from 'react';
 
 import './SecondaryButton.css';
 
-const SecondaryButton = ({ text }: { text: string }): ReactElement => {
-  return <button className="secondary-btn">{text}</button>;
+const SecondaryButton = ({
+  onClick,
+  text
+}: {
+  onClick?: () => void;
+  text: string;
+}): ReactElement => {
+  return (
+    <button onClick={onClick} className="secondary-btn">
+      {text}
+    </button>
+  );
 };
 
 export default SecondaryButton;

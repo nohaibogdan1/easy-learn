@@ -31,6 +31,7 @@ enum BUTTONS_TEXT {
   UNSELECT_ALL = 'Unselect all',
   ADD_DECK = 'Add deck',
   ADD_CARD = 'Add card',
+  ADD_COURSE = 'Add course',
   DELETE_COURSE = 'Delete course',
   DELETE_DECK = 'Delete deck',
   DELETE_SELECTED_DECKS = 'Delete selected decks',
@@ -40,10 +41,41 @@ enum BUTTONS_TEXT {
   EDIT_DESCRIPTION = 'Edit description',
   OK = 'Ok',
   CANCEL = 'Cancel',
+  ADDING_DECK_OK = 'Ok',
+  ADDING_DECK_CANCEL = 'Cancel',
+  DESCRIPTION_EDITING_OK = 'Ok',
+  DESCRIPTION_EDITING_CANCEL = 'Cancel',
   EXPORT = 'Export',
   CHANGE_LEVEL = 'Change level',
   CHANGE_ORDER = 'Change order',
-  SEARCH = 'Search'
+  SEARCH = 'Search',
+  OK_CONFIRMATION_FORM = 'Ok',
+  CANCEL_CONFIRMATION_FORM = 'Cancel',
+  DELETE_SELECTED_CARDS = 'Delete selected cards',
+  ADD_TO_DECK = 'Add to deck',
+  CLOSE = 'Close',
+  NEXT = 'Next',
+  PREV = 'Prev',
+  CUSTOMIZE = 'Customize',
+  END_TEST = 'End test'
 }
 
-export { LEVELS, ICON_BUTTONS_CLASSES, BUTTONS_TEXT, LABELS_SEPARATOR, ROOT_NAME };
+enum FieldsForSorting {
+  createdAt = 'createdAt'
+}
+
+enum OrderSettings {
+  none = 'none',
+  shuffleCards = 'shuffleCards',
+  reverseOrder = 'reverseOrder'
+}
+
+export {
+  LEVELS,
+  ICON_BUTTONS_CLASSES,
+  BUTTONS_TEXT,
+  LABELS_SEPARATOR,
+  ROOT_NAME,
+  FieldsForSorting,
+  OrderSettings
+};

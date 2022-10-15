@@ -39,7 +39,7 @@ const useRandomTests = () => {
       .filter(([_, checked]) => checked)
       .map(([level]) => labels.push(level));
 
-    return getAllCardsByFilter({ nextSeeDate, labels });
+    return getAllCardsByFilter({ filter: { nextSeeDate, labels } });
   };
 
   return {

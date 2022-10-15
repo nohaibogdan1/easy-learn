@@ -6,12 +6,18 @@ import './MobileMenuItem.css';
 
 const MobileMenuItem = ({
   text = '',
-  className = ''
+  className = '',
+  onClick
 }: {
   text?: string;
   className?: string;
+  onClick?: () => void;
 }): ReactElement => {
-  return <button className={`mobile-menu-item-wrapper ${className}`}>{text}</button>;
+  return (
+    <button onClick={onClick} className={`mobile-menu-item-wrapper ${className}`}>
+      {text}
+    </button>
+  );
 };
 
 export default MobileMenuItem;

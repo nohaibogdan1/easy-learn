@@ -1,5 +1,6 @@
 /* eslint-disable */
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import './deck.css';
 import PrimaryButton from '../components/buttons/PrimaryButton';
@@ -10,96 +11,434 @@ import List from '../components/list/List';
 import MobileMenu from '../components/mobile-menu/MobileMenu';
 import MobileMenuItem from '../components/mobile-menu/MobileMenuItem';
 import MobileSubmenu from '../components/mobile-menu/MobileSubmenu';
-import { BUTTONS_TEXT, ICON_BUTTONS_CLASSES } from '../constants';
+import { BUTTONS_TEXT, ICON_BUTTONS_CLASSES, LEVELS, ROOT_NAME } from '../constants';
 import ReorderButton from '../components/buttons/ReorderButton';
 import Search from '../components/Search';
+import { useDbStore } from '../stores/db-store/store';
+import { CardAndDeckStored, CardStored } from '../data/interfaces';
+import {
+  getMenuStateForDeckPage,
+  mapButtonsTextToHandlers,
+  mapButtonsTextToIcons
+} from '../logic/menu-helpers';
+import ConfirmationForm from '../components/forms/ConfirmationForm';
 
 const DeckPage = (): ReactElement => {
+  /** ----------------- CUSTOM HOOK CALLS -------------------- */
+  const { id } = useParams();
+
+  const {
+    state: { db },
+    getDeck,
+    updateDeck,
+    removeCardsFromDeck,
+    deleteDeck,
+    getDeckFilteredCards
+  } = useDbStore();
+
+  const navigate = useNavigate();
+
+  /** ----------------- USE STATE -------------------- */
+  const [description, setDescription] = useState('');
+  const [courseId, setCourseId] = useState<number | null>(null);
+  const [newDescription, setNewDescription] = useState(description);
+  const [descriptionEditing, setDescriptionEditing] = useState(false);
+  const [cards, setCards] = useState<CardAndDeckStored[]>([]);
+  const [selectedCardsId, setSelectedCardsId] = useState<number[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [addingCard, setAddingCard] = useState<Boolean>(false);
+  const [removingSelectedCards, setRemovingSelectedCards] = useState<Boolean>(false);
+  const [deletingDeck, setDeletingDeck] = useState<Boolean>(false);
+  const [showConfirmationForm, setShowConfirmationForm] = useState<Boolean>(false);
+  const [confirmationFormError, setConfirmationFormError] = useState<string | null>(null);
+
+  /** ----------------- USE EFFECT -------------------- */
+  useEffect(() => {
+    if (db) {
+      (async () => {
+        await getDeckData();
+      })();
+    }
+  }, [Boolean(db)]);
+
+  useEffect(() => {
+    if (descriptionEditing || removingSelectedCards || deletingDeck) {
+      setConfirmationFormError(null);
+      setShowConfirmationForm(true);
+    }
+  }, [descriptionEditing, removingSelectedCards, deletingDeck]);
+
+  useEffect(() => {
+    if (!showConfirmationForm) {
+      setDescriptionEditing(false);
+      setRemovingSelectedCards(false);
+      setDeletingDeck(false);
+    }
+  }, [showConfirmationForm]);
+
+  /** ----------------- DATA HANDLING FUNCTIONS -------------------- */
+  const getDeckData = async () => {
+    try {
+      setError(null);
+
+      if (!id) {
+        return;
+      }
+
+      const parsedId = parseInt(id);
+
+      if (isNaN(parsedId)) {
+        return;
+      }
+
+      const deck = await getDeck({
+        id: parsedId,
+        includeCards: true
+      });
+
+      if (!deck) {
+        setError('Deck not found');
+        return;
+      }
+
+      setDescription(deck.description);
+      setNewDescription(deck.description);
+      setCards(deck.cards || []);
+      setSelectedCardsId([]);
+      setCourseId(deck.courseId);
+    } catch (err) {
+      setError('Error happened when getting the deck');
+    }
+  };
+
+  const editDescripton = async (): Promise<{ error: null | string }> => {
+    try {
+      if (!Boolean(newDescription.trim())) {
+        return { error: 'you did not enter description' };
+      }
+
+      if (!id) {
+        return { error: null };
+      }
+
+      const parsedId = parseInt(id);
+
+      if (isNaN(parsedId)) {
+        return { error: null };
+      }
+
+      await updateDeck({ description: newDescription, id: parsedId });
+
+      return { error: null };
+    } catch (err) {
+      return { error: 'Error on editing the description' };
+    }
+  };
+
+  const removeSelectedCards = async (): Promise<{ error: null | string }> => {
+    try {
+      if (!selectedCardsId.length) {
+        return { error: null };
+      }
+
+      if (!id) {
+        return { error: null };
+      }
+
+      const parsedId = parseInt(id);
+
+      if (isNaN(parsedId)) {
+        return { error: null };
+      }
+
+      await removeCardsFromDeck({ cardsIds: selectedCardsId, deckId: parsedId });
+
+      return { error: null };
+    } catch (err) {
+      return { error: 'Error on deleting the selected decks' };
+    }
+  };
+
+  const removeDeck = async (): Promise<{ error: null | string }> => {
+    try {
+      if (!id) {
+        return { error: null };
+      }
+
+      const parsedId = parseInt(id);
+
+      if (isNaN(parsedId)) {
+        return { error: null };
+      }
+
+      await deleteDeck(parsedId);
+
+      return { error: null };
+    } catch (err) {
+      return { error: 'Error on deleting the deck' };
+    }
+  };
+
+  const setSearchInput = async (searchText: string) => {
+    if (!id) {
+      return;
+    }
+
+    const parsedId = parseInt(id);
+
+    if (isNaN(parsedId)) {
+      return;
+    }
+
+    const cards = await getDeckFilteredCards({ deckId: parsedId, text: searchText });
+
+    setCards(cards);
+  };
+
+  /** ----------------- FUNCTIONS -------------------- */
+
+  const onRedirect = (id: number): void => {
+    navigate(`/${ROOT_NAME}/card/${id}`);
+  };
+
+  /** ----------------- EVENT HANDLERS -------------------- */
+  const onExport = () => {};
+
+  const onSelectAll = (): void => {
+    setSelectedCardsId(() => cards.map((card) => card.id));
+  };
+
+  const onUnselectAll = (): void => {
+    setSelectedCardsId(() => []);
+  };
+
+  const onCheckboxChange = ({ checked, id }: { checked: boolean; id: number }): void => {
+    setSelectedCardsId((selectedCardsId) => {
+      if (checked) {
+        return [...selectedCardsId, id];
+      }
+      return [...selectedCardsId.filter((cardId) => cardId !== id)];
+    });
+  };
+
+  const onAddCard = async () => {
+    navigate(`/${ROOT_NAME}/add-card`, { state: { deckId: id } });
+  };
+
+  const onEditDescription = () => {
+    setDescriptionEditing(true);
+  };
+
+  const onRemoveSelectedCards = () => {
+    setRemovingSelectedCards(true);
+  };
+
+  const onDeleteDeck = () => {
+    setDeletingDeck(true);
+  };
+
+  const onConfirmationFormOk = async () => {
+    let error = null;
+
+    if (removingSelectedCards) {
+      const data = await removeSelectedCards();
+      error = data.error;
+    }
+
+    if (deletingDeck) {
+      const data = await removeDeck();
+      error = data.error;
+      if (!error) {
+        navigate(`/${ROOT_NAME}/courses/${courseId}`);
+      }
+    }
+
+    if (descriptionEditing) {
+      const data = await editDescripton();
+      error = data.error;
+    }
+
+    if (error) {
+      setConfirmationFormError(error);
+      return;
+    }
+
+    setShowConfirmationForm(false);
+
+    getDeckData();
+  };
+
+  const onConfirmationFormCancel = () => {
+    setShowConfirmationForm(false);
+  };
+
+  const onPlay = () => {
+    if (!id) {
+      return;
+    }
+
+    const parsedId = parseInt(id);
+
+    if (isNaN(parsedId)) {
+      return;
+    }
+
+    navigate(`/${ROOT_NAME}/test/`, { 
+      state: { 
+        decksIds: [parsedId],
+      }
+    });
+  };
+
+  const onPlaySelected = () => {
+    navigate(`/${ROOT_NAME}/test/`, { 
+      state: { 
+        cardsIds: selectedCardsId,
+      }
+    });
+  };
+
+  /** ----------------- VARIABLES ------------------------------ */
+
+  const buttonTextHandlersMap = {
+    [BUTTONS_TEXT.PLAY]: onPlay,
+    [BUTTONS_TEXT.PLAY_SELECTED]: onPlaySelected,
+    [BUTTONS_TEXT.ADD_CARD]: onAddCard,
+    [BUTTONS_TEXT.SELECT_ALL]: onSelectAll,
+    [BUTTONS_TEXT.UNSELECT_ALL]: onUnselectAll,
+    [BUTTONS_TEXT.DELETE_DECK]: onDeleteDeck,
+    [BUTTONS_TEXT.REMOVE_SELECTED_CARDS]: onRemoveSelectedCards,
+    [BUTTONS_TEXT.EDIT_DESCRIPTION]: onEditDescription,
+    [BUTTONS_TEXT.EXPORT]: onExport,
+    [BUTTONS_TEXT.OK_CONFIRMATION_FORM]: onConfirmationFormOk,
+    [BUTTONS_TEXT.CANCEL_CONFIRMATION_FORM]: onConfirmationFormCancel
+  };
+
+  const {
+    firstDesktopSubmenu,
+    secondDesktopSubmenu,
+    firstMobileSubmenu,
+    secondMobileSubmenu,
+    editMenu
+  } = getMenuStateForDeckPage({
+    addingItem: addingCard,
+    selected: Boolean(selectedCardsId.length),
+    allSelected: Boolean(cards.length) && cards.every((card) => selectedCardsId.includes(card.id)),
+    descriptionEditing,
+    haveDecks: Boolean(cards.length)
+  });
+
+  const firstDekstopSubmenuButtons = mapButtonsTextToHandlers({
+    buttonTextHandlersMap,
+    buttonsText: firstDesktopSubmenu
+  });
+
+  const secondDekstopSubmenuButtons = mapButtonsTextToHandlers({
+    buttonTextHandlersMap,
+    buttonsText: secondDesktopSubmenu
+  });
+
+  const firstMobileSubmenuButtons = mapButtonsTextToHandlers({
+    buttonTextHandlersMap,
+    buttonsText: firstMobileSubmenu
+  });
+
+  const secondMobileSubmenuButtons = mapButtonsTextToHandlers({
+    buttonTextHandlersMap,
+    buttonsText: secondMobileSubmenu
+  });
+
+  const editMenuButtons = mapButtonsTextToHandlers({
+    buttonTextHandlersMap,
+    buttonsText: editMenu
+  });
+
+  let confirmationFormData;
+  let setConfirmationFormData;
+
+  if (descriptionEditing) {
+    confirmationFormData = newDescription;
+    setConfirmationFormData = setNewDescription;
+  }
+
+  /** ----------------- RETURN --------------------------------- */
+
   return (
     <div className="page-wrapper deck-page-wrapper">
       <div className="top-section">
         <div className="deck-description">
-          <div className="text">
-            Mathematics + a long name for the course is simply dummy text of the printing and
-            typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since
-            the 1500s,
-          </div>
+          <div className="text">{description}</div>
           <ButtonsGroup className="margin-top-small">
-            <MobileMenuItem className={`icon-btn ${ICON_BUTTONS_CLASSES.EDIT}`} />
-            {/* <MobileMenuItem className={`icon-btn ${ICON_BUTTONS_CLASSES.OK}`}/>
-            <MobileMenuItem className={`icon-btn ${ICON_BUTTONS_CLASSES.CANCEL}`}/> */}
+            {editMenuButtons.map((btn, idx) => (
+              <MobileMenuItem
+                key={idx}
+                onClick={btn.onClick}
+                className={`icon-btn ${mapButtonsTextToIcons(btn.text)} || ''`}
+              />
+            ))}
           </ButtonsGroup>
         </div>
         <ButtonsGroup className={'direction-column margin-right-medium margin-top-medium'}>
           <ButtonsGroup>
-            <PrimaryButton text={BUTTONS_TEXT.PLAY} />
-            <PrimaryButton text={BUTTONS_TEXT.PLAY_SELECTED} />
+            {firstDekstopSubmenuButtons.map((btn, idx) => {
+              return <PrimaryButton key={idx} text={btn.text} onClick={btn.onClick} />;
+            })}
           </ButtonsGroup>
           <ButtonsGroup className={'margin-top-medium wrap'}>
-            <SecondaryButton text={BUTTONS_TEXT.ADD_CARD} />
-            <SecondaryButton text={BUTTONS_TEXT.SELECT_ALL} />
-            <SecondaryButton text={BUTTONS_TEXT.UNSELECT_ALL} />
-            <SecondaryButton text={BUTTONS_TEXT.DELETE_DECK} />
-            <SecondaryButton text={BUTTONS_TEXT.REMOVE_SELECTED_CARDS} />
-            <SecondaryButton text={BUTTONS_TEXT.CHANGE_LEVEL} />
-            <SecondaryButton text={BUTTONS_TEXT.CHANGE_ORDER} />
-            <SecondaryButton text={BUTTONS_TEXT.EXPORT} />
+            {secondDekstopSubmenuButtons.map((btn, idx) => {
+              return <SecondaryButton key={idx} text={btn.text} onClick={btn.onClick} />;
+            })}
           </ButtonsGroup>
         </ButtonsGroup>
-        <Search />
+        <Search setSearchInput={setSearchInput} />
       </div>
       <div className="bottom-section">
         <h3 className="mobile-margin-exterior">Cards</h3>
         <List>
-          <ReorderButton />
-          <ListItem
-            usesCheckbox
-            showArrow
-            text={`Mathematics + a long name for the course is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,`}
-          />
-          <ReorderButton />
-          <ListItem
-            text={`Mathematics + a long name for the course is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,`}
-          />
-          <ReorderButton />
-          <ListItem
-            text={`Mathematics + a long name for the course is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,`}
-          />
-          <ReorderButton />
-          <ListItem
-            text={`Mathematics + a long name for the course is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,`}
-          />
-          <ReorderButton />
-          <ListItem
-            text={`Mathematics + a long name for the course is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,`}
-          />
-          <ReorderButton />
-          <ListItem
-            text={`Mathematics + a long name for the course is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,`}
-          />
-          <ReorderButton />
+          {cards.map((card) => {
+            const checked = Boolean(selectedCardsId.find((cardId) => cardId === card.id));
+
+            return (
+              <ListItem
+                key={card.id}
+                showArrow
+                text={card.question}
+                id={card.id}
+                usesCheckbox
+                onCheckboxChange={onCheckboxChange}
+                checked={checked}
+                onRedirect={onRedirect}
+              />
+            );
+          })}
         </List>
       </div>
       <MobileMenu>
-        <MobileSubmenu className="space-evenly">
-          <MobileMenuItem text={BUTTONS_TEXT.PLAY} />
-          <MobileMenuItem text={BUTTONS_TEXT.PLAY_SELECTED} />
-        </MobileSubmenu>
-        <MobileSubmenu>
-          <MobileMenuItem text={BUTTONS_TEXT.ADD_CARD} />
-          <MobileMenuItem text={BUTTONS_TEXT.SEARCH} />
-          <MobileMenuItem text={BUTTONS_TEXT.SELECT_ALL} />
-          <MobileMenuItem text={BUTTONS_TEXT.UNSELECT_ALL} />
-          <MobileMenuItem text={BUTTONS_TEXT.DELETE_DECK} />
-          <MobileMenuItem text={BUTTONS_TEXT.REMOVE_SELECTED_CARDS} />
-          <MobileMenuItem text={BUTTONS_TEXT.EDIT_DESCRIPTION} />
-          <MobileMenuItem text={BUTTONS_TEXT.OK} />
-          <MobileMenuItem text={BUTTONS_TEXT.CANCEL} />
-          <MobileMenuItem text={BUTTONS_TEXT.CHANGE_LEVEL} />
-          <MobileMenuItem text={BUTTONS_TEXT.CHANGE_ORDER} />
-          <MobileMenuItem text={BUTTONS_TEXT.EXPORT} />
-        </MobileSubmenu>
+        {Boolean(firstMobileSubmenuButtons.length) && (
+          <MobileSubmenu className="space-evenly">
+            {firstMobileSubmenuButtons.map((button, idx) => (
+              <MobileMenuItem key={idx} text={button.text} onClick={button.onClick} />
+            ))}
+          </MobileSubmenu>
+        )}
+        {Boolean(secondMobileSubmenuButtons.length) && (
+          <MobileSubmenu>
+            {secondMobileSubmenuButtons.map((button, idx) => (
+              <MobileMenuItem key={idx} text={button.text} onClick={button.onClick} />
+            ))}
+          </MobileSubmenu>
+        )}
       </MobileMenu>
+
+      {showConfirmationForm && (
+        <ConfirmationForm
+          onOk={onConfirmationFormOk}
+          onCancel={onConfirmationFormCancel}
+          error={confirmationFormError}
+          data={confirmationFormData}
+          setData={setConfirmationFormData}
+        />
+      )}
     </div>
   );
 };

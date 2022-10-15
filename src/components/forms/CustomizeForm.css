@@ -1,0 +1,16 @@
+.customize-form-wrapper {
+  align-items: center;
+  background-color: rgba(1, 1, 1, 0.8);
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 1;
+}
+
+.customize-form {
+  background-color: red;
+}

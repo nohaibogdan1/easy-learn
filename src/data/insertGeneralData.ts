@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { DbState } from '../stores/db-store/store';
-import { CardAdd } from './interfaces';
+import { CardAdd, CourseAdd, DeckAdd, CardDeckAdd } from './interfaces';
 import { tables } from '../db/tables';
 
 const insertGeneralData = ({
@@ -10,7 +10,7 @@ const insertGeneralData = ({
   table
 }: {
   state: DbState;
-  data: CardAdd;
+  data: CardAdd | CourseAdd | DeckAdd | CardDeckAdd;
   table: tables;
 }): Promise<number> => {
   return new Promise((acc, reject) => {
@@ -19,7 +19,7 @@ const insertGeneralData = ({
       try {
         const transaction = db.transaction(table, 'readwrite');
         const store = transaction.objectStore(table);
-        const request = store.add(data);
+        const request = store.add({ ...data, createdAt: new Date().getTime().toString() });
 
         request.onerror = () => {
           console.log('Add to Store Error');

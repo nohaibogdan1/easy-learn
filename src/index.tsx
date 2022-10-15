@@ -6,16 +6,18 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import List from './routes/list';
-import Insert from './routes/insert';
 import Test from './routes/test';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import Data from './routes/data';
+import ImportPage from './routes/import';
 import { ROOT_NAME } from './constants';
 import { DbStoreProvider } from './stores/db-store/store';
 import NavBar from './components/NavBar';
 import HomePage from './routes/home';
 import CoursePage from './routes/course';
 import DeckPage from './routes/deck';
+import AddCardPage from './routes/add-card';
+import CardPage from './routes/card';
+import CardsPage from './routes/cards';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
@@ -26,12 +28,14 @@ root.render(
         <Routes>
           <Route path={ROOT_NAME + '/'} element={<App />}></Route>
           <Route path={ROOT_NAME + '/list'} element={<List />}></Route>
-          <Route path={ROOT_NAME + '/insert'} element={<Insert />}></Route>
           <Route path={ROOT_NAME + '/test'} element={<Test />}></Route>
-          <Route path={ROOT_NAME + '/data'} element={<Data />}></Route>
+          <Route path={ROOT_NAME + '/import'} element={<ImportPage />}></Route>
           <Route path={ROOT_NAME + '/home'} element={<HomePage />}></Route>
-          <Route path={ROOT_NAME + '/course/:id'} element={<CoursePage />}></Route>
-          <Route path={ROOT_NAME + '/deck'} element={<DeckPage />}></Route>
+          <Route path={ROOT_NAME + '/courses/:id'} element={<CoursePage />}></Route>
+          <Route path={ROOT_NAME + '/decks/:id'} element={<DeckPage />}></Route>
+          <Route path={ROOT_NAME + '/add-card'} element={<AddCardPage />}></Route>
+          <Route path={ROOT_NAME + '/cards/:id'} element={<CardPage />}></Route>
+          <Route path={ROOT_NAME + '/cards'} element={<CardsPage />}></Route>
         </Routes>
       </BrowserRouter>
     </DbStoreProvider>
