@@ -84,6 +84,8 @@ type CardDeckStored = CardDeck & {
   id: number;
 };
 
+type CardDeckModification = Partial<CardDeckStored>;
+
 type Sort = {
   field: FieldsForSorting;
   asc?: boolean;
@@ -127,5 +129,6 @@ export type {
   Sort,
   TestCustomSettings,
   CardAndDeckStored,
-  ExcelRow
+  ExcelRow,
+  CardDeckModification,
 };

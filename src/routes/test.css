@@ -18,6 +18,10 @@
   font-size: 51px;
 }
 
+.test-page-wrapper .nav-card-btn.hidden {
+  visibility: hidden;
+}
+
 .test-page-wrapper .test-wrapper {
   font-size: 15px;
   line-height: 40px;
@@ -54,7 +58,6 @@
 
   .test-page-wrapper .bottom-section {
     background-position: 55% 0%;
-    height: auto;
     margin-bottom: 100px;
     margin-top: 70px;
   }

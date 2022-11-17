@@ -19,7 +19,10 @@ import {
   getAllCardsByFilterData,
   getDeckFilterdCardsData,
   deleteCardsData,
-  getAllCardsForTestData
+  getAllCardsForTestData,
+  createRevertedCardsData,
+  updateCardsLevelData,
+  getCardData,
 } from '../../data/card';
 import deleteGeneralEntry from '../../data/deleteGeneralEntry';
 import {
@@ -52,8 +55,11 @@ import {
   updateDeckData,
   removeCardsFromDeckData,
   deleteDeckData,
-  insertCardDeckData
+  insertCardDeckData,
+  updateCardOrderData,
+  addCardsToDeckData,
 } from '../../data/deck';
+import { LEVELS, Where } from '../../constants';
 
 export type DbState = {
   db: IDBDatabase | null;
@@ -96,7 +102,12 @@ export type IDbContext = {
     text: string;
   }) => Promise<CardAndDeckStored[]>;
   deleteCards: (cardsIds: number[]) => Promise<void>;
-  insertCardDeck: (arg: { deckId: number; cardId: number }) => Promise<void>;
+  insertCardDeck: (arg: { deckId: number, cardId: number }) => Promise<void>;
+  updateCardsOrder: (arg: { cardIdTarget: number, where: Where, cardsIdsToMove: number[], deckId: number, }) => Promise<void>;
+  addCardsToDeck: (arg: { deckId: number, cardsIds: number[] }) => Promise<void>;
+  createRevertedCards: (arg: CardStored[]) => Promise<void>;
+  updateCardsLevel: (arg: {cardsIds: number[], newLevel: LEVELS}) => Promise<void>;
+  getCard: (arg: number) => Promise<CardStored | undefined>;
 };
 
 const initialDbState = {
@@ -268,6 +279,64 @@ export const DbStoreProvider = ({
     return await insertCardDeckData({ cardId, deckId, state });
   };
 
+  const updateCardsOrder = async ({
+    cardIdTarget,
+    where,
+    cardsIdsToMove,
+    deckId,
+  }: { 
+    cardIdTarget: number,
+    where: Where,
+    cardsIdsToMove: number[],
+    deckId: number,
+  }): Promise<void> => {
+
+    return updateCardOrderData({
+      cardIdTarget,
+      where,
+      cardsIdsToMove,
+      deckId, 
+      state,
+    });
+  };
+
+  const addCardsToDeck = async ({
+    cardsIds,
+    deckId,
+  }: {
+    cardsIds: number[],
+    deckId: number,
+  }): Promise<void> => {
+    addCardsToDeckData({
+      cardsIds,
+      deckId,
+      state
+    });
+  };
+
+  const createRevertedCards = async (cards: CardStored[]): Promise<void> => {
+    createRevertedCardsData({
+      cards,
+      state,
+    });
+  };
+
+  const updateCardsLevel = async ({
+    newLevel,
+    cardsIds,
+  }:{
+    newLevel: LEVELS,
+    cardsIds: number[]
+  }): Promise<void> => {
+    updateCardsLevelData({
+      cardsIds, newLevel, state
+    });
+  };
+
+  const getCard = (cardId: number): Promise<CardStored | undefined> => {
+    return getCardData({cardId, state});
+  }
+
   useEffect(() => {
     openDb({ setState });
   }, []);
@@ -295,7 +364,12 @@ export const DbStoreProvider = ({
         removeCardsFromDeck,
         getDeckFilteredCards,
         deleteCards,
-        insertCardDeck
+        insertCardDeck,
+        updateCardsOrder,
+        addCardsToDeck,
+        createRevertedCards,
+        updateCardsLevel,
+        getCard,
       }}
     >
       {children}

@@ -7,9 +7,14 @@ import { ROOT_NAME } from '../constants';
 import { useDbStore } from '../stores/db-store/store';
 
 const AddCardPage = (args: any) => {
-  const {
-    state: { deckId }
-  } = useLocation() as { state: { deckId: string } };
+  const state = useLocation().state as { deckId?: string } | null; 
+
+  let deckId: string | undefined;
+
+  if (state) {
+    deckId = state.deckId;
+  }
+
   const navigate = useNavigate();
 
   const { insertCard } = useDbStore();
@@ -17,7 +22,11 @@ const AddCardPage = (args: any) => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
 
-  const id = parseInt(deckId);
+  let parsedDeckId: number | undefined;
+
+  if (deckId) {
+    parsedDeckId = parseInt(deckId);
+  }
 
   const onChangeQuestion = (event: BaseSyntheticEvent) => {
     setQuestion(event.target.value);
@@ -33,12 +42,16 @@ const AddCardPage = (args: any) => {
     }
 
     await insertCard({
-      deckId: id,
+      deckId: parsedDeckId,
       question,
       answer
     });
 
-    navigate(`/${ROOT_NAME}/decks/${id}`);
+    if (parsedDeckId) {
+      navigate(`/${ROOT_NAME}/decks/${parsedDeckId}`);
+    } else {
+      navigate(`/${ROOT_NAME}/cards`);
+    }
   };
 
   const onClickAddExistentCard = () => {
@@ -46,7 +59,11 @@ const AddCardPage = (args: any) => {
   };
 
   const onClickCancel = () => {
-    navigate(`/${ROOT_NAME}/decks/${id}`);
+    if (parsedDeckId) {
+      navigate(`/${ROOT_NAME}/decks/${parsedDeckId}`);
+    } else {
+      navigate(`/${ROOT_NAME}/cards`);
+    }
   };
 
   return (

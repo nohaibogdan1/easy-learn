@@ -33,13 +33,23 @@ const Test = (): ReactElement => {
   const navigate = useNavigate();
 
   const {
-    state: { decksIds, coursesIds, cardsIds }
+    state
   } = useLocation() as { 
     state: { 
       decksIds?: number[],
       cardsIds?: number[],
       coursesIds?: number[],
-    }};
+    } | null};
+
+  let decksIds: number[] | undefined;
+  let coursesIds: number[] | undefined;
+  let cardsIds: number[] | undefined;
+  
+  if (state) {
+    decksIds = state.decksIds;
+    coursesIds = state.coursesIds;
+    cardsIds = state.cardsIds;
+  }
 
   /** ----------------- USE STATE -------------------- */
   const [cards, setCards] = useState<CardAndDeckStored[]>([]);
@@ -50,6 +60,11 @@ const Test = (): ReactElement => {
   const [reviewedCardsIds, setReviewedCardsIds] = useState<number[]>([]);
   const [isCustomizeFormShown, setIsCustomizeFormShown] = useState(false);
   const [customSettings, setCustomSettings] = useState<TestCustomSettings>({
+    orderSettings: OrderSettings.none,
+    showAnswerSettings: false,
+    levelFilterSettings: []
+  });
+  const [customSettingsNew, setCustomSettingsNew] = useState<TestCustomSettings>({
     orderSettings: OrderSettings.none,
     showAnswerSettings: false,
     levelFilterSettings: []
@@ -81,54 +96,65 @@ const Test = (): ReactElement => {
         decksIds,
         coursesIds,
       });
-      setCards(cards);
+      setCards(cards.sort((c1, c2) => c1.orderId - c2.orderId));
     } catch (err) {
       setError('Error getting cards');
     }
   };
 
   /** ----------------- FUNCTIONS -------------------- */
-  const applyCustomSettings = () => {
+  const applyCustomSettings = async () => {
     setCurrentCardIndex(0);
     setReviewedCardsIds([]);
-    setCards((cards) => cards);
     setIsAnswerShown(false);
 
+    let cardsNew = [...cards];
+
+    if (customSettings.levelFilterSettings.length) {
+      cardsNew = [...cardsNew.filter((c) => customSettings.levelFilterSettings.includes(c.level))]
+    } else {
+      
+      try {
+        const cards = await getAllCardsForTest({
+          cardsIds,
+          decksIds,
+          coursesIds,
+        });
+
+        cardsNew = [...cards];
+      
+      } catch (e) {
+        setError('Error getting cards');
+      }
+    }
+
     if (customSettings.orderSettings === OrderSettings.none) {
-      setCards((cards) => cards.sort((c1, c2) => c1.orderId - c2.orderId));
+      cardsNew = [...cardsNew.sort((c1, c2) => c1.orderId - c2.orderId)];
     }
 
     if (customSettings.orderSettings === OrderSettings.reverseOrder) {
-      setCards((cards) => cards.sort((c1, c2) => c2.orderId - c1.orderId));
+      cardsNew = [...cardsNew.sort((c1, c2) => c2.orderId - c1.orderId)];
     }
 
     if (customSettings.orderSettings === OrderSettings.shuffleCards) {
-      setCards((cards) => {
-        const shuffledOrders = shuffle(cards.map((c) => c.id));
-        const shuffledCards = [];
+      const shuffledOrders = shuffle(cardsNew.map((c) => c.id));
+      const shuffledCards = [];
 
-        for (const o of shuffledOrders) {
-          const card = cards.find((c) => c.id === o);
-          if (card) {
-            shuffledCards.push(card);
-          }
+      for (const o of shuffledOrders) {
+        const card = cardsNew.find((c) => c.id === o);
+        if (card) {
+          shuffledCards.push(card);
         }
-
-        return shuffledCards;
-      });
+      }
+      
+      cardsNew = [...shuffledCards];
     }
 
     if (customSettings.showAnswerSettings) {
       setIsAnswerShown(true);
     }
 
-    if (customSettings.levelFilterSettings.length) {
-      setCards((cards) =>
-        cards.filter((c) => customSettings.levelFilterSettings.includes(c.level))
-      );
-    } else {
-      getCardsData();
-    }
+    setCards(cardsNew);
   };
 
   const updateShowAnswer = () => {
@@ -140,7 +166,7 @@ const Test = (): ReactElement => {
   };
 
   const changeCustomSettings = (newCustomSettings: TestCustomSettings) => {
-    setCustomSettings(newCustomSettings);
+    setCustomSettingsNew(newCustomSettings);
   };
 
   /** ----------------- EVENT HANDLERS -------------------- */
@@ -218,6 +244,7 @@ const Test = (): ReactElement => {
   const onCustomizeFormPlay = () => {
     setIsCustomizeFormShown(false);
     setCustomSettingsChanged(true);
+    setCustomSettings(customSettingsNew);
   };
 
   const onCustomizeFormClose = () => {
@@ -225,6 +252,14 @@ const Test = (): ReactElement => {
   };
 
   /** ----------------- VARIABLES ------------------------------ */
+
+  const currentCard = cards[currentCardIndex];
+  const showPrevBtn = currentCardIndex > 0 && !isCustomizeFormShown && !endingTest;
+  const showNextBtn = currentCardIndex < cards.length - 1 && !isCustomizeFormShown && !endingTest;
+
+  const total = cards.length.toString();
+  const current = (currentCardIndex + 1).toString();
+  const reviewed = reviewedCardsIds.length.toString();
 
   const buttonTextHandlersMap = {
     [BUTTONS_TEXT.CUSTOMIZE]: onCustomize,
@@ -234,7 +269,9 @@ const Test = (): ReactElement => {
     [BUTTONS_TEXT.PREV]: onPrevCard,
     [BUTTONS_TEXT.EASY]: onSelectEasy,
     [BUTTONS_TEXT.GOOD]: onSelectGood,
-    [BUTTONS_TEXT.HARD]: onSelectHard
+    [BUTTONS_TEXT.HARD]: onSelectHard,
+    [BUTTONS_TEXT.CLOSE]: onCustomizeFormClose,
+    [BUTTONS_TEXT.PLAY]: onCustomizeFormPlay
   };
 
   const {
@@ -242,10 +279,11 @@ const Test = (): ReactElement => {
     desktopNavigationSubmenu,
     secondDesktopSubmenu,
     firstMobileSubmenu,
-    secondMobileSubmenu
+    secondMobileSubmenu,
   } = getMenuStateForTestPage({
     isAnswerShown,
-    endingTest
+    endingTest,
+    isCustomizeFormShown,
   });
 
   const desktopCardSubmenuButtons = mapButtonsTextToHandlers({
@@ -273,14 +311,6 @@ const Test = (): ReactElement => {
     buttonsText: secondMobileSubmenu
   });
 
-  const currentCard = cards[currentCardIndex];
-  const showPrevBtn = currentCardIndex > 0;
-  const showNextBtn = currentCardIndex < cards.length - 1;
-
-  const total = cards.length.toString();
-  const current = (currentCardIndex + 1).toString();
-  const reviewed = reviewedCardsIds.length.toString();
-
   /** ----------------- RETURN --------------------------------- */
 
   return (
@@ -301,21 +331,17 @@ const Test = (): ReactElement => {
         <div className="bottom-section mobile-margin-exterior">
           <div className="test-wrapper">
             <div className="test-buttons-wrapper">
-              {showPrevBtn && (
-                <button className="nav-card-btn" onClick={onPrevCard}>
-                  {'<'}
-                </button>
-              )}
+              <button className={`nav-card-btn ${showPrevBtn ? '' : 'hidden'}`} onClick={onPrevCard}>
+                {'<'}
+              </button>
               <div className="question-btns">
                 {desktopCardSubmenuButtons.map((btn, idx) => {
                   return <PrimaryButton key={idx} text={btn.text} onClick={btn.onClick} />;
                 })}
               </div>
-              {showNextBtn && (
-                <button className="nav-card-btn" onClick={onNextCard}>
-                  {'>'}
-                </button>
-              )}
+              <button className={`nav-card-btn ${showNextBtn ? '' : 'hidden'}`} onClick={onNextCard}>
+                {'>'}
+              </button>
             </div>
             <div className="question">{currentCard.question}</div>
             {isAnswerShown && <div className="answer">{currentCard.answer}</div>}
@@ -335,13 +361,31 @@ const Test = (): ReactElement => {
       <MobileMenu>
         {Boolean(firstMobileSubmenuButtons.length) && (
           <MobileSubmenu className="space-evenly">
-            {firstMobileSubmenuButtons.map((button, idx) => (
-              <MobileMenuItem key={idx} text={button.text} onClick={button.onClick} />
-            ))}
+            <MobileMenuItem 
+              className={`${showPrevBtn ? '' : 'hidden'}`} 
+              key={0} 
+              text={BUTTONS_TEXT.PREV} 
+              onClick={buttonTextHandlersMap[BUTTONS_TEXT.PREV]} />
+
+            {firstMobileSubmenuButtons.map((button, idx) => {
+              return (
+                <MobileMenuItem 
+                  key={idx} 
+                  text={button.text} 
+                  onClick={button.onClick} />
+              )
+            })}
+
+             <MobileMenuItem 
+                className={`${showNextBtn ? '' : 'hidden'}`} 
+                key={1000} 
+                text={BUTTONS_TEXT.NEXT} 
+                onClick={buttonTextHandlersMap[BUTTONS_TEXT.NEXT]} />
+    
           </MobileSubmenu>
         )}
         {Boolean(secondMobileSubmenuButtons.length) && (
-          <MobileSubmenu>
+          <MobileSubmenu className='space-evenly'>
             {secondMobileSubmenuButtons.map((button, idx) => (
               <MobileMenuItem key={idx} text={button.text} onClick={button.onClick} />
             ))}

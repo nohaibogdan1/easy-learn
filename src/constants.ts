@@ -57,7 +57,10 @@ enum BUTTONS_TEXT {
   NEXT = 'Next',
   PREV = 'Prev',
   CUSTOMIZE = 'Customize',
-  END_TEST = 'End test'
+  END_TEST = 'End test',
+  REORDER = 'Reorder',
+  CREATE_REVERTED_CARD = 'Create reverted card',
+  UPDATE_CONFIDENCE_LEVEL = 'Update confidence level',
 }
 
 enum FieldsForSorting {
@@ -70,6 +73,12 @@ enum OrderSettings {
   reverseOrder = 'reverseOrder'
 }
 
+enum Where {
+  before = 'before',
+  after = 'after'
+}
+
+
 export {
   LEVELS,
   ICON_BUTTONS_CLASSES,
@@ -77,5 +86,6 @@ export {
   LABELS_SEPARATOR,
   ROOT_NAME,
   FieldsForSorting,
-  OrderSettings
+  OrderSettings,
+  Where,
 };

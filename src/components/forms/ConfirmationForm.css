@@ -1,5 +1,5 @@
 .confirmation-form-wrapper {
-  align-items: center;
+  align-items: flex-start;
   background-color: rgba(1, 1, 1, 0.8);
   display: flex;
   height: 100vh;
@@ -12,5 +12,30 @@
 }
 
 .confirmation-form {
-  background-color: red;
+  align-items: center;
+  background-color: #022559;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 600px;
+  padding: 20px;
+  position: relative;
+  width: 70%;
+  top: 100px;
 }
+
+.text-input {
+  height: 50px;
+  width: 100%;
+}
+
+/* ------------ MOBILE --------------  */
+
+@media (max-width: 500px) {
+  .confirmation-form {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+

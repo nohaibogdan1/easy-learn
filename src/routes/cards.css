@@ -1,0 +1,12 @@
+.cards-page-wrapper .space {
+  margin-bottom: 20px;
+}
+
+/* ------------ MOBILE --------------  */
+@media (max-width: 500px) {
+  .cards-page-wrapper {
+    padding-bottom: 100px
+  }
+}
+
+

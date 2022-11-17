@@ -1,4 +1,4 @@
-.customize-form-wrapper {
+.confidence-level-update-form-wrapper{
   align-items: flex-start;
   background-color: rgba(1, 1, 1, 0.8);
   display: flex;
@@ -11,7 +11,7 @@
   z-index: 1;
 }
 
-.customize-form {
+.confidence-level-update-form{
   align-items: center;
   background-color: #022559;
   display: flex;
@@ -25,35 +25,17 @@
   top: 100px;
 }
 
-.settings-wrapper {
-  display: flex;
-  justify-content: space-around;
+.text-input {
+  height: 50px;
   width: 100%;
-}
-
-.order-settings-wrapper,
-.answer-settings-wrapper,
-.level-settings-wrapper {
-  display: flex;
-  flex-direction: column;
-  margin: 10px;;
-}
-
-.level-settings-wrapper label,
-.order-settings-wrapper label {
-  margin: 5px;
 }
 
 /* ------------ MOBILE --------------  */
 
 @media (max-width: 500px) {
-  .settings-wrapper {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .customize-form {
-    width: auto;
+  .confidence-level-update-form{
+    max-width: 100%;
+    width: 100%;
   }
 }
 

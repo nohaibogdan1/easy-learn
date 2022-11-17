@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import { BUTTONS_TEXT, ICON_BUTTONS_CLASSES } from '../constants';
+import { TestCustomSettings } from '../data/interfaces';
 
 interface CoursePageMenu {
   firstDesktopSubmenu: BUTTONS_TEXT[];
@@ -46,13 +47,17 @@ const getMenuStateForCoursePage = ({
   allSelected,
   selected,
   descriptionEditing,
-  haveDecks
+  haveDecks,
+  deletingSelectedDecks, 
+  deletingCourse,
 }: {
   addingItem: Boolean;
   allSelected: Boolean;
   selected: Boolean;
   descriptionEditing: Boolean;
   haveDecks: Boolean;
+  deletingSelectedDecks: Boolean;
+  deletingCourse: Boolean;
 }): CoursePageMenu => {
   /** FIRST DESKTOP SUBMENU */
   let firstDesktopSubmenu: BUTTONS_TEXT[] = [];
@@ -109,7 +114,7 @@ const getMenuStateForCoursePage = ({
     firstMobileSubmenu.push(BUTTONS_TEXT.PLAY_SELECTED);
   }
 
-  if (descriptionEditing || addingItem) {
+  if (descriptionEditing || addingItem || deletingCourse || deletingSelectedDecks) {
     firstMobileSubmenu = [BUTTONS_TEXT.OK, BUTTONS_TEXT.CANCEL];
   }
 
@@ -132,7 +137,7 @@ const getMenuStateForCoursePage = ({
     secondMobileSubmenu.push(BUTTONS_TEXT.EXPORT, BUTTONS_TEXT.DELETE_SELECTED_DECKS);
   }
 
-  if (descriptionEditing || addingItem) {
+  if (descriptionEditing || addingItem || deletingCourse || deletingSelectedDecks) {
     secondMobileSubmenu = [];
   }
 
@@ -222,18 +227,24 @@ const getMenuStateForDeckPage = ({
   allSelected,
   selected,
   descriptionEditing,
-  haveDecks
+  haveCards,
+  deletingDeck,
+  removingSelectedCards,
+  updatingConfidenceLevel,
 }: {
   addingItem: Boolean;
   allSelected: Boolean;
   selected: Boolean;
   descriptionEditing: Boolean;
-  haveDecks: Boolean;
+  haveCards: Boolean;
+  deletingDeck: Boolean; 
+  removingSelectedCards: Boolean;
+  updatingConfidenceLevel: Boolean;
 }): DeckPageMenu => {
   /** FIRST DESKTOP SUBMENU */
   let firstDesktopSubmenu: BUTTONS_TEXT[] = [];
 
-  if (haveDecks) {
+  if (haveCards) {
     firstDesktopSubmenu = [BUTTONS_TEXT.PLAY];
   }
 
@@ -244,7 +255,7 @@ const getMenuStateForDeckPage = ({
   /** SECOND DESKTOP SUBMENU */
   let secondDesktopSubmenu = [BUTTONS_TEXT.ADD_CARD, BUTTONS_TEXT.EXPORT, BUTTONS_TEXT.DELETE_DECK];
 
-  if (haveDecks) {
+  if (haveCards) {
     if (!allSelected) {
       secondDesktopSubmenu.push(BUTTONS_TEXT.SELECT_ALL);
     } else {
@@ -253,7 +264,11 @@ const getMenuStateForDeckPage = ({
   }
 
   if (selected || allSelected) {
-    secondDesktopSubmenu.push(BUTTONS_TEXT.REMOVE_SELECTED_CARDS);
+    secondDesktopSubmenu.push(BUTTONS_TEXT.REMOVE_SELECTED_CARDS, BUTTONS_TEXT.UPDATE_CONFIDENCE_LEVEL);
+  }
+
+  if (selected && !allSelected) {
+    secondDesktopSubmenu.push(BUTTONS_TEXT.REORDER);
   }
 
   /** EDIT MENU */
@@ -262,7 +277,7 @@ const getMenuStateForDeckPage = ({
   /** FIRST MOBILE SUBMENU */
   let firstMobileSubmenu: BUTTONS_TEXT[] = [];
 
-  if (haveDecks) {
+  if (haveCards) {
     firstMobileSubmenu = [BUTTONS_TEXT.PLAY];
   }
 
@@ -270,7 +285,12 @@ const getMenuStateForDeckPage = ({
     firstMobileSubmenu.push(BUTTONS_TEXT.PLAY_SELECTED);
   }
 
-  if (descriptionEditing || addingItem) {
+  if (descriptionEditing || 
+    addingItem || 
+    removingSelectedCards || 
+    deletingDeck || 
+    updatingConfidenceLevel) {
+      
     firstMobileSubmenu = [BUTTONS_TEXT.OK, BUTTONS_TEXT.CANCEL];
   }
 
@@ -281,7 +301,7 @@ const getMenuStateForDeckPage = ({
     BUTTONS_TEXT.EDIT_DESCRIPTION
   ];
 
-  if (haveDecks) {
+  if (haveCards) {
     if (!allSelected) {
       secondMobileSubmenu.push(BUTTONS_TEXT.SELECT_ALL);
     } else {
@@ -290,10 +310,18 @@ const getMenuStateForDeckPage = ({
   }
 
   if (selected || allSelected) {
-    secondMobileSubmenu.push(BUTTONS_TEXT.EXPORT, BUTTONS_TEXT.REMOVE_SELECTED_CARDS);
+    secondMobileSubmenu.push(
+      BUTTONS_TEXT.EXPORT, 
+      BUTTONS_TEXT.REMOVE_SELECTED_CARDS, 
+      BUTTONS_TEXT.UPDATE_CONFIDENCE_LEVEL
+    );
   }
 
-  if (descriptionEditing || addingItem) {
+  if (selected && !allSelected) {
+    secondMobileSubmenu.push(BUTTONS_TEXT.REORDER);
+  }
+
+  if (descriptionEditing || addingItem || removingSelectedCards || deletingDeck) {
     secondMobileSubmenu = [];
   }
 
@@ -326,7 +354,11 @@ const getMenuStateForCardsPage = ({
   let secondDesktopSubmenu = [BUTTONS_TEXT.ADD_CARD, BUTTONS_TEXT.EXPORT];
 
   if (selected || allSelected) {
-    secondDesktopSubmenu.push(BUTTONS_TEXT.DELETE_SELECTED_CARDS, BUTTONS_TEXT.ADD_TO_DECK);
+    secondDesktopSubmenu.push(
+      BUTTONS_TEXT.DELETE_SELECTED_CARDS, 
+      BUTTONS_TEXT.ADD_TO_DECK,
+      BUTTONS_TEXT.CREATE_REVERTED_CARD
+    );
   }
 
   /** FIRST MOBILE SUBMENU */
@@ -341,10 +373,14 @@ const getMenuStateForCardsPage = ({
   }
 
   /** SECOND MOBILE SUBMENU */
-  let secondMobileSubmenu = [BUTTONS_TEXT.ADD_CARD, BUTTONS_TEXT.EDIT_DESCRIPTION];
+  let secondMobileSubmenu = [BUTTONS_TEXT.ADD_CARD, BUTTONS_TEXT.EXPORT];
 
   if (selected || allSelected) {
-    secondMobileSubmenu.push(BUTTONS_TEXT.EXPORT, BUTTONS_TEXT.DELETE_SELECTED_CARDS);
+    secondMobileSubmenu.push( 
+      BUTTONS_TEXT.DELETE_SELECTED_CARDS, 
+      BUTTONS_TEXT.ADD_TO_DECK,
+      BUTTONS_TEXT.CREATE_REVERTED_CARD
+    );
   }
 
   if (deletingSelectedCards) {
@@ -361,10 +397,12 @@ const getMenuStateForCardsPage = ({
 
 const getMenuStateForTestPage = ({
   isAnswerShown,
-  endingTest
+  endingTest,
+  isCustomizeFormShown,
 }: {
   isAnswerShown: Boolean;
   endingTest: Boolean;
+  isCustomizeFormShown: Boolean;
 }): TestPageMenu => {
   /** DESKTOP NAVIGATION SUBMENU */
   let desktopNavigationSubmenu: BUTTONS_TEXT[] = [BUTTONS_TEXT.PREV, BUTTONS_TEXT.NEXT];
@@ -380,20 +418,20 @@ const getMenuStateForTestPage = ({
   let secondDesktopSubmenu = [BUTTONS_TEXT.CUSTOMIZE, BUTTONS_TEXT.END_TEST];
 
   /** FIRST MOBILE SUBMENU */
-  let firstMobileSubmenu: BUTTONS_TEXT[] = [
-    BUTTONS_TEXT.SHOW_ANSWER,
-    BUTTONS_TEXT.PREV,
-    BUTTONS_TEXT.NEXT
-  ];
-
+  let firstMobileSubmenu: BUTTONS_TEXT[] = [];
+ 
   if (isAnswerShown) {
-    firstMobileSubmenu = [
+    firstMobileSubmenu.push(
       BUTTONS_TEXT.EASY,
       BUTTONS_TEXT.GOOD,
       BUTTONS_TEXT.HARD,
-      BUTTONS_TEXT.PREV,
-      BUTTONS_TEXT.NEXT
-    ];
+    );
+  } else {
+    firstMobileSubmenu.push(BUTTONS_TEXT.SHOW_ANSWER);
+  }
+
+  if (isCustomizeFormShown) {
+    firstMobileSubmenu = [BUTTONS_TEXT.PLAY, BUTTONS_TEXT.CLOSE];
   }
 
   if (endingTest) {
@@ -403,7 +441,7 @@ const getMenuStateForTestPage = ({
   /** SECOND MOBILE SUBMENU */
   let secondMobileSubmenu = [BUTTONS_TEXT.CUSTOMIZE, BUTTONS_TEXT.END_TEST];
 
-  if (endingTest) {
+  if (endingTest || isCustomizeFormShown) {
     secondMobileSubmenu = [];
   }
 

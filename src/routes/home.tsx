@@ -173,12 +173,12 @@ const HomePage = (): ReactElement => {
             })}
           </ButtonsGroup>
         </ButtonsGroup>
-        <StatisticsGroup className="direction-column">
+        {/* <StatisticsGroup className="direction-column">
           <Statistics value="22345" description="This month" />
           <Statistics value="22345" description="This week" />
           <Statistics value="22345" description="Yesterday" />
           <Statistics value="22345" description="Today" />
-        </StatisticsGroup>
+        </StatisticsGroup> */}
       </div>
 
       <div className="bottom-section">
@@ -227,6 +227,7 @@ const HomePage = (): ReactElement => {
           error={addingCourseError}
           data={courseDescription}
           setData={setCourseDescription}
+          message={"Enter the description of the course"}
         />
       )}
     </div>

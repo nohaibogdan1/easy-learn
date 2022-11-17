@@ -12,13 +12,15 @@ const ConfirmationForm = ({
   onCancel,
   error,
   data,
-  setData
+  setData, 
+  message,
 }: {
   error: string | null;
   data?: string;
   onOk: () => void;
   onCancel: () => void;
   setData?: (arg: string) => void;
+  message: string;
 }): ReactElement => {
   const onChange = (event: BaseSyntheticEvent) => {
     setData?.(event.target.value);
@@ -35,14 +37,12 @@ const ConfirmationForm = ({
   return (
     <div className="confirmation-form-wrapper">
       <div className="confirmation-form">
+        <h3>{message}</h3>
         {Boolean(error) && <div>Error: {error}</div>}
         {typeof data === 'string' && Boolean(setData) && (
-          <label>
-            <span>Description</span>
-            <input type={'text'} value={data} onChange={onChange} />
-          </label>
+          <textarea className='text-input' value={data} onChange={onChange} />
         )}
-        <ButtonsGroup className={'margin-top-medium wrap display-flex'}>
+        <ButtonsGroup className={'mobile-hidden margin-top-medium wrap display-flex'}>
           <PrimaryButton onClick={onClickOk} text={BUTTONS_TEXT.OK} />
           <SecondaryButton onClick={onClickCancel} text={BUTTONS_TEXT.CANCEL} />
         </ButtonsGroup>

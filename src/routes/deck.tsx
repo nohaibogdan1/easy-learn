@@ -11,7 +11,7 @@ import List from '../components/list/List';
 import MobileMenu from '../components/mobile-menu/MobileMenu';
 import MobileMenuItem from '../components/mobile-menu/MobileMenuItem';
 import MobileSubmenu from '../components/mobile-menu/MobileSubmenu';
-import { BUTTONS_TEXT, ICON_BUTTONS_CLASSES, LEVELS, ROOT_NAME } from '../constants';
+import { BUTTONS_TEXT, ICON_BUTTONS_CLASSES, LEVELS, ROOT_NAME, Where } from '../constants';
 import ReorderButton from '../components/buttons/ReorderButton';
 import Search from '../components/Search';
 import { useDbStore } from '../stores/db-store/store';
@@ -22,6 +22,7 @@ import {
   mapButtonsTextToIcons
 } from '../logic/menu-helpers';
 import ConfirmationForm from '../components/forms/ConfirmationForm';
+import ConfidenceLevelUpdateForm from '../components/forms/ConfidenceLevelUpdateForm';
 
 const DeckPage = (): ReactElement => {
   /** ----------------- CUSTOM HOOK CALLS -------------------- */
@@ -33,7 +34,9 @@ const DeckPage = (): ReactElement => {
     updateDeck,
     removeCardsFromDeck,
     deleteDeck,
-    getDeckFilteredCards
+    getDeckFilteredCards,
+    updateCardsOrder,
+    updateCardsLevel,
   } = useDbStore();
 
   const navigate = useNavigate();
@@ -50,7 +53,10 @@ const DeckPage = (): ReactElement => {
   const [removingSelectedCards, setRemovingSelectedCards] = useState<Boolean>(false);
   const [deletingDeck, setDeletingDeck] = useState<Boolean>(false);
   const [showConfirmationForm, setShowConfirmationForm] = useState<Boolean>(false);
+  const [showConfidenceLevelUpdateForm, setShowConfidenceLevelUpdateForm] = useState<Boolean>(false);
   const [confirmationFormError, setConfirmationFormError] = useState<string | null>(null);
+  const [reordering, setReordering] = useState<Boolean>(false);
+  const [confidenceLevelToUpdate, setConfidenceLevelToUpdate] = useState<LEVELS>(LEVELS.EASY);
 
   /** ----------------- USE EFFECT -------------------- */
   useEffect(() => {
@@ -103,7 +109,7 @@ const DeckPage = (): ReactElement => {
 
       setDescription(deck.description);
       setNewDescription(deck.description);
-      setCards(deck.cards || []);
+      setCards(deck.cards?.sort((c1, c2) => c1.orderId - c2.orderId) || []);
       setSelectedCardsId([]);
       setCourseId(deck.courseId);
     } catch (err) {
@@ -127,7 +133,11 @@ const DeckPage = (): ReactElement => {
         return { error: null };
       }
 
-      await updateDeck({ description: newDescription, id: parsedId });
+      if (!courseId) {
+        return { error: null };
+      }
+
+      await updateDeck({ description: newDescription, id: parsedId, courseId });
 
       return { error: null };
     } catch (err) {
@@ -195,6 +205,35 @@ const DeckPage = (): ReactElement => {
     setCards(cards);
   };
 
+  const updateOrder = async ({ 
+    cardId, 
+    where 
+  }: { 
+    cardId: number, 
+    where: Where 
+  }): Promise<void> => {
+    try {
+
+      /** calculate order ids for all cards, but keep the selected cards together
+       * and put them at the orderId mentioned as an argument
+       */
+
+      if (!id) {
+        return;
+      }
+
+      await updateCardsOrder({ 
+        cardIdTarget: cardId, 
+        cardsIdsToMove: selectedCardsId,
+        where,
+        deckId: parseInt(id),
+      });
+
+    } catch (err) {
+      setError('Error on updating the order');
+    }
+  };
+
   /** ----------------- FUNCTIONS -------------------- */
 
   const onRedirect = (id: number): void => {
@@ -222,6 +261,9 @@ const DeckPage = (): ReactElement => {
   };
 
   const onAddCard = async () => {
+
+    console.log('id', id)
+
     navigate(`/${ROOT_NAME}/add-card`, { state: { deckId: id } });
   };
 
@@ -298,6 +340,45 @@ const DeckPage = (): ReactElement => {
     });
   };
 
+  const onReorder = () => {
+    setReordering(true);
+  };
+
+  const moveHereBtnClick = ({ 
+    cardId, 
+    where 
+  }: { 
+    cardId: number, 
+    where: Where 
+  }) => async () => {
+    await updateOrder({ cardId, where });
+
+    setReordering(false);
+
+    await getDeckData();
+  };
+
+  const onUpdateConfidenceLevel = () => {
+    setShowConfidenceLevelUpdateForm(true);
+  };
+
+  const onConfidenceLevelUpdateFormCancel = () => {
+    setShowConfidenceLevelUpdateForm(false);
+  };
+
+  const onConfidenceLevelUpdateFormOk = async () => {
+    try {
+      await updateCardsLevel({
+        newLevel: confidenceLevelToUpdate,
+        cardsIds: selectedCardsId,
+      });
+    } catch (err) {
+      console.log('Error at updating the confidence level', err)
+    }
+
+    setShowConfidenceLevelUpdateForm(false);
+  };
+
   /** ----------------- VARIABLES ------------------------------ */
 
   const buttonTextHandlersMap = {
@@ -311,7 +392,9 @@ const DeckPage = (): ReactElement => {
     [BUTTONS_TEXT.EDIT_DESCRIPTION]: onEditDescription,
     [BUTTONS_TEXT.EXPORT]: onExport,
     [BUTTONS_TEXT.OK_CONFIRMATION_FORM]: onConfirmationFormOk,
-    [BUTTONS_TEXT.CANCEL_CONFIRMATION_FORM]: onConfirmationFormCancel
+    [BUTTONS_TEXT.CANCEL_CONFIRMATION_FORM]: onConfirmationFormCancel,
+    [BUTTONS_TEXT.REORDER]: onReorder,
+    [BUTTONS_TEXT.UPDATE_CONFIDENCE_LEVEL]: onUpdateConfidenceLevel,
   };
 
   const {
@@ -325,7 +408,10 @@ const DeckPage = (): ReactElement => {
     selected: Boolean(selectedCardsId.length),
     allSelected: Boolean(cards.length) && cards.every((card) => selectedCardsId.includes(card.id)),
     descriptionEditing,
-    haveDecks: Boolean(cards.length)
+    haveCards: Boolean(cards.length),
+    deletingDeck, 
+    removingSelectedCards,
+    updatingConfidenceLevel: showConfidenceLevelUpdateForm,
   });
 
   const firstDekstopSubmenuButtons = mapButtonsTextToHandlers({
@@ -355,10 +441,20 @@ const DeckPage = (): ReactElement => {
 
   let confirmationFormData;
   let setConfirmationFormData;
+  let message = "";
 
   if (descriptionEditing) {
     confirmationFormData = newDescription;
     setConfirmationFormData = setNewDescription;
+    message = "Edit the description";
+  }
+
+  if (removingSelectedCards) {
+    message = "Are you sure you want to remove the selected cards ?";
+  }
+
+  if (deletingDeck) {
+    message = "Are you sure you want to delete the deck ?";
   }
 
   /** ----------------- RETURN --------------------------------- */
@@ -395,20 +491,33 @@ const DeckPage = (): ReactElement => {
       <div className="bottom-section">
         <h3 className="mobile-margin-exterior">Cards</h3>
         <List>
-          {cards.map((card) => {
+          {cards.map((card, idx) => {
             const checked = Boolean(selectedCardsId.find((cardId) => cardId === card.id));
 
             return (
-              <ListItem
-                key={card.id}
-                showArrow
-                text={card.question}
-                id={card.id}
-                usesCheckbox
-                onCheckboxChange={onCheckboxChange}
-                checked={checked}
-                onRedirect={onRedirect}
-              />
+              <div key={card.id}>
+                {reordering && (
+                  <button 
+                    className='move-here-btn' 
+                    onClick={moveHereBtnClick({ cardId: card.id, where: Where.before })}>
+                  </button>
+                  )}
+                <ListItem
+                  showArrow
+                  text={card.question}
+                  id={card.id}
+                  usesCheckbox
+                  onCheckboxChange={onCheckboxChange}
+                  checked={checked}
+                  onRedirect={onRedirect}
+                />
+                {reordering && idx === cards.length - 1 && (
+                  <button 
+                    className='move-here-btn' 
+                    onClick={moveHereBtnClick({ cardId: card.id, where: Where.after })}>
+                  </button>
+                  )}
+              </div>
             );
           })}
         </List>
@@ -437,6 +546,16 @@ const DeckPage = (): ReactElement => {
           error={confirmationFormError}
           data={confirmationFormData}
           setData={setConfirmationFormData}
+          message={message}
+        />
+      )}
+
+      {showConfidenceLevelUpdateForm && (
+        <ConfidenceLevelUpdateForm
+          confidenceLevelToUpdate={confidenceLevelToUpdate}
+          setConfidenceLevelToUpdate={setConfidenceLevelToUpdate}
+          close={onConfidenceLevelUpdateFormCancel}
+          ok={onConfidenceLevelUpdateFormOk}
         />
       )}
     </div>

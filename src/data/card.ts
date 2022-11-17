@@ -18,6 +18,8 @@ import { DbState } from '../stores/db-store/store';
 import getAllGeneralData from './getAllGeneralData';
 import { filterCardsByField, sortCards } from '../logic/card';
 import deleteGeneralEntry from './deleteGeneralEntry';
+import { LEVELS } from '../constants';
+import { calculateNextSeeDate } from '../logic/questionAnswer';
 
 const insertCardData = async ({
   data,
@@ -207,14 +209,18 @@ const getAllCardsForTestData = async ({
       if (cardDecksFiltered.length) {
         return cardDecksFilteredCardIds.includes(c.id);
       } else {
-        return true;
+        if (cardsIds?.length) {
+          return cardsIds.includes(c.id);
+        } else {
+          return true;
+        }
       }
     })
     .map((c) => {
       const orderId = cardsDecks.find((cd) => cd.cardId === c.id)?.orderId;
       return {
         ...c,
-        orderId: orderId ?? 0
+        orderId: orderId ?? c.id
       };
     });
 };
@@ -303,6 +309,62 @@ const deleteCardsData = async ({
   }
 };
 
+const createRevertedCardsData = async ({
+  cards,
+  state,
+}: {
+  cards: CardStored[],
+  state: DbState,
+}): Promise<void> => {
+
+  for (const card of cards) {
+    await insertCardData({
+      data: {
+        question: card.answer,
+        answer: card.question,
+      },
+      state,
+    });
+  }
+};
+
+const updateCardsLevelData = async ({
+  cardsIds,
+  newLevel,
+  state,
+}:{
+  cardsIds: number[],
+  newLevel: LEVELS,
+  state: DbState
+}): Promise<void> => {
+  const cards = await getAllCardsData(state);
+  const filteredCards = cards.filter((c) => cardsIds.includes(c.id));
+
+  for (const card of filteredCards) {
+    const nextSeeDate = calculateNextSeeDate(card.lastSawDate);
+    await updateCardData({
+      data: {
+        ...card,
+        level: newLevel,
+        nextSeeDate: nextSeeDate[newLevel]
+      },
+      state,
+    });
+  }
+};
+
+const getCardData = async ({
+  cardId,
+  state,
+}: {
+  cardId: number,
+  state: DbState,
+}): Promise<CardStored | undefined> => {
+  const cards = await getAllCardsData(state);
+  return cards.find((c) => c.id === cardId);
+}
+
+
 export {
   insertCardData,
   updateCardData,
@@ -310,5 +372,8 @@ export {
   getAllCardsByFilterData,
   getDeckFilterdCardsData,
   deleteCardsData,
-  getAllCardsForTestData
+  getAllCardsForTestData,
+  createRevertedCardsData,
+  updateCardsLevelData,
+  getCardData,
 };

@@ -328,7 +328,9 @@ const CoursePage = (): ReactElement => {
     selected: Boolean(selectedDecksId.length),
     allSelected: Boolean(decks.length) && decks.every((deck) => selectedDecksId.includes(deck.id)),
     descriptionEditing,
-    haveDecks: Boolean(decks.length)
+    haveDecks: Boolean(decks.length),
+    deletingSelectedDecks, 
+    deletingCourse,
   });
 
   const firstDekstopSubmenuButtons = mapButtonsTextToHandlers({
@@ -358,15 +360,26 @@ const CoursePage = (): ReactElement => {
 
   let confirmationFormData;
   let setConfirmationFormData;
+  let message = "";
 
   if (addingDeck) {
     confirmationFormData = deckDescription;
     setConfirmationFormData = setDeckDescription;
+    message = "Enter the name of the deck";
   }
 
   if (descriptionEditing) {
     confirmationFormData = newDescription;
     setConfirmationFormData = setNewDescription;
+    message = "Edit the description";
+  }
+
+  if (deletingCourse) {
+    message = "Are you sure you want to delete the course ?";
+  }
+
+  if (deletingSelectedDecks) {
+    message = "Are you sure you want to delete the selected decks ?";
   }
 
   /** ----------------- RETURN --------------------------------- */
@@ -443,6 +456,7 @@ const CoursePage = (): ReactElement => {
           error={confirmationFormError}
           data={confirmationFormData}
           setData={setConfirmationFormData}
+          message={message}
         />
       )}
     </div>

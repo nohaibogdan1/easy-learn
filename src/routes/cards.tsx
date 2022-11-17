@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { CardStored, CourseStored, DeckStored } from '../data/interfaces';
 import List from '../components/list/List';
@@ -19,6 +19,8 @@ import PrimaryButton from '../components/buttons/PrimaryButton';
 import SecondaryButton from '../components/buttons/SecondaryButton';
 import PickDecksForm from '../components/forms/PickDecksForm';
 
+import './cards.css';
+
 const CardsPage = () => {
   /** ------------------- CUSTOM HOOK ---------------- */
   const {
@@ -26,10 +28,14 @@ const CardsPage = () => {
     getAllCardsByFilter,
     deleteCards,
     getAllDecks,
-    getAllCourses
+    getAllCourses,
+    addCardsToDeck,
+    createRevertedCards,
   } = useDbStore();
 
   const navigate = useNavigate();
+
+  const state = useLocation().state as { deckId?: string } | null; 
 
   /** ------------------- USE STATE ---------------- */
   const [cards, setCards] = useState<CardStored[]>([]);
@@ -184,7 +190,39 @@ const CardsPage = () => {
     });
   };
 
+  const onAddCard = () => {
+    navigate(`/${ROOT_NAME}/add-card`);
+  };
+
+  const onSelectDeck = async (deckId: number) => {
+    try {
+
+      await addCardsToDeck({
+        deckId,
+        cardsIds: selectedCardsIds,
+      });
+
+    } catch (e) {
+      console.log('error on adding cards to another deck', e);
+    }
+
+    onConfirmationFormCancel();
+  };
+
+
+  const onCreateRevertedCard = async () => {
+    console.log('calll');
+
+    try {
+      await createRevertedCards(selectedCards);
+    } catch (err) {
+      console.log('Error on creating a reverted card', err);
+    }
+  };
+
   /** ------------------- VARIABLES ---------------- */
+  const deckId = state?.deckId;
+  
   const selectedCardsIds = selectedCards.map((c) => c.id);
 
   const buttonTextHandlersMap = {
@@ -195,7 +233,9 @@ const CardsPage = () => {
     [BUTTONS_TEXT.OK_CONFIRMATION_FORM]: onConfirmationFormOk,
     [BUTTONS_TEXT.CANCEL_CONFIRMATION_FORM]: onConfirmationFormCancel,
     [BUTTONS_TEXT.PLAY]: onPlay,
-    [BUTTONS_TEXT.PLAY_SELECTED]: onPlaySelected
+    [BUTTONS_TEXT.PLAY_SELECTED]: onPlaySelected,
+    [BUTTONS_TEXT.ADD_CARD]: onAddCard,
+    [BUTTONS_TEXT.CREATE_REVERTED_CARD]: onCreateRevertedCard,
   };
 
   const { firstDesktopSubmenu, secondDesktopSubmenu, firstMobileSubmenu, secondMobileSubmenu } =
@@ -246,7 +286,7 @@ const CardsPage = () => {
         </ButtonsGroup>
       </ButtonsGroup>
       <Search setSearchInput={setSearchInput} />
-      <div>Selected cards</div>
+      <div className="space"></div>
       <List>
         {selectedCards
           .map((c) => {
@@ -263,7 +303,7 @@ const CardsPage = () => {
           })
           .filter(Boolean)}
       </List>
-      Cards
+      <div className="space"></div>
       <List>
         {cards.map((card) => {
           const checked = Boolean(selectedCardsIds.find((id) => id === card.id));
@@ -305,6 +345,7 @@ const CardsPage = () => {
           error={confirmationFormError}
           data={confirmationFormData}
           setData={setConfirmationFormData}
+          message={"Are you sure you want to delete selected cards ?"}
         />
       )}
       {showPickDecksForm && (
@@ -313,6 +354,7 @@ const CardsPage = () => {
           onClose={onConfirmationFormCancel}
           decks={decks}
           courses={courses}
+          onSelectDeck={onSelectDeck}
         />
       )}
     </div>

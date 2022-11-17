@@ -42,7 +42,7 @@
 
 /* ------------ SETTING UP THE ORDER --------------  */
 
-.list-item-wrapper .text {
+.list-item-wrapper .text-wrapper {
   flex: 1;
   order: 2;
 }
@@ -52,6 +52,13 @@
 }
 .list-item-wrapper .check {
   order: 1;
+}
+
+/* ------------ TEXT --------------  */
+.list-item-wrapper .text-wrapper .text.italic {
+  font-style: italic;
+  border-bottom: 1px solid black;
+  margin-bottom: 5px;
 }
 
 /* ------------ MOBILE --------------  */

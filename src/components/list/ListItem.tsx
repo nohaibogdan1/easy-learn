@@ -13,9 +13,6 @@ const ListItem = ({
   id,
   onRedirect,
   textSecondary,
-  showRemove,
-  onRemove,
-  showExpand,
   children
 }: {
   text: string;
@@ -45,39 +42,16 @@ const ListItem = ({
     }
   };
 
-  const onRemoveClick = () => {
-    if (id) {
-      onRemove?.(id);
-    }
-  };
-
-  const onToggleExpand = () => {
-    setIsExpanded((isExpanded) => !isExpanded);
-  };
-
   return (
     <div className="list-item-wrapper">
-      <div className="text">{text}</div>
+      <div className="text-wrapper">
+        <div className={`text ${textSecondary ? 'italic' : ''}`}>{text}</div>
+        {textSecondary && <div className="text-secondary">{textSecondary}</div>}
+      </div>
       {showArrow && <div className="arrow" onClick={onRedirectClick}></div>}
-      {showRemove && (
-        <div className="remove-btn" onClick={onRemoveClick}>
-          X
-        </div>
-      )}
-      {showExpand && !isExpanded && (
-        <div className="expand-btn" onClick={onToggleExpand}>
-          V
-        </div>
-      )}
-      {showExpand && isExpanded && (
-        <div className="expand-btn" onClick={onToggleExpand}>
-          A
-        </div>
-      )}
       {usesCheckbox && (
         <input className="checkbox" type={'checkbox'} checked={checked} onChange={onChange} />
       )}
-      {textSecondary && <div>{textSecondary}</div>}
       {Boolean(children) && isExpanded && children}
     </div>
   );

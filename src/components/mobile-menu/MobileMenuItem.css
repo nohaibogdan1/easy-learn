@@ -13,6 +13,10 @@
   white-space: nowrap;
 }
 
+.mobile-menu-item-wrapper.hidden {
+  visibility: hidden;
+}
+
 /* ------------ MOBILE MENU ICON BUTTON --------------  */
 
 .mobile-menu-item-wrapper.icon-btn {
