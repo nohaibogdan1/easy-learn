@@ -4,6 +4,18 @@ const formatDate = (time: string): string => {
   return new Date(parseFloat(time)).toDateString();
 };
 
+const formatToCalendarDate = (time: string | null): string | null => {
+  if (!time) {
+    return null;
+  }
+  const date = new Date(time);
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDay();
+
+  return `${day}/${month}/${year}`;
+};
+
 const isTruthyValue = (value: any): boolean => {
   if (value === undefined || value === null) {
     return false;
@@ -35,4 +47,4 @@ function shuffle(array: number[]) {
   return array;
 }
 
-export { formatDate, isTruthyValue, shuffle };
+export { formatDate, isTruthyValue, shuffle, formatToCalendarDate };

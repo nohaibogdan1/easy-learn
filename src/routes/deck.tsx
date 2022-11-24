@@ -237,7 +237,7 @@ const DeckPage = (): ReactElement => {
   /** ----------------- FUNCTIONS -------------------- */
 
   const onRedirect = (id: number): void => {
-    navigate(`/${ROOT_NAME}/card/${id}`);
+    navigate(`/${ROOT_NAME}/cards/${id}`);
   };
 
   /** ----------------- EVENT HANDLERS -------------------- */
