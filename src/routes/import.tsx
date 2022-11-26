@@ -9,16 +9,6 @@ import { useDbStore } from '../stores/db-store/store';
 import { Obj } from '../types';
 import { LEVELS } from '../constants';
 
-const validateSpreadsheetColumns = (columns: string[]): string | undefined => {
-  if (!columns.includes('question')) {
-    return 'Column question is missing';
-  }
-
-  if (!columns.includes('answer')) {
-    return 'Column answer is missing';
-  }
-};
-
 const ImportPage = (): ReactElement => {
   const {
     getAllCards,
@@ -223,9 +213,24 @@ const ImportPage = (): ReactElement => {
   };
 
   return (
-    <div>
+    <div className="import-page-wrapper">
       <div className="message">
-        In order to import data use an excel file
+        In order to import data use an excel file<br/><br/>
+        Excel file should can contain the following columns:
+        <ul>
+          <li>question</li>
+          <li>answer</li>
+          <li>last saw date</li>
+          <li>next see date</li>
+          <li>level</li>
+          <li>course description</li>
+          <li>deck description</li>
+        </ul>
+        In order to update a card that is already in the application
+        we can use also the property "card id".<br/>
+        <br/>
+        <img className='example' src={require("../assets/spreadsheet.png")}/>
+        
       </div>
       <input className="picker" type="file" name="import" onChange={importData} />
       {readFinished && <div>{total} rows read</div>}

@@ -1,3 +1,7 @@
+.import-page-wrapper {
+  padding: 0 40px 40px 40px;
+}
+
 .message,
 .error,
 .success {
@@ -6,5 +10,9 @@
 }
 
 .message {
+  max-width: 400px;
+}
+
+.example {
   max-width: 400px;
 }
