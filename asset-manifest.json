@@ -1,14 +1,23 @@
 {
   "files": {
-    "main.css": "/easy-learn/static/css/main.1d33b738.css",
-    "main.js": "/easy-learn/static/js/main.5492f5e3.js",
+    "main.css": "/easy-learn/static/css/main.945a33b1.css",
+    "main.js": "/easy-learn/static/js/main.ee63ff42.js",
+    "static/media/spreadsheet.png": "/easy-learn/static/media/spreadsheet.2007cd37448cd9bcc08f.png",
+    "static/media/a.jpg": "/easy-learn/static/media/a.5785bd8091bef061e84a.jpg",
     "service-worker.js": "/easy-learn/service-worker.js",
+    "static/media/cancel.svg": "/easy-learn/static/media/cancel.766a68bb83f780f46fa2.svg",
+    "static/media/next.svg": "/easy-learn/static/media/next.332cadfaa0e4440e0c8c.svg",
+    "static/media/prev.svg": "/easy-learn/static/media/prev.71c2695fe0997ebac110.svg",
+    "static/media/settings.svg": "/easy-learn/static/media/settings.aa08ff9ef90bb11bd80c.svg",
     "index.html": "/easy-learn/index.html",
-    "main.1d33b738.css.map": "/easy-learn/static/css/main.1d33b738.css.map",
-    "main.5492f5e3.js.map": "/easy-learn/static/js/main.5492f5e3.js.map"
+    "static/media/back.svg": "/easy-learn/static/media/back.450849af8bb6c3661be6.svg",
+    "static/media/edit.svg": "/easy-learn/static/media/edit.715c795178271dfa2a81.svg",
+    "static/media/ok.svg": "/easy-learn/static/media/ok.6a82ba6901e6dfeb33c9.svg",
+    "main.945a33b1.css.map": "/easy-learn/static/css/main.945a33b1.css.map",
+    "main.ee63ff42.js.map": "/easy-learn/static/js/main.ee63ff42.js.map"
   },
   "entrypoints": [
-    "static/css/main.1d33b738.css",
-    "static/js/main.5492f5e3.js"
+    "static/css/main.945a33b1.css",
+    "static/js/main.ee63ff42.js"
   ]
 }
