@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, SyntheticEvent, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import { Filter, SelectedLevels } from '../types';
@@ -251,8 +251,71 @@ const Test = (): ReactElement => {
     setIsCustomizeFormShown(false);
   };
 
-  /** ----------------- VARIABLES ------------------------------ */
+  const onTouchStart = (event: any) => {
+    touches.push({
+      posX: event.touches[0].clientX,
+      posY: event.touches[0].clientY,
+    });
+  };
 
+  const onTouchMove = (event: any) => {
+    isSwipe = true;
+    touches.push({
+      posX: event.touches[0].clientX,
+      posY: event.touches[0].clientY,
+    });
+  };
+
+  const onTouchEnd = () => {
+    const detectSwipe = () => {
+      const firstTouch = touches[0];
+      const lastTouch = touches[touches.length - 1];
+  
+      const xDiff = Math.abs(firstTouch.posX - lastTouch.posX);
+      const yDiff = Math.abs(firstTouch.posY - lastTouch.posY);
+  
+      if (xDiff > yDiff && xDiff > 40 && isSwipe) {
+        if (firstTouch.posX > lastTouch.posX) {
+          onNextCard();
+        } else {
+          onPrevCard();
+        }
+      }
+  
+      isSwipe = false;
+      touches = [];
+    }
+
+    const detectDoubleTap = () => {
+      let currentTime = new Date().getTime();
+      let tapLength = currentTime - lastTap;
+
+      clearTimeout(timeout);
+      if (tapLength < 500 && tapLength > 0) {
+        onShowAnswer();
+      } else {
+        timeout = setTimeout(() => {
+          clearTimeout(timeout);
+        }, 500);
+      }
+      
+      lastTap = currentTime;
+    };
+
+
+    detectSwipe();
+    detectDoubleTap();
+  };
+
+
+
+  /** ----------------- VARIABLES ------------------------------ */
+  let touches: any[] = [];
+  let isSwipe: boolean = false;
+
+  let lastTap = 0;
+  let timeout: any;
+  
   const currentCard = cards[currentCardIndex];
   const showPrevBtn = currentCardIndex > 0 && !isCustomizeFormShown && !endingTest;
   const showNextBtn = currentCardIndex < cards.length - 1 && !isCustomizeFormShown && !endingTest;
@@ -328,7 +391,11 @@ const Test = (): ReactElement => {
         </StatisticsGroup>
       </div>
       {Boolean(cards.length) && (
-        <div className="bottom-section mobile-margin-exterior">
+        <div 
+          onTouchStart={onTouchStart} 
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+          className="bottom-section mobile-margin-exterior">
           <div className="test-wrapper">
             <div className="test-buttons-wrapper">
               <button className={`nav-card-btn ${showPrevBtn ? '' : 'hidden'}`} onClick={onPrevCard}>
