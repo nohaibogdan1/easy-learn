@@ -38,7 +38,9 @@ import {
   DeckWithCards,
   DeckModification,
   Sort,
-  CardAndDeckStored
+  CardAndDeckStored,
+  Recording,
+  RecordingStored
 } from '../../data/interfaces';
 import {
   getAllCoursesData,
@@ -60,6 +62,7 @@ import {
   addCardsToDeckData,
 } from '../../data/deck';
 import { LEVELS, Where } from '../../constants';
+import { saveAudioData, getAudioData } from '../../data/audio';
 
 export type DbState = {
   db: IDBDatabase | null;
@@ -108,6 +111,8 @@ export type IDbContext = {
   createRevertedCards: (arg: CardStored[]) => Promise<void>;
   updateCardsLevel: (arg: {cardsIds: number[], newLevel: LEVELS}) => Promise<void>;
   getCard: (arg: number) => Promise<CardStored | undefined>;
+  saveAudio: (arg: Recording) => Promise<number>;
+  getAudio: (arg: number) => Promise<RecordingStored | undefined>;
 };
 
 const initialDbState = {
@@ -337,6 +342,15 @@ export const DbStoreProvider = ({
     return getCardData({cardId, state});
   }
 
+  const saveAudio = async (audioBlob: Recording): Promise<number> => {
+    return saveAudioData({audioBlob, state});
+  };
+
+  const getAudio = (recordingId: number): Promise<RecordingStored | undefined> => {
+    return getAudioData({recordingId, state});
+  };
+
+
   useEffect(() => {
     openDb({ setState });
   }, []);
@@ -370,6 +384,8 @@ export const DbStoreProvider = ({
         createRevertedCards,
         updateCardsLevel,
         getCard,
+        saveAudio,
+        getAudio,
       }}
     >
       {children}

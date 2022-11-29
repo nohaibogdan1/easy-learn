@@ -220,6 +220,10 @@ const CardsPage = () => {
     }
   };
 
+  const onRedirect = (id: number): void => {
+    navigate(`/${ROOT_NAME}/cards/${id}`);
+  };
+
   /** ------------------- VARIABLES ---------------- */
   const deckId = state?.deckId;
   
@@ -234,7 +238,7 @@ const CardsPage = () => {
     [BUTTONS_TEXT.CANCEL_CONFIRMATION_FORM]: onConfirmationFormCancel,
     [BUTTONS_TEXT.PLAY]: onPlay,
     [BUTTONS_TEXT.PLAY_SELECTED]: onPlaySelected,
-    [BUTTONS_TEXT.ADD_CARD]: onAddCard,
+    // [BUTTONS_TEXT.ADD_CARD]: onAddCard,
     [BUTTONS_TEXT.CREATE_REVERTED_CARD]: onCreateRevertedCard,
   };
 
@@ -318,6 +322,7 @@ const CardsPage = () => {
               checked={checked}
               onCheckboxChange={onCardChecked}
               id={card.id}
+              onRedirect={onRedirect}
             />
           );
         })}

@@ -34,6 +34,13 @@ interface CardsPageMenu {
   secondMobileSubmenu: BUTTONS_TEXT[];
 }
 
+interface CardPageMenu {
+  firstDesktopSubmenu: BUTTONS_TEXT[];
+  secondDesktopSubmenu: BUTTONS_TEXT[];
+  firstMobileSubmenu: BUTTONS_TEXT[];
+  secondMobileSubmenu: BUTTONS_TEXT[];
+}
+
 interface TestPageMenu {
   desktopNavigationSubmenu: BUTTONS_TEXT[];
   desktopCardSubmenu: BUTTONS_TEXT[];
@@ -41,6 +48,7 @@ interface TestPageMenu {
   firstMobileSubmenu: BUTTONS_TEXT[];
   secondMobileSubmenu: BUTTONS_TEXT[];
 }
+
 
 const getMenuStateForCoursePage = ({
   addingItem,
@@ -73,7 +81,7 @@ const getMenuStateForCoursePage = ({
   /** SECOND DESKTOP SUBMENU */
   let secondDesktopSubmenu = [
     BUTTONS_TEXT.ADD_DECK,
-    BUTTONS_TEXT.EXPORT,
+    // BUTTONS_TEXT.EXPORT,
     BUTTONS_TEXT.DELETE_COURSE
   ];
 
@@ -296,7 +304,7 @@ const getMenuStateForDeckPage = ({
 
   /** SECOND MOBILE SUBMENU */
   let secondMobileSubmenu = [
-    BUTTONS_TEXT.ADD_CARD,
+    // BUTTONS_TEXT.ADD_CARD,
     BUTTONS_TEXT.DELETE_DECK,
     BUTTONS_TEXT.EDIT_DESCRIPTION
   ];
@@ -311,7 +319,7 @@ const getMenuStateForDeckPage = ({
 
   if (selected || allSelected) {
     secondMobileSubmenu.push(
-      BUTTONS_TEXT.EXPORT, 
+      // BUTTONS_TEXT.EXPORT, 
       BUTTONS_TEXT.REMOVE_SELECTED_CARDS, 
       BUTTONS_TEXT.UPDATE_CONFIDENCE_LEVEL
     );
@@ -351,7 +359,10 @@ const getMenuStateForCardsPage = ({
   }
 
   /** SECOND DESKTOP SUBMENU */
-  let secondDesktopSubmenu = [BUTTONS_TEXT.ADD_CARD, BUTTONS_TEXT.EXPORT];
+  let secondDesktopSubmenu = [
+    // BUTTONS_TEXT.ADD_CARD,
+    // BUTTONS_TEXT.EXPORT
+  ];
 
   if (selected || allSelected) {
     secondDesktopSubmenu.push(
@@ -373,7 +384,9 @@ const getMenuStateForCardsPage = ({
   }
 
   /** SECOND MOBILE SUBMENU */
-  let secondMobileSubmenu = [BUTTONS_TEXT.ADD_CARD, BUTTONS_TEXT.EXPORT];
+  let secondMobileSubmenu = [
+    // BUTTONS_TEXT.ADD_CARD, BUTTONS_TEXT.EXPORT
+  ];
 
   if (selected || allSelected) {
     secondMobileSubmenu.push( 
@@ -386,6 +399,81 @@ const getMenuStateForCardsPage = ({
   if (deletingSelectedCards) {
     secondMobileSubmenu = [];
   }
+
+  return {
+    firstDesktopSubmenu,
+    secondDesktopSubmenu,
+    firstMobileSubmenu,
+    secondMobileSubmenu
+  };
+};
+
+const getMenuStateForCardPage = ({
+  editing,
+  hasRecording,
+  canStopRecord,
+  canPlay,
+}: {
+  editing: boolean;
+  hasRecording: boolean;
+  canStopRecord: boolean;
+  canPlay: boolean;
+}): CardPageMenu => {
+  /** FIRST DESKTOP SUBMENU */
+  let firstDesktopSubmenu: BUTTONS_TEXT[] = [
+    BUTTONS_TEXT.RECORD,
+  ];
+
+  if (hasRecording) {
+    firstDesktopSubmenu.push(BUTTONS_TEXT.LISTEN);
+  }
+
+  if (canStopRecord) {
+    firstDesktopSubmenu = [BUTTONS_TEXT.STOP];
+  }
+
+  if (canPlay) {
+    firstDesktopSubmenu = [
+      BUTTONS_TEXT.LISTEN_NEW,
+      BUTTONS_TEXT.SAVE,
+      BUTTONS_TEXT.RECORD,
+    ]
+  }
+
+  /** SECOND DESKTOP SUBMENU */
+  let secondDesktopSubmenu: BUTTONS_TEXT[] = [];
+
+  /** FIRST MOBILE SUBMENU */
+  let firstMobileSubmenu: BUTTONS_TEXT[] = [
+    BUTTONS_TEXT.RECORD,
+    BUTTONS_TEXT.EDIT_QUESTION,
+    BUTTONS_TEXT.EDIT_ANSWER,
+  ];
+
+  if (hasRecording) {
+    firstMobileSubmenu.push(BUTTONS_TEXT.LISTEN);
+  }
+
+  if (canStopRecord) {
+    firstMobileSubmenu = [BUTTONS_TEXT.STOP];
+  }
+
+  if (canPlay) {
+    firstMobileSubmenu = [
+      BUTTONS_TEXT.LISTEN_NEW,
+      BUTTONS_TEXT.SAVE,
+      BUTTONS_TEXT.RECORD,
+      BUTTONS_TEXT.EDIT_QUESTION,
+      BUTTONS_TEXT.EDIT_ANSWER,
+    ]
+  }
+
+  if (editing) {
+    firstMobileSubmenu = [BUTTONS_TEXT.OK, BUTTONS_TEXT.CANCEL];
+  }
+
+  /** SECOND MOBILE SUBMENU */
+  let secondMobileSubmenu:BUTTONS_TEXT[] = [];
 
   return {
     firstDesktopSubmenu,
@@ -486,6 +574,7 @@ export {
   getMenuStateForHomePage,
   getMenuStateForDeckPage,
   getMenuStateForCardsPage,
+  getMenuStateForCardPage,
   getMenuStateForTestPage,
   mapButtonsTextToHandlers,
   mapButtonsTextToIcons

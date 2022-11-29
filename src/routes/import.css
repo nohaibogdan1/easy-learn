@@ -2,6 +2,10 @@
   padding: 0 40px 40px 40px;
 }
 
+.import-page-wrapper img {
+  width: 100%;
+}
+
 .message,
 .error,
 .success {

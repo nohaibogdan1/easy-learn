@@ -127,7 +127,7 @@ const HomePage = (): ReactElement => {
     [BUTTONS_TEXT.UNSELECT_ALL]: onUnselectAll,
     [BUTTONS_TEXT.OK]: onOk,
     [BUTTONS_TEXT.CANCEL]: onCancel,
-    [BUTTONS_TEXT.EXPORT]: onExport
+    // [BUTTONS_TEXT.EXPORT]: onExport
   };
 
   const { firstDesktopSubmenu, secondDesktopSubmenu, firstMobileSubmenu, secondMobileSubmenu } =

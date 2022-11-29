@@ -312,7 +312,7 @@ const CoursePage = (): ReactElement => {
     [BUTTONS_TEXT.DELETE_COURSE]: onDeleteCourse,
     [BUTTONS_TEXT.DELETE_SELECTED_DECKS]: onDeleteSelectedDecks,
     [BUTTONS_TEXT.EDIT_DESCRIPTION]: onEditDescription,
-    [BUTTONS_TEXT.EXPORT]: onExport,
+    // [BUTTONS_TEXT.EXPORT]: onExport,
     [BUTTONS_TEXT.OK_CONFIRMATION_FORM]: onConfirmationFormOk,
     [BUTTONS_TEXT.CANCEL_CONFIRMATION_FORM]: onConfirmationFormCancel
   };

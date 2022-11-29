@@ -1,16 +1,33 @@
 /* eslint-disable */
 
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 import { ROOT_NAME } from '../constants';
 import './NavBar.css';
 
 const NavBar = () => {
+  const {pathname} = useLocation();
+
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    setChecked(false);
+  }, [pathname]);
+
+  const onChange = () => {
+    setChecked((checked) => !checked);
+  }
+
   return (
     <nav className="nav-wrapper">
       <div className="logo">easy learn</div>
-      <input id="menu-toggle" type="checkbox" />
+      <input 
+        id="menu-toggle" 
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+      />
       <label className="menu-button-container" htmlFor="menu-toggle">
         <div className="menu-button"></div>
       </label>

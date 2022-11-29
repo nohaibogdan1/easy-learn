@@ -12,6 +12,7 @@ interface Card {
   level: LEVELS;
   deckId?: number | null;
   createdAt: string;
+  recordingId: number | null;
 }
 
 interface CardAdd {
@@ -108,6 +109,17 @@ type ExcelRow = Partial<Card> & {
   deckDescription?: string;
 };
 
+/** ----------- RECORDING --------- */
+interface Recording {
+  blob: Blob;
+}
+
+type RecordingAdd = Recording;
+
+type RecordingStored = RecordingAdd & {
+  id: number;
+}
+
 export type {
   Card,
   CardAdd,
@@ -131,4 +143,7 @@ export type {
   CardAndDeckStored,
   ExcelRow,
   CardDeckModification,
+  RecordingAdd,
+  Recording,
+  RecordingStored,
 };

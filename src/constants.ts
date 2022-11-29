@@ -61,6 +61,13 @@ enum BUTTONS_TEXT {
   REORDER = 'Reorder',
   CREATE_REVERTED_CARD = 'Create reverted card',
   UPDATE_CONFIDENCE_LEVEL = 'Update confidence level',
+  EDIT_QUESTION = 'Edit question',
+  EDIT_ANSWER = 'Edit answer',
+  LISTEN = 'Listen',
+  RECORD = 'Record',
+  SAVE = 'Save recording',
+  STOP = 'Stop recording',
+  LISTEN_NEW = 'Listen new recording',
 }
 
 enum FieldsForSorting {

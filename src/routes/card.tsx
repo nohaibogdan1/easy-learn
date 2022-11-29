@@ -9,15 +9,34 @@ import MobileMenuItem from '../components/mobile-menu/MobileMenuItem';
 import ConfirmationForm from '../components/forms/ConfirmationForm';
 import { formatToCalendarDate } from '../logic/utils';
 import "./card.css";
+import useRecordAudio from '../logic/audio';
+import MobileMenu from '../components/mobile-menu/MobileMenu';
+import MobileSubmenu from '../components/mobile-menu/MobileSubmenu';
+import { BUTTONS_TEXT } from '../constants';
+import { getMenuStateForCardPage, getMenuStateForCardsPage, mapButtonsTextToHandlers } from '../logic/menu-helpers';
+import PrimaryButton from '../components/buttons/PrimaryButton';
 
 const CardPage = (args: any) => {
+
   /** ----------------- CUSTOM HOOK CALLS -------------------- */
   const cardId = parseInt(useParams()?.id ?? "-");
 
   const { 
     state: {db}, 
-    getCard
+    getCard,
+    updateCard,
   } = useDbStore();
+
+  const {
+    startRecord, 
+    stopRecord,
+    playRecord,
+    saveRecord,
+    listenRecording,
+    canRecord,
+    canPlay,
+    canStopRecord,
+  } = useRecordAudio();
 
   /** ----------------- USE STATE -------------------- */
   const [card, setCard] = useState<CardStored | null>(null);
@@ -70,13 +89,11 @@ const CardPage = (args: any) => {
     let error = null;
 
     if (questionEditing) {
-      // const data = await 
-      // error = data.error; 
+      await updateCard({...card, question: newQuestion});
     }
 
     if (answerEditing) {
-      // const data = await 
-      // error = data.error; 
+      await updateCard({...card, answer: newAnswer});
     }
 
     if (error) {
@@ -101,7 +118,77 @@ const CardPage = (args: any) => {
     setAnswerEditing(true);
   };
 
+  const onRecordClick = async () => {
+    startRecord?.();
+  };
+
+  const onStopRecordClick = async () => {
+    stopRecord?.();
+  };
+
+  const onListenClick = () => {
+    playRecord?.();
+  };
+
+  const onSaveClick = async () => {
+    const id = await saveRecord?.();
+    await updateCard({...card, recordingId: id});
+    getCardData();
+  };
+
+  const onListenRecordClick = () => {
+    if (!card?.recordingId) {
+      return;
+    }
+
+    listenRecording(card.recordingId);
+  };
+
   /** ----------------- VARIABLES ------------------------------ */
+  const buttonTextHandlersMap = {
+    [BUTTONS_TEXT.EDIT_QUESTION]: onClickEditQuestion,
+    [BUTTONS_TEXT.EDIT_ANSWER]: onClickEditAnswer,
+    [BUTTONS_TEXT.OK_CONFIRMATION_FORM]: onConfirmationFormOk,
+    [BUTTONS_TEXT.CANCEL_CONFIRMATION_FORM]: onConfirmationFormCancel,
+    [BUTTONS_TEXT.LISTEN]: onListenRecordClick,
+    [BUTTONS_TEXT.RECORD]: onRecordClick,
+    [BUTTONS_TEXT.SAVE]: onSaveClick,
+    [BUTTONS_TEXT.STOP]: onStopRecordClick,
+    [BUTTONS_TEXT.LISTEN_NEW]: onListenClick,
+  };
+
+  const {
+    firstDesktopSubmenu,
+    secondDesktopSubmenu,
+    firstMobileSubmenu,
+    secondMobileSubmenu,
+  } = getMenuStateForCardPage({
+    editing: questionEditing || answerEditing,
+    hasRecording: Boolean(card?.recordingId),
+    canPlay,
+    canStopRecord,
+  });
+
+  const firstDekstopSubmenuButtons = mapButtonsTextToHandlers({
+    buttonTextHandlersMap,
+    buttonsText: firstDesktopSubmenu
+  });
+
+  const secondDekstopSubmenuButtons = mapButtonsTextToHandlers({
+    buttonTextHandlersMap,
+    buttonsText: secondDesktopSubmenu
+  });
+
+  const firstMobileSubmenuButtons = mapButtonsTextToHandlers({
+    buttonTextHandlersMap,
+    buttonsText: firstMobileSubmenu
+  });
+
+  const secondMobileSubmenuButtons = mapButtonsTextToHandlers({
+    buttonTextHandlersMap,
+    buttonsText: secondMobileSubmenu
+  });
+
   let displayLastSawDate = null;
   let displayNextSeeDate = null;
 
@@ -155,6 +242,29 @@ const CardPage = (args: any) => {
       <div>{card.level ?? "No Level"}</div>
       <p>Last saw date: <span>{formatToCalendarDate(displayLastSawDate) ?? "Never"}</span></p>
       <p>Next see date: <span>{formatToCalendarDate(displayNextSeeDate) ?? "immediately"}</span></p>
+
+      <ButtonsGroup>
+        {firstDekstopSubmenuButtons.map((btn, idx) => {
+          return <PrimaryButton key={idx} text={btn.text} onClick={btn.onClick} />;
+        })}
+      </ButtonsGroup>
+
+      <MobileMenu>
+        {Boolean(firstMobileSubmenuButtons.length) && (
+          <MobileSubmenu>
+            {firstMobileSubmenuButtons.map((button, idx) => (
+              <MobileMenuItem key={idx} text={button.text} onClick={button.onClick} />
+            ))}
+          </MobileSubmenu>
+        )}
+        {Boolean(secondMobileSubmenuButtons.length) && (
+          <MobileSubmenu>
+            {secondMobileSubmenuButtons.map((button, idx) => (
+              <MobileMenuItem key={idx} text={button.text} onClick={button.onClick} />
+            ))}
+          </MobileSubmenu>
+        )}
+      </MobileMenu>
 
       {showConfirmationForm && (
         <ConfirmationForm

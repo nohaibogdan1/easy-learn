@@ -40,6 +40,11 @@ const openDb = ({
       keyPath: 'id',
       autoIncrement: true
     });
+
+    event.currentTarget?.result?.createObjectStore(tables.RECORDINGS, {
+      keyPath: 'id',
+      autoIncrement: true
+    });
   };
 };
 

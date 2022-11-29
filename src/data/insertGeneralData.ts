@@ -1,7 +1,13 @@
 /* eslint-disable */
 
 import { DbState } from '../stores/db-store/store';
-import { CardAdd, CourseAdd, DeckAdd, CardDeckAdd } from './interfaces';
+import { 
+  CardAdd, 
+  CourseAdd, 
+  DeckAdd, 
+  CardDeckAdd, 
+  RecordingAdd
+} from './interfaces';
 import { tables } from '../db/tables';
 
 const insertGeneralData = ({
@@ -10,9 +16,12 @@ const insertGeneralData = ({
   table
 }: {
   state: DbState;
-  data: CardAdd | CourseAdd | DeckAdd | CardDeckAdd;
+  data: CardAdd | CourseAdd | DeckAdd | CardDeckAdd | RecordingAdd;
   table: tables;
 }): Promise<number> => {
+
+  console.log("insertGeneralData", table)
+
   return new Promise((acc, reject) => {
     const { db } = state;
     if (db) {
