@@ -431,7 +431,7 @@ const Test = (): ReactElement => {
               }}
             />
             {isAnswerShown && 
-              <div>
+              <div className='answer-wrapper'>
                 <div className='line'></div>
                 <div 
                   className="answer" 

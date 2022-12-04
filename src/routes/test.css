@@ -50,8 +50,16 @@
   margin-top: 20px;
 }
 
+.test-page-wrapper .answer-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80vw;
+}
+
 .test-page-wrapper .line {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
 }
 
 .test-page-wrapper .answer {

@@ -63,7 +63,7 @@ import {
 } from '../../data/deck';
 import { LEVELS, Where } from '../../constants';
 import { saveAudioData, getAudioData } from '../../data/audio';
-import useTextSize from '../../hooks/useTextSize';
+import { textSizeMapper } from '../../hooks/useTextSize';
 
 export type DbState = {
   db: IDBDatabase | null;
@@ -357,6 +357,13 @@ export const DbStoreProvider = ({
   const updateTextSizeClass = (size: string) => {
     setState(state => ({...state, fontSizeClass: size}));
   };
+
+  useEffect(() => {
+    const savedTextSize = localStorage.getItem('text-size');
+    if (savedTextSize) {
+      updateTextSizeClass(textSizeMapper[parseInt(savedTextSize) as keyof typeof textSizeMapper]);
+    }
+  }, []);
 
   useEffect(() => {
     openDb({ setState });

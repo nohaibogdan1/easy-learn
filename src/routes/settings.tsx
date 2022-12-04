@@ -18,6 +18,10 @@ const SettingsPage = () => {
     increaseText();
   }
 
+  useEffect(() => {
+    console.log("BLUUU", textSizeClass)
+  }, [textSizeClass]);
+
   return (
     <div className={`page-wrapper ${textSizeClass} settings-page-wrapper`}>
       <h3>Change size of text</h3>
