@@ -21,6 +21,7 @@ import CustomizeForm from '../components/forms/CustomizeForm';
 import './test.css';
 import { convertNewLineToHtmlBreak, sanitizeHtml, shuffle } from '../logic/utils';
 import { calculateNextSeeDate, calculateNewLastSawDate } from '../logic/questionAnswer';
+import useRecordAudio from '../logic/audio';
 
 const Test = (): ReactElement => {
   /** ----------------- CUSTOM HOOK CALLS -------------------- */
@@ -40,6 +41,8 @@ const Test = (): ReactElement => {
       cardsIds?: number[],
       coursesIds?: number[],
     } | null};
+
+  const { listenRecording } = useRecordAudio();
 
   let decksIds: number[] | undefined;
   let coursesIds: number[] | undefined;
@@ -307,6 +310,11 @@ const Test = (): ReactElement => {
     detectDoubleTap();
   };
 
+  const onClickPlayAudio = () => {
+    if (currentCard.recordingId) {
+      listenRecording(currentCard.recordingId);
+    }
+  };
 
 
   /** ----------------- VARIABLES ------------------------------ */
@@ -410,6 +418,12 @@ const Test = (): ReactElement => {
                 {'>'}
               </button>
             </div>
+            {currentCard.recordingId && 
+              <MobileMenuItem
+                onClick={onClickPlayAudio}
+                className={`icon-btn play-audio-btn`}
+              />
+            }
             <div 
               className="question" 
               dangerouslySetInnerHTML={{

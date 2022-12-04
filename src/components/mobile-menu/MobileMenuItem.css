@@ -17,6 +17,10 @@
   visibility: hidden;
 }
 
+.mobile-menu-item-wrapper.icon-btn.play-audio-btn {
+  width: 31px;
+}
+
 /* ------------ MOBILE MENU ICON BUTTON --------------  */
 
 .mobile-menu-item-wrapper.icon-btn {
@@ -68,4 +72,10 @@
 
 .mobile-menu-item-wrapper.mobile-menu-item-wrapper.icon-btn.cancel-btn::before {
   background-image: url('../../icons/cancel.svg');
+}
+
+.mobile-menu-item-wrapper.icon-btn.play-audio-btn::before {
+  background-image: url('../../icons/play.svg');
+  height: 31px;
+  width: 31px;
 }

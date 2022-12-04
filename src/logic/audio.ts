@@ -47,13 +47,6 @@ const useRecordAudio = () => {
       const play = () => {
         const audioBlob = new Blob(audioChunks);
         const audioUrl = URL.createObjectURL(audioBlob);
-        
-
-        console.log("audioUrl", audioUrl)
-        console.log("audioBlob", audioBlob)
-        console.log("audioChunks", audioChunks)
-
-
         const audio = new Audio(audioUrl);
         audio.play()
       }
@@ -66,8 +59,6 @@ const useRecordAudio = () => {
       const save = async () => {
         const audioBlob = new Blob(audioChunks);
         const id = await saveAudio({blob: audioBlob});
-        console.log("id", id)
-
         return id;
       };
 
@@ -90,7 +81,7 @@ const useRecordAudio = () => {
     const {blob} = data;
     const audioUrl = URL.createObjectURL(blob);
     const audio = new Audio(audioUrl);
-    audio.play()
+    audio.play();
   };
 
   return { 
