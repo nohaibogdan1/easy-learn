@@ -20,6 +20,7 @@ import {
   mapButtonsTextToIcons
 } from '../logic/menu-helpers';
 import ConfirmationForm from '../components/forms/ConfirmationForm';
+import { convertNewLineToHtmlBreak, sanitizeHtml } from '../logic/utils';
 
 const CoursePage = (): ReactElement => {
   /** ----------------- CUSTOM HOOK CALLS -------------------- */
@@ -387,7 +388,12 @@ const CoursePage = (): ReactElement => {
     <div className="page-wrapper course-page-wrapper">
       <div className="top-section">
         <div className="course-description">
-          <div className="text">{description}</div>
+          <div 
+            className="text" 
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHtml(convertNewLineToHtmlBreak(description)) 
+            }}
+          />
           <ButtonsGroup className="margin-top-small">
             {editMenuButtons.map((btn, idx) => (
               <MobileMenuItem

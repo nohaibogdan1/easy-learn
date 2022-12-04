@@ -13,4 +13,5 @@
 
 .card-page-wrapper .text {
   margin-right: 20px;
+  white-space: pre-wrap;
 }

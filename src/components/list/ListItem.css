@@ -61,6 +61,11 @@
   margin-bottom: 5px;
 }
 
+.list-item-wrapper .text-wrapper .text,
+.list-item-wrapper .text-wrapper .text-secondary {
+  white-space: pre-wrap;
+}
+
 /* ------------ MOBILE --------------  */
 
 @media (max-width: 500px) {

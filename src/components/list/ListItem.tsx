@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import React, { BaseSyntheticEvent, ReactElement, ReactNode, useState } from 'react';
+import { convertNewLineToHtmlBreak, sanitizeHtml } from '../../logic/utils';
 
 import './ListItem.css';
 
@@ -45,8 +46,18 @@ const ListItem = ({
   return (
     <div className="list-item-wrapper">
       <div className="text-wrapper">
-        <div className={`text ${textSecondary ? 'italic' : ''}`}>{text}</div>
-        {textSecondary && <div className="text-secondary">{textSecondary}</div>}
+        <div 
+          className={`text ${textSecondary ? 'italic' : ''}`} 
+          dangerouslySetInnerHTML={{__html: sanitizeHtml(convertNewLineToHtmlBreak(text)) }}
+        />
+        {textSecondary && 
+          <div 
+            className="text-secondary"
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHtml(convertNewLineToHtmlBreak(textSecondary)) 
+            }}
+          />
+        }
       </div>
       {showArrow && <div className="arrow" onClick={onRedirectClick}></div>}
       {usesCheckbox && (

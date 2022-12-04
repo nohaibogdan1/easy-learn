@@ -19,7 +19,7 @@ import { getMenuStateForTestPage, mapButtonsTextToHandlers } from '../logic/menu
 import { ROOT_NAME } from '../constants';
 import CustomizeForm from '../components/forms/CustomizeForm';
 import './test.css';
-import { shuffle } from '../logic/utils';
+import { convertNewLineToHtmlBreak, sanitizeHtml, shuffle } from '../logic/utils';
 import { calculateNextSeeDate, calculateNewLastSawDate } from '../logic/questionAnswer';
 
 const Test = (): ReactElement => {
@@ -410,8 +410,23 @@ const Test = (): ReactElement => {
                 {'>'}
               </button>
             </div>
-            <div className="question">{currentCard.question}</div>
-            {isAnswerShown && <div className="answer">{currentCard.answer}</div>}
+            <div 
+              className="question" 
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHtml(convertNewLineToHtmlBreak(currentCard.question)) 
+              }}
+            />
+            {isAnswerShown && 
+              <div>
+                <div className='line'></div>
+                <div 
+                  className="answer" 
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeHtml(convertNewLineToHtmlBreak(currentCard.answer)) 
+                  }}
+                />
+              </div>
+            }
           </div>
         </div>
       )}
