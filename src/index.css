@@ -59,6 +59,26 @@ a {
   margin-right: 40px;
 }
 
+.page-wrapper.xs {
+  font-size: 10px;
+}
+
+.page-wrapper.s {
+  font-size: 12px;
+}
+
+.page-wrapper.m {
+  font-size: 14px;
+}
+
+.page-wrapper.l {
+  font-size: 16px;
+}
+
+.page-wrapper.xl {
+  font-size: 18px;
+}
+
 @media (max-width: 500px) {
   .page-wrapper {
     margin-left: 0;

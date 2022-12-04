@@ -9,24 +9,24 @@
 
 .statistics-wrapper .description {
   color: #696c76;
-  font-size: 15px;
+  font-size: 1em;
   margin-right: 40px;
 }
 
 .statistics-wrapper .value {
   color: #da9191;
-  font-size: 25px;
+  font-size: 1em;
 }
 
 /* ------------ MOBILE --------------  */
 
 @media (max-width: 500px) {
   .statistics-wrapper .description {
-    font-size: 12px;
+    font-size: 1em;
     margin-right: 5px;
   }
 
   .statistics-wrapper .value {
-    font-size: 19px;
+    font-size: 1em;
   }
 }

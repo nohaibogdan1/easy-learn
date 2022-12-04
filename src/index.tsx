@@ -18,6 +18,7 @@ import DeckPage from './routes/deck';
 import AddCardPage from './routes/add-card';
 import CardPage from './routes/card';
 import CardsPage from './routes/cards';
+import SettingsPage from './routes/settings';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
@@ -36,6 +37,7 @@ root.render(
           <Route path={ROOT_NAME + '/add-card'} element={<AddCardPage />}></Route>
           <Route path={ROOT_NAME + '/cards/:id'} element={<CardPage />}></Route>
           <Route path={ROOT_NAME + '/cards'} element={<CardsPage />}></Route>
+          <Route path={ROOT_NAME + '/settings'} element={<SettingsPage />}></Route>
         </Routes>
       </BrowserRouter>
     </DbStoreProvider>

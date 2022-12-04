@@ -26,7 +26,7 @@ import useRecordAudio from '../logic/audio';
 const Test = (): ReactElement => {
   /** ----------------- CUSTOM HOOK CALLS -------------------- */
   const {
-    state: { db },
+    state: { db, fontSizeClass },
     getAllCardsForTest,
     updateCard
   } = useDbStore();
@@ -385,7 +385,7 @@ const Test = (): ReactElement => {
   /** ----------------- RETURN --------------------------------- */
 
   return (
-    <div className="page-wrapper test-page-wrapper">
+    <div className={`page-wrapper ${fontSizeClass} test-page-wrapper`}>
       <div className="top-section">
         <ButtonsGroup className={'margin-top-medium wrap'}>
           {secondDekstopSubmenuButtons.map((btn, idx) => {

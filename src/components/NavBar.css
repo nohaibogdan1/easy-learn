@@ -28,7 +28,7 @@
 .menu > li {
   margin: 0 1rem;
   overflow: hidden;
-  font-size: 12px;
+  font-size: 1em;
 }
 
 .menu-button-container {
@@ -82,7 +82,7 @@
 }
 
 .logo {
-  font-size: 21px;
+  font-size: 2em;
   font-weight: bold;
   text-transform: uppercase;
 }
@@ -163,6 +163,26 @@
   }
 }
 
+.nav-wrapper.xs {
+  font-size: 10px;
+}
+
+.nav-wrapper.s {
+  font-size: 12px;
+}
+
+.nav-wrapper.m {
+  font-size: 14px;
+}
+
+.nav-wrapper.l {
+  font-size: 16px;
+}
+
+.nav-wrapper.xl {
+  font-size: 18px;
+}
+
 @media screen and (max-width: 450px) {
   .menu-button,
   .menu-button::before,
@@ -183,3 +203,5 @@
 .logo {
   text-transform: uppercase;
 }
+
+

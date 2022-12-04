@@ -5,11 +5,14 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { ROOT_NAME } from '../constants';
 import './NavBar.css';
+import { useDbStore } from '../stores/db-store/store';
 
 const NavBar = () => {
   const {pathname} = useLocation();
 
   const [checked, setChecked] = useState(false);
+
+  const { state: {fontSizeClass} } = useDbStore();
 
   useEffect(() => {
     setChecked(false);
@@ -20,7 +23,7 @@ const NavBar = () => {
   }
 
   return (
-    <nav className="nav-wrapper">
+    <nav className={`nav-wrapper ${fontSizeClass}`}>
       <div className="logo">easy learn</div>
       <input 
         id="menu-toggle" 

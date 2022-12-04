@@ -63,9 +63,11 @@ import {
 } from '../../data/deck';
 import { LEVELS, Where } from '../../constants';
 import { saveAudioData, getAudioData } from '../../data/audio';
+import useTextSize from '../../hooks/useTextSize';
 
 export type DbState = {
   db: IDBDatabase | null;
+  fontSizeClass: string;
 };
 
 export type IDbContext = {
@@ -113,17 +115,19 @@ export type IDbContext = {
   getCard: (arg: number) => Promise<CardStored | undefined>;
   saveAudio: (arg: Recording) => Promise<number>;
   getAudio: (arg: number) => Promise<RecordingStored | undefined>;
+  updateTextSizeClass: (arg: string) => void;
 };
 
 const initialDbState = {
-  db: null
+  db: null,
+  fontSizeClass: 'm',
 };
 
 const defaultValue = {
   state: initialDbState
 };
 
-export const DbContext = createContext(defaultValue as IDbContext);
+export const DbContext = createContext(defaultValue as unknown as IDbContext);
 
 export const useDbStore = (): IDbContext => useContext(DbContext);
 
@@ -350,6 +354,9 @@ export const DbStoreProvider = ({
     return getAudioData({recordingId, state});
   };
 
+  const updateTextSizeClass = (size: string) => {
+    setState(state => ({...state, fontSizeClass: size}));
+  };
 
   useEffect(() => {
     openDb({ setState });
@@ -386,6 +393,7 @@ export const DbStoreProvider = ({
         getCard,
         saveAudio,
         getAudio,
+        updateTextSizeClass,
       }}
     >
       {children}
