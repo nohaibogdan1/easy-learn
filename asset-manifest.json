@@ -1,13 +1,15 @@
 {
   "files": {
-    "main.css": "/easy-learn/static/css/main.f33242f1.css",
-    "main.js": "/easy-learn/static/js/main.af4042e5.js",
+    "main.css": "/easy-learn/static/css/main.42ab2968.css",
+    "main.js": "/easy-learn/static/js/main.c948f508.js",
     "static/media/spreadsheet.png": "/easy-learn/static/media/spreadsheet.2007cd37448cd9bcc08f.png",
     "static/media/a.jpg": "/easy-learn/static/media/a.5785bd8091bef061e84a.jpg",
     "service-worker.js": "/easy-learn/service-worker.js",
     "static/media/cancel.svg": "/easy-learn/static/media/cancel.766a68bb83f780f46fa2.svg",
+    "static/media/selected.svg": "/easy-learn/static/media/selected.80a55285da1dfdd407af.svg",
     "static/media/love-face.svg": "/easy-learn/static/media/love-face.c3f4a92179cdef9ece1e.svg",
     "static/media/settings2.svg": "/easy-learn/static/media/settings2.ec0860bab6fb3ab6e35a.svg",
+    "static/media/unselected.svg": "/easy-learn/static/media/unselected.c0f6da42c2e0045da5b4.svg",
     "static/media/eye.svg": "/easy-learn/static/media/eye.d11d17a85335889d8ab7.svg",
     "static/media/sad-face.svg": "/easy-learn/static/media/sad-face.61f1c0cdbd85d630510a.svg",
     "static/media/audio-play.svg": "/easy-learn/static/media/audio-play.818b7d842b2cdfa165f6.svg",
@@ -23,11 +25,12 @@
     "static/media/edit.svg": "/easy-learn/static/media/edit.715c795178271dfa2a81.svg",
     "static/media/index.cjs": "/easy-learn/static/media/index.cd351d7c31d0d3fccf96.cjs",
     "static/media/ok.svg": "/easy-learn/static/media/ok.6a82ba6901e6dfeb33c9.svg",
-    "main.f33242f1.css.map": "/easy-learn/static/css/main.f33242f1.css.map",
-    "main.af4042e5.js.map": "/easy-learn/static/js/main.af4042e5.js.map"
+    "static/media/play-2.svg": "/easy-learn/static/media/play-2.b44a05943a4b643de15f.svg",
+    "main.42ab2968.css.map": "/easy-learn/static/css/main.42ab2968.css.map",
+    "main.c948f508.js.map": "/easy-learn/static/js/main.c948f508.js.map"
   },
   "entrypoints": [
-    "static/css/main.f33242f1.css",
-    "static/js/main.af4042e5.js"
+    "static/css/main.42ab2968.css",
+    "static/js/main.c948f508.js"
   ]
 }
