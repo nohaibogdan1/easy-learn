@@ -1,6 +1,13 @@
 /* ------------ MOBILE MENU BUTTON --------------  */
 
 .mobile-menu-item-wrapper {
+  /* background-color: red; */
+  width: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.mobile-menu-item {
   background: none;
   border: none;
   box-sizing: content-box;
@@ -13,22 +20,23 @@
   white-space: nowrap;
 }
 
-.mobile-menu-item-wrapper.hidden {
+.mobile-menu-item.hidden {
   visibility: hidden;
 }
 
-.mobile-menu-item-wrapper.icon-btn.play-audio-btn {
+.mobile-menu-item.icon-btn.play-audio-btn {
   width: 31px;
 }
 
 /* ------------ MOBILE MENU ICON BUTTON --------------  */
 
-.mobile-menu-item-wrapper.icon-btn {
+.mobile-menu-item.icon-btn {
   padding: 0;
   width: 15px;
+  background-size: cover;
 }
 
-.mobile-menu-item-wrapper.icon-btn::before {
+.mobile-menu-item.icon-btn::before {
   background-size: cover;
   content: '';
   height: 15px;
@@ -38,44 +46,106 @@
   top: 0;
 }
 
-.mobile-menu-item-wrapper.icon-btn.prev-nav-card-btn::before,
-.mobile-menu-item-wrapper.icon-btn.next-nav-card-btn::before {
+.mobile-menu-item.icon-btn.prev-nav-card-btn::before,
+.mobile-menu-item.icon-btn.next-nav-card-btn::before {
   height: 20px;
   width: 10px;
 }
 
 /* ------------ MOBILE MENU ICON BUTTONS ADDING SVG --------------  */
 
-.mobile-menu-item-wrapper.icon-btn.customize-btn::before {
+.mobile-menu-item.icon-btn.customize-btn::before {
   background-image: url('../../icons/settings.svg');
 }
 
-.mobile-menu-item-wrapper.icon-btn.prev-nav-card-btn::before {
+.mobile-menu-item.icon-btn.prev-nav-card-btn::before {
   background-image: url('../../icons/prev.svg');
 }
 
-.mobile-menu-item-wrapper.icon-btn.next-nav-card-btn::before {
+.mobile-menu-item.icon-btn.next-nav-card-btn::before {
   background-image: url('../../icons/next.svg');
 }
 
-.mobile-menu-item-wrapper.icon-btn.back-btn::before {
+.mobile-menu-item.icon-btn.back-btn::before {
   background-image: url('../../icons/back.svg');
 }
 
-.mobile-menu-item-wrapper.mobile-menu-item-wrapper.icon-btn.edit-btn::before {
+.mobile-menu-item.icon-btn.edit-btn::before {
   background-image: url('../../icons/edit.svg');
 }
 
-.mobile-menu-item-wrapper.mobile-menu-item-wrapper.icon-btn.ok-btn::before {
+.mobile-menu-item.icon-btn.ok-btn::before {
   background-image: url('../../icons/ok.svg');
 }
 
-.mobile-menu-item-wrapper.mobile-menu-item-wrapper.icon-btn.cancel-btn::before {
+.mobile-menu-item.icon-btn.cancel-btn::before {
   background-image: url('../../icons/cancel.svg');
 }
 
-.mobile-menu-item-wrapper.icon-btn.play-audio-btn::before {
-  background-image: url('../../icons/play.svg');
-  height: 31px;
-  width: 31px;
+.mobile-menu-item.icon-btn.settings-btn {
+  background-image: url('../../icons/settings2.svg');
+  height: 18px;
+  width: 18px;
+  position: absolute;
+  left: 7%;
+}
+
+.mobile-menu-item.icon-btn.end-test-btn {
+  background-image: url('../../icons/end-test.svg');
+  height: 18px;
+  width: 18px;
+  position: absolute;
+  right: 7%;
+}
+
+.mobile-menu-item.icon-btn.hard-btn {
+  background-image: url('../../icons/sad-face.svg');
+  height: 28px;
+  width: 28px;
+  position: absolute;
+  left: 25%;
+}
+
+.mobile-menu-item.icon-btn.good-btn {
+  background-image: url('../../icons/happy-face.svg');
+  height: 30px;
+  width: 30px;
+}
+
+.mobile-menu-item.icon-btn.easy-btn {
+  background-image: url('../../icons/love-face.svg');
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  right: 25%;
+}
+
+.mobile-menu-item.icon-btn.prev-mobile-btn {
+  background-image: url('../../icons/arrow-left.svg');
+  height: 27px;
+  width: 14px;
+  position: absolute;
+  left: 25%;
+}
+
+.mobile-menu-item.icon-btn.next-mobile-btn {
+  background-image: url('../../icons/arrow-right.svg');
+  height: 27px;
+  width: 14px;
+  position: absolute;
+  right: 25%;
+}
+
+.mobile-menu-item.icon-btn.show-answer-btn {
+  background-image: url('../../icons/eye.svg');
+  height: 25px;
+  width: 45px;
+}
+
+.mobile-menu-item.icon-btn.play-audio-btn {
+  background-image: url('../../icons/audio-play.svg');
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  right: 7%;
 }

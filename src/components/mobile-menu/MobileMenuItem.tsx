@@ -14,7 +14,7 @@ const MobileMenuItem = ({
   onClick?: () => void;
 }): ReactElement => {
   return (
-    <button onClick={onClick} className={`mobile-menu-item-wrapper ${className}`}>
+    <button onClick={onClick} className={`mobile-menu-item ${className}`}>
       {text}
     </button>
   );

@@ -192,7 +192,7 @@ const Test = (): ReactElement => {
   };
 
   const onEndTest = () => {
-    navigate(`/${ROOT_NAME}/cards`);
+    navigate(-1);
   };
 
   const onSelectLevel = async (level: LEVELS) => {
@@ -349,8 +349,6 @@ const Test = (): ReactElement => {
     desktopCardSubmenu,
     desktopNavigationSubmenu,
     secondDesktopSubmenu,
-    firstMobileSubmenu,
-    secondMobileSubmenu,
   } = getMenuStateForTestPage({
     isAnswerShown,
     endingTest,
@@ -372,15 +370,47 @@ const Test = (): ReactElement => {
     buttonsText: secondDesktopSubmenu
   });
 
-  const firstMobileSubmenuButtons = mapButtonsTextToHandlers({
-    buttonTextHandlersMap,
-    buttonsText: firstMobileSubmenu
-  });
+  const mobileMenuWhenPlaying = () => {
+    return (
+      <MobileMenu>
 
-  const secondMobileSubmenuButtons = mapButtonsTextToHandlers({
-    buttonTextHandlersMap,
-    buttonsText: secondMobileSubmenu
-  });
+          <MobileSubmenu className="space-evenly">
+            <MobileMenuItem onClick={onCustomize} className="icon-btn settings-btn"/>
+            <MobileMenuItem onClick={onSelectHard} className="icon-btn hard-btn"/>
+            <MobileMenuItem onClick={onSelectGood} className="icon-btn good-btn"/>
+            <MobileMenuItem onClick={onSelectEasy} className="icon-btn easy-btn"/>
+            <MobileMenuItem onClick={onEndTest} className="icon-btn end-test-btn"/>
+          </MobileSubmenu>
+        
+          <MobileSubmenu className='space-evenly'>
+            <MobileMenuItem onClick={onPrevCard} className="icon-btn prev-mobile-btn"/>
+            <MobileMenuItem onClick={onShowAnswer} className="icon-btn show-answer-btn"/>
+            <MobileMenuItem onClick={onClickPlayAudio} className="icon-btn play-audio-btn"/>
+            <MobileMenuItem onClick={onNextCard} className="icon-btn next-mobile-btn"/>
+          </MobileSubmenu>
+
+      </MobileMenu>
+    );
+  };
+
+  const mobileMenuWhenCustomizing = () => {
+    return (
+      <MobileMenu>
+        <MobileSubmenu className="space-evenly">
+          <MobileMenuItem onClick={onCustomizeFormPlay} text="Play"/>
+          <MobileMenuItem onClick={onCustomizeFormClose} text="Close"/>
+        </MobileSubmenu>
+      </MobileMenu>
+    )
+  };
+
+  const getMobileMenu = () => {
+    if (isCustomizeFormShown) {
+      return mobileMenuWhenCustomizing();
+    } else {
+      return mobileMenuWhenPlaying();
+    }
+  }
 
   /** ----------------- RETURN --------------------------------- */
 
@@ -454,40 +484,7 @@ const Test = (): ReactElement => {
         />
       )}
 
-      <MobileMenu>
-        {Boolean(firstMobileSubmenuButtons.length) && (
-          <MobileSubmenu className="space-evenly">
-            <MobileMenuItem 
-              className={`${showPrevBtn ? '' : 'hidden'}`} 
-              key={0} 
-              text={BUTTONS_TEXT.PREV} 
-              onClick={buttonTextHandlersMap[BUTTONS_TEXT.PREV]} />
-
-            {firstMobileSubmenuButtons.map((button, idx) => {
-              return (
-                <MobileMenuItem 
-                  key={idx} 
-                  text={button.text} 
-                  onClick={button.onClick} />
-              )
-            })}
-
-             <MobileMenuItem 
-                className={`${showNextBtn ? '' : 'hidden'}`} 
-                key={1000} 
-                text={BUTTONS_TEXT.NEXT} 
-                onClick={buttonTextHandlersMap[BUTTONS_TEXT.NEXT]} />
-    
-          </MobileSubmenu>
-        )}
-        {Boolean(secondMobileSubmenuButtons.length) && (
-          <MobileSubmenu className='space-evenly'>
-            {secondMobileSubmenuButtons.map((button, idx) => (
-              <MobileMenuItem key={idx} text={button.text} onClick={button.onClick} />
-            ))}
-          </MobileSubmenu>
-        )}
-      </MobileMenu>
+      {getMobileMenu()}
     </div>
   );
 };
