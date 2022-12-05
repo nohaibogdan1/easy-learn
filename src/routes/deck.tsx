@@ -58,6 +58,8 @@ const DeckPage = (): ReactElement => {
   const [confirmationFormError, setConfirmationFormError] = useState<string | null>(null);
   const [reordering, setReordering] = useState<Boolean>(false);
   const [confidenceLevelToUpdate, setConfidenceLevelToUpdate] = useState<LEVELS>(LEVELS.EASY);
+  const [showSettingsMenu, setShowSettingsMenu] = useState<Boolean>(false);
+
 
   /** ----------------- USE EFFECT -------------------- */
   useEffect(() => {
@@ -72,6 +74,7 @@ const DeckPage = (): ReactElement => {
     if (descriptionEditing || removingSelectedCards || deletingDeck) {
       setConfirmationFormError(null);
       setShowConfirmationForm(true);
+      setShowSettingsMenu(false);
     }
   }, [descriptionEditing, removingSelectedCards, deletingDeck]);
 
@@ -361,6 +364,7 @@ const DeckPage = (): ReactElement => {
 
   const onUpdateConfidenceLevel = () => {
     setShowConfidenceLevelUpdateForm(true);
+    setShowSettingsMenu(false);
   };
 
   const onConfidenceLevelUpdateFormCancel = () => {
@@ -379,6 +383,10 @@ const DeckPage = (): ReactElement => {
 
     setShowConfidenceLevelUpdateForm(false);
   };
+
+  const onOpenSettings = () => {
+    setShowSettingsMenu(true);
+  }
 
   /** ----------------- VARIABLES ------------------------------ */
 
@@ -458,6 +466,52 @@ const DeckPage = (): ReactElement => {
     message = "Are you sure you want to delete the deck ?";
   }
 
+  const allSelected = Boolean(cards.length) && cards.every((card) => selectedCardsId.includes(card.id));
+
+  const mobileMenu = () => {
+    if (showConfirmationForm) {
+      return (
+        <MobileSubmenu className="space-evenly">
+          <MobileMenuItem text="Cancel" onClick={onConfirmationFormCancel} />
+          <MobileMenuItem text="Ok" onClick={onConfirmationFormOk} />
+        </MobileSubmenu>
+      );
+    } else if (showConfidenceLevelUpdateForm) {
+      return (
+        <MobileSubmenu className="space-evenly">
+          <MobileMenuItem text="Cancel" onClick={onConfidenceLevelUpdateFormCancel} />
+          <MobileMenuItem text="Ok" onClick={onConfidenceLevelUpdateFormOk} />
+        </MobileSubmenu>
+      );
+    } else {
+      return (
+        <MobileSubmenu className="space-evenly">
+          <MobileMenuItem className="icon-btn larger settings-deck-btn relative" onClick={onOpenSettings} />
+          <MobileMenuItem className="icon-btn larger play-btn" onClick={onPlay} />
+          {allSelected && <MobileMenuItem className="icon-btn larger unselect-all-btn" onClick={onUnselectAll} />}
+          {!allSelected && <MobileMenuItem className="icon-btn larger select-all-btn" onClick={onSelectAll} />}
+        </MobileSubmenu>
+      );
+    }
+  };
+
+  const settingsMenu = () => {
+    if (showSettingsMenu) {
+      return (
+        <div className="settings-menu-wrapper">
+          <div className="settings-menu">
+            <MobileMenuItem text='Remove selected cards' className="settings-menu" onClick={onRemoveSelectedCards}/>
+            <MobileMenuItem text='Delete deck' className="settings-menu" onClick={onDeleteDeck}/>
+            <MobileMenuItem text='Update confidence level' className="settings-menu" onClick={onUpdateConfidenceLevel}/>
+            <MobileMenuItem text='Edit description' className="settings-menu" onClick={onEditDescription}/>
+          </div>
+        </div>
+      )
+    }
+    
+    return null;
+  };
+
   /** ----------------- RETURN --------------------------------- */
 
   return (
@@ -529,21 +583,10 @@ const DeckPage = (): ReactElement => {
         </List>
       </div>
       <MobileMenu>
-        {Boolean(firstMobileSubmenuButtons.length) && (
-          <MobileSubmenu className="space-evenly">
-            {firstMobileSubmenuButtons.map((button, idx) => (
-              <MobileMenuItem key={idx} text={button.text} onClick={button.onClick} />
-            ))}
-          </MobileSubmenu>
-        )}
-        {Boolean(secondMobileSubmenuButtons.length) && (
-          <MobileSubmenu>
-            {secondMobileSubmenuButtons.map((button, idx) => (
-              <MobileMenuItem key={idx} text={button.text} onClick={button.onClick} />
-            ))}
-          </MobileSubmenu>
-        )}
+        {mobileMenu()}
       </MobileMenu>
+
+      {settingsMenu()}
 
       {showConfirmationForm && (
         <ConfirmationForm
@@ -564,6 +607,8 @@ const DeckPage = (): ReactElement => {
           ok={onConfidenceLevelUpdateFormOk}
         />
       )}
+
+
     </div>
   );
 };

@@ -36,6 +36,11 @@
   background-size: cover;
 }
 
+.mobile-menu-item.icon-btn.larger {
+  width: 20px;
+  height: 20px;
+}
+
 .mobile-menu-item.icon-btn::before {
   background-size: cover;
   content: '';
@@ -88,6 +93,10 @@
   width: 18px;
   position: absolute;
   left: 7%;
+}
+
+.mobile-menu-item.icon-btn.settings-deck-btn {
+  background-image: url('../../icons/settings2.svg');
 }
 
 .mobile-menu-item.icon-btn.end-test-btn {
@@ -148,4 +157,23 @@
   width: 20px;
   position: absolute;
   right: 7%;
+}
+
+.mobile-menu-item.icon-btn.play-btn {
+  background-image: url('../../icons/play-2.svg');
+  width: 28px;
+  height: 28px;
+}
+
+.mobile-menu-item.icon-btn.unselect-all-btn {
+  background-image: url('../../icons/selected.svg');
+}
+
+.mobile-menu-item.icon-btn.select-all-btn {
+  background-image: url('../../icons/unselected.svg');
+}
+
+.mobile-menu-item.settings-menu {
+  height: 1.4em;
+  font-size: 15px;
 }

@@ -31,6 +31,23 @@
 
 /* ------------ MOBILE --------------  */
 
+.settings-menu-wrapper {
+  align-items: flex-start;
+  background-color: #000;
+  bottom: 50px;
+  display: flex;
+  height: auto;
+  position: fixed;
+  width: auto;
+  padding: 10px;
+}
+
+.settings-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 @media (max-width: 500px) {
   /* ------------ BOTTOM SECTION --------------  */
 
