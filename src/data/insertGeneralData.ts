@@ -6,7 +6,8 @@ import {
   CourseAdd, 
   DeckAdd, 
   CardDeckAdd, 
-  RecordingAdd
+  RecordingAdd,
+  AuditAdd
 } from './interfaces';
 import { tables } from '../db/tables';
 
@@ -16,7 +17,13 @@ const insertGeneralData = ({
   table
 }: {
   state: DbState;
-  data: CardAdd | CourseAdd | DeckAdd | CardDeckAdd | RecordingAdd;
+  data: 
+    CardAdd | 
+    CourseAdd | 
+    DeckAdd | 
+    CardDeckAdd |
+    RecordingAdd |
+    AuditAdd;
   table: tables;
 }): Promise<number> => {
 

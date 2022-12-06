@@ -45,6 +45,11 @@ const openDb = ({
       keyPath: 'id',
       autoIncrement: true
     });
+
+    event.currentTarget?.result?.createObjectStore(tables.AUDIT, {
+      keyPath: 'id',
+      autoIncrement: true
+    });
   };
 };
 

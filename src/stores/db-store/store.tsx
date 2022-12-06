@@ -40,7 +40,8 @@ import {
   Sort,
   CardAndDeckStored,
   Recording,
-  RecordingStored
+  RecordingStored,
+  AuditAdd
 } from '../../data/interfaces';
 import {
   getAllCoursesData,
@@ -64,6 +65,7 @@ import {
 import { LEVELS, Where } from '../../constants';
 import { saveAudioData, getAudioData } from '../../data/audio';
 import { textSizeMapper } from '../../hooks/useTextSize';
+import { insertChangeData } from '../../data/audit';
 
 export type DbState = {
   db: IDBDatabase | null;
@@ -116,6 +118,7 @@ export type IDbContext = {
   saveAudio: (arg: Recording) => Promise<number>;
   getAudio: (arg: number) => Promise<RecordingStored | undefined>;
   updateTextSizeClass: (arg: string) => void;
+  insertChange: (data: AuditAdd) => void;
 };
 
 const initialDbState = {
@@ -354,6 +357,12 @@ export const DbStoreProvider = ({
     return getAudioData({recordingId, state});
   };
 
+  const insertChange = (data: AuditAdd): void => {
+    insertChangeData({
+      data, state
+    });
+  };
+
   const updateTextSizeClass = (size: string) => {
     setState(state => ({...state, fontSizeClass: size}));
   };
@@ -401,6 +410,7 @@ export const DbStoreProvider = ({
         saveAudio,
         getAudio,
         updateTextSizeClass,
+        insertChange,
       }}
     >
       {children}

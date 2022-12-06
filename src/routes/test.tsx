@@ -1,11 +1,10 @@
 /* eslint-disable */
 
-import React, { ReactElement, SyntheticEvent, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { Filter, SelectedLevels } from '../types';
-import { CardStored, Card, TestCustomSettings, CardAndDeckStored } from '../data/interfaces';
-import { LEVELS, ICON_BUTTONS_CLASSES, BUTTONS_TEXT, OrderSettings } from '../constants';
+import { CardStored, TestCustomSettings, CardAndDeckStored } from '../data/interfaces';
+import { LEVELS, OrderSettings } from '../constants';
 import { useDbStore } from '../stores/db-store/store';
 import Statistics from '../components/Statistics';
 import StatisticsGroup from '../components/StatisticsGroup';
@@ -15,8 +14,6 @@ import ButtonsGroup from '../components/buttons/ButtonsGroup';
 import MobileMenu from '../components/mobile-menu/MobileMenu';
 import MobileSubmenu from '../components/mobile-menu/MobileSubmenu';
 import MobileMenuItem from '../components/mobile-menu/MobileMenuItem';
-import { getMenuStateForTestPage, mapButtonsTextToHandlers } from '../logic/menu-helpers';
-import { ROOT_NAME } from '../constants';
 import CustomizeForm from '../components/forms/CustomizeForm';
 import './test.css';
 import { convertNewLineToHtmlBreak, sanitizeHtml, shuffle } from '../logic/utils';
@@ -28,7 +25,8 @@ const Test = (): ReactElement => {
   const {
     state: { db, fontSizeClass },
     getAllCardsForTest,
-    updateCard
+    updateCard,
+    insertChange,
   } = useDbStore();
 
   const navigate = useNavigate();
@@ -227,6 +225,14 @@ const Test = (): ReactElement => {
       await updateCard({
         ...update
       });
+
+      insertChange({
+        cardId: currentCard.id,
+        level,
+        lastSawDate: newLastSawDate,
+        nextSeeDate: newNextSeeDate[level],
+      });
+
     } catch (err) {
       setError('Error when updating level');
     }

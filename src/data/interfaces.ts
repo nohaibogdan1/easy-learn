@@ -120,6 +120,20 @@ type RecordingStored = RecordingAdd & {
   id: number;
 }
 
+/** ----------- AUDIT --------- */
+interface Audit {
+  cardId: number;
+  level: LEVELS;
+  lastSawDate: string;
+  nextSeeDate: string;
+}
+
+type AuditAdd = Audit;
+
+type AuditStored = AuditAdd & {
+  id: number;
+}
+
 export type {
   Card,
   CardAdd,
@@ -146,4 +160,5 @@ export type {
   RecordingAdd,
   Recording,
   RecordingStored,
+  AuditAdd,
 };

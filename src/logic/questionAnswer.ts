@@ -25,15 +25,12 @@ const calculateNextSeeDate = (lastSawDate: string | null): NextSeeDate => {
   const differenceInDays = getDifferenceInDays(currentDate.toString(), lastSawDateValue);
   const day = 1000 * 60 * 60 * 24;
 
-  const getDaysUntilNextForEasy = (): number => {
-    if (differenceInDays < 10) {
-      return day * 7;
-    }
-    return differenceInDays * 2;
-  };
-
   const calculateNextSeeDateEasy = (): string => {
-    const days = getDaysUntilNextForEasy();
+    const oneWeek = day * 7;
+    const days = differenceInDays < 10 ? 
+      oneWeek : 
+      differenceInDays * 2;
+
     const nextSeeDate = currentDate + days;
     return nextSeeDate.toString();
   };
