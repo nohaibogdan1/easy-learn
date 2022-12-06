@@ -342,20 +342,26 @@ const Test = (): ReactElement => {
       <MobileMenu>
           <MobileSubmenu className="space-evenly">
             <MobileMenuItem onClick={onCustomize} className="icon-btn settings-btn"/>
-            <MobileMenuItem onClick={onSelectHard} className="icon-btn hard-btn"/>
-            <MobileMenuItem onClick={onSelectGood} className="icon-btn good-btn"/>
-            <MobileMenuItem onClick={onSelectEasy} className="icon-btn easy-btn"/>
+            {cards.length &&
+              <>
+                <MobileMenuItem onClick={onSelectHard} className="icon-btn hard-btn"/>
+                <MobileMenuItem onClick={onSelectGood} className="icon-btn good-btn"/>
+                <MobileMenuItem onClick={onSelectEasy} className="icon-btn easy-btn"/>
+              </>
+            }
             <MobileMenuItem onClick={onEndTest} className="icon-btn end-test-btn"/>
           </MobileSubmenu>
         
-          <MobileSubmenu className='space-evenly'>
-            <MobileMenuItem onClick={onPrevCard} className={`icon-btn prev-mobile-btn ${showPrevBtn ? '' : 'hidden'}`}/>
-            <MobileMenuItem onClick={onShowAnswer} className="icon-btn show-answer-btn"/>
-            {currentCard.recordingId && 
-              <MobileMenuItem onClick={onClickPlayAudio} className="icon-btn play-audio-btn"/>
-            }
-            <MobileMenuItem onClick={onNextCard} className={`icon-btn next-mobile-btn ${showNextBtn ? '' : 'hidden'}`}/>
-          </MobileSubmenu>
+          {cards.length && 
+            <MobileSubmenu className='space-evenly'>
+              <MobileMenuItem onClick={onPrevCard} className={`icon-btn prev-mobile-btn ${showPrevBtn ? '' : 'hidden'}`}/>
+              <MobileMenuItem onClick={onShowAnswer} className="icon-btn show-answer-btn"/>
+              {currentCard.recordingId && 
+                <MobileMenuItem onClick={onClickPlayAudio} className="icon-btn play-audio-btn"/>
+              }
+              <MobileMenuItem onClick={onNextCard} className={`icon-btn next-mobile-btn ${showNextBtn ? '' : 'hidden'}`}/>
+            </MobileSubmenu>
+          }
       </MobileMenu>
     );
   };
@@ -423,7 +429,7 @@ const Test = (): ReactElement => {
           <Statistics description="reviewed" value={reviewed} />
         </StatisticsGroup>
       </div>
-      {Boolean(cards.length) && (
+      {cards.length && (
         <div 
           onTouchStart={onTouchStart} 
           onTouchMove={onTouchMove}
