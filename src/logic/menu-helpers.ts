@@ -256,10 +256,6 @@ const getMenuStateForDeckPage = ({
     firstDesktopSubmenu = [BUTTONS_TEXT.PLAY];
   }
 
-  if (selected || allSelected) {
-    firstDesktopSubmenu.push(BUTTONS_TEXT.PLAY_SELECTED);
-  }
-
   /** SECOND DESKTOP SUBMENU */
   let secondDesktopSubmenu = [BUTTONS_TEXT.ADD_CARD, BUTTONS_TEXT.EXPORT, BUTTONS_TEXT.DELETE_DECK];
 
@@ -287,10 +283,6 @@ const getMenuStateForDeckPage = ({
 
   if (haveCards) {
     firstMobileSubmenu = [BUTTONS_TEXT.PLAY];
-  }
-
-  if (selected || allSelected) {
-    firstMobileSubmenu.push(BUTTONS_TEXT.PLAY_SELECTED);
   }
 
   if (descriptionEditing || 

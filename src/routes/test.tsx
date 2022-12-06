@@ -175,13 +175,18 @@ const Test = (): ReactElement => {
   /** ----------------- EVENT HANDLERS -------------------- */
 
   const onNextCard = () => {
-    setCurrentCardIndex((currentCardIndex) => currentCardIndex + 1);
+    setCurrentCardIndex((currentCardIndex) => {
+      if (currentCardIndex === cards.length - 1) {
+        return currentCardIndex;
+      }
+      return currentCardIndex + 1
+    });
   };
 
   const onPrevCard = () => {
     setCurrentCardIndex((currentCardIndex) => {
       if (currentCardIndex === 0) {
-        return 0;
+        return currentCardIndex;
       }
       return currentCardIndex - 1;
     });
@@ -332,48 +337,9 @@ const Test = (): ReactElement => {
   const current = (currentCardIndex + 1).toString();
   const reviewed = reviewedCardsIds.length.toString();
 
-  const buttonTextHandlersMap = {
-    [BUTTONS_TEXT.CUSTOMIZE]: onCustomize,
-    [BUTTONS_TEXT.END_TEST]: onEndTest,
-    [BUTTONS_TEXT.SHOW_ANSWER]: onShowAnswer,
-    [BUTTONS_TEXT.NEXT]: onNextCard,
-    [BUTTONS_TEXT.PREV]: onPrevCard,
-    [BUTTONS_TEXT.EASY]: onSelectEasy,
-    [BUTTONS_TEXT.GOOD]: onSelectGood,
-    [BUTTONS_TEXT.HARD]: onSelectHard,
-    [BUTTONS_TEXT.CLOSE]: onCustomizeFormClose,
-    [BUTTONS_TEXT.PLAY]: onCustomizeFormPlay
-  };
-
-  const {
-    desktopCardSubmenu,
-    desktopNavigationSubmenu,
-    secondDesktopSubmenu,
-  } = getMenuStateForTestPage({
-    isAnswerShown,
-    endingTest,
-    isCustomizeFormShown,
-  });
-
-  const desktopCardSubmenuButtons = mapButtonsTextToHandlers({
-    buttonTextHandlersMap,
-    buttonsText: desktopCardSubmenu
-  });
-
-  const desktopNavigationSubmenuButtons = mapButtonsTextToHandlers({
-    buttonTextHandlersMap,
-    buttonsText: desktopNavigationSubmenu
-  });
-
-  const secondDekstopSubmenuButtons = mapButtonsTextToHandlers({
-    buttonTextHandlersMap,
-    buttonsText: secondDesktopSubmenu
-  });
-
   const mobileMenuWhenPlaying = () => {
     return (
       <MobileMenu>
-
           <MobileSubmenu className="space-evenly">
             <MobileMenuItem onClick={onCustomize} className="icon-btn settings-btn"/>
             <MobileMenuItem onClick={onSelectHard} className="icon-btn hard-btn"/>
@@ -383,12 +349,13 @@ const Test = (): ReactElement => {
           </MobileSubmenu>
         
           <MobileSubmenu className='space-evenly'>
-            <MobileMenuItem onClick={onPrevCard} className="icon-btn prev-mobile-btn"/>
+            <MobileMenuItem onClick={onPrevCard} className={`icon-btn prev-mobile-btn ${showPrevBtn ? '' : 'hidden'}`}/>
             <MobileMenuItem onClick={onShowAnswer} className="icon-btn show-answer-btn"/>
-            <MobileMenuItem onClick={onClickPlayAudio} className="icon-btn play-audio-btn"/>
-            <MobileMenuItem onClick={onNextCard} className="icon-btn next-mobile-btn"/>
+            {currentCard.recordingId && 
+              <MobileMenuItem onClick={onClickPlayAudio} className="icon-btn play-audio-btn"/>
+            }
+            <MobileMenuItem onClick={onNextCard} className={`icon-btn next-mobile-btn ${showNextBtn ? '' : 'hidden'}`}/>
           </MobileSubmenu>
-
       </MobileMenu>
     );
   };
@@ -412,16 +379,44 @@ const Test = (): ReactElement => {
     }
   }
 
+  const desktopLevelBtns = () => {
+    return (
+      <div className="question-btns">
+        <PrimaryButton text="Hard" onClick={onSelectHard} />
+        <PrimaryButton text="Good" onClick={onSelectGood} />
+        <PrimaryButton text="Easy" onClick={onSelectEasy} />
+      </div>
+    );
+  }
+
+  const desktopPrevBtn = () => {
+    return (
+      <MobileMenuItem 
+        className={`icon-btn prev-mobile-btn desktop ${showPrevBtn ? '' : 'hidden'}`} 
+        onClick={onPrevCard} 
+      />
+    );
+  }
+
+  const desktopNextBtn = () => {
+    return (
+      <MobileMenuItem 
+        className={`icon-btn next-mobile-btn desktop ${showNextBtn ? '' : 'hidden'}`} 
+        onClick={onNextCard} 
+      />
+    );
+  }
+
   /** ----------------- RETURN --------------------------------- */
 
   return (
     <div className={`page-wrapper ${fontSizeClass} test-page-wrapper`}>
       <div className="top-section">
         <ButtonsGroup className={'margin-top-medium wrap'}>
-          {secondDekstopSubmenuButtons.map((btn, idx) => {
-            return <SecondaryButton key={idx} text={btn.text} onClick={btn.onClick} />;
-          })}
+          <SecondaryButton text="Customize" onClick={onCustomize} />
+          <SecondaryButton text="End test" onClick={onEndTest} />
         </ButtonsGroup>
+
         <StatisticsGroup>
           <Statistics description="total" value={total} />
           <Statistics description="current" value={current} />
@@ -434,32 +429,30 @@ const Test = (): ReactElement => {
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
           className="bottom-section mobile-margin-exterior">
+
           <div className="test-wrapper">
             <div className="test-buttons-wrapper">
-              <button className={`nav-card-btn ${showPrevBtn ? '' : 'hidden'}`} onClick={onPrevCard}>
-                {'<'}
-              </button>
-              <div className="question-btns">
-                {desktopCardSubmenuButtons.map((btn, idx) => {
-                  return <PrimaryButton key={idx} text={btn.text} onClick={btn.onClick} />;
-                })}
-              </div>
-              <button className={`nav-card-btn ${showNextBtn ? '' : 'hidden'}`} onClick={onNextCard}>
-                {'>'}
-              </button>
+              {desktopPrevBtn()}
+              {desktopLevelBtns()}
+              {desktopNextBtn()}
             </div>
+
             {currentCard.recordingId && 
-              <MobileMenuItem
-                onClick={onClickPlayAudio}
-                className={`icon-btn play-audio-btn`}
-              />
+              <ButtonsGroup>
+                <MobileMenuItem
+                  onClick={onClickPlayAudio}
+                  className={`icon-btn play-audio-btn desktop`}
+                />
+              </ButtonsGroup>
             }
+
             <div 
               className="question" 
               dangerouslySetInnerHTML={{
                 __html: sanitizeHtml(convertNewLineToHtmlBreak(currentCard.question)) 
               }}
             />
+
             {isAnswerShown && 
               <div className='answer-wrapper'>
                 <div className='line'></div>
@@ -471,6 +464,7 @@ const Test = (): ReactElement => {
                 />
               </div>
             }
+
           </div>
         </div>
       )}

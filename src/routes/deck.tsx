@@ -319,29 +319,33 @@ const DeckPage = (): ReactElement => {
   };
 
   const onPlay = () => {
-    if (!id) {
+    if (!id && !selectedCardsId.length) {
       return;
     }
 
-    const parsedId = parseInt(id);
+    if (selectedCardsId.length) {
+      navigate(`/${ROOT_NAME}/test/`, { 
+        state: { 
+          cardsIds: selectedCardsId,
+        }
+      });
 
-    if (isNaN(parsedId)) {
       return;
     }
 
-    navigate(`/${ROOT_NAME}/test/`, { 
-      state: { 
-        decksIds: [parsedId],
-      }
-    });
-  };
+    if (id) {
+      const parsedId = parseInt(id);
 
-  const onPlaySelected = () => {
-    navigate(`/${ROOT_NAME}/test/`, { 
-      state: { 
-        cardsIds: selectedCardsId,
+      if (isNaN(parsedId)) {
+        return;
       }
-    });
+  
+      navigate(`/${ROOT_NAME}/test/`, { 
+        state: { 
+          decksIds: [parsedId],
+        }
+      });
+    }
   };
 
   const onReorder = () => {
@@ -392,7 +396,6 @@ const DeckPage = (): ReactElement => {
 
   const buttonTextHandlersMap = {
     [BUTTONS_TEXT.PLAY]: onPlay,
-    [BUTTONS_TEXT.PLAY_SELECTED]: onPlaySelected,
     // [BUTTONS_TEXT.ADD_CARD]: onAddCard,
     [BUTTONS_TEXT.SELECT_ALL]: onSelectAll,
     [BUTTONS_TEXT.UNSELECT_ALL]: onUnselectAll,
