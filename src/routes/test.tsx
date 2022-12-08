@@ -355,7 +355,7 @@ const Test = (): ReactElement => {
       <MobileMenu>
           <MobileSubmenu className="space-evenly">
             <MobileMenuItem onClick={onCustomize} className="icon-btn settings-btn"/>
-            {cards.length &&
+            {Boolean(cards.length) &&
               <>
                 <MobileMenuItem onClick={onSelectHard} className="icon-btn hard-btn"/>
                 <MobileMenuItem onClick={onSelectGood} className="icon-btn good-btn"/>
@@ -365,7 +365,7 @@ const Test = (): ReactElement => {
             <MobileMenuItem onClick={onEndTest} className="icon-btn end-test-btn"/>
           </MobileSubmenu>
         
-          {cards.length && 
+          {Boolean(cards.length) && 
             <MobileSubmenu className='space-evenly'>
               <MobileMenuItem onClick={onPrevCard} className={`icon-btn prev-mobile-btn ${showPrevBtn ? '' : 'hidden'}`}/>
               <MobileMenuItem onClick={onShowAnswer} className="icon-btn show-answer-btn"/>
