@@ -23,6 +23,7 @@ import {
   createRevertedCardsData,
   updateCardsLevelData,
   getCardData,
+  getAllCardsDecksData,
 } from '../../data/card';
 import deleteGeneralEntry from '../../data/deleteGeneralEntry';
 import {
@@ -41,7 +42,8 @@ import {
   CardAndDeckStored,
   Recording,
   RecordingStored,
-  AuditAdd
+  AuditAdd,
+  CardDeckStored
 } from '../../data/interfaces';
 import {
   getAllCoursesData,
@@ -119,6 +121,7 @@ export type IDbContext = {
   getAudio: (arg: number) => Promise<RecordingStored | undefined>;
   updateTextSizeClass: (arg: string) => void;
   insertChange: (data: AuditAdd) => void;
+  getAllCardsDecks: () => Promise<CardDeckStored[]>;
 };
 
 const initialDbState = {
@@ -363,6 +366,10 @@ export const DbStoreProvider = ({
     });
   };
 
+  const getAllCardsDecks = async (): Promise<CardDeckStored[]> => {
+    return getAllCardsDecksData(state);
+  };
+
   const updateTextSizeClass = (size: string) => {
     setState(state => ({...state, fontSizeClass: size}));
   };
@@ -411,6 +418,7 @@ export const DbStoreProvider = ({
         getAudio,
         updateTextSizeClass,
         insertChange,
+        getAllCardsDecks,
       }}
     >
       {children}

@@ -135,6 +135,13 @@ const getAllCardsData = (state: DbState): Promise<CardStored[]> => {
   }) as Promise<CardStored[]>;
 };
 
+const getAllCardsDecksData = (state: DbState): Promise<CardDeckStored[]> => {
+  return getAllGeneralData({
+    state,
+    table: tables.CARDS_DECKS
+  }) as Promise<CardDeckStored[]>;
+};
+
 const getAllCardsForTestData = async ({
   cardsIds, 
   decksIds, 
@@ -376,4 +383,5 @@ export {
   createRevertedCardsData,
   updateCardsLevelData,
   getCardData,
+  getAllCardsDecksData,
 };
