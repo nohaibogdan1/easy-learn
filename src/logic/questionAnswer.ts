@@ -55,4 +55,14 @@ const calculateNextSeeDate = (lastSawDate: string | null): NextSeeDate => {
   return result;
 };
 
-export { calculateNewLastSawDate, calculateNextSeeDate, getDifferenceInDays };
+const isToday = (date: string) => {
+  const days = getDifferenceInDays(date, new Date().getTime().toString());
+  return days === 0;
+};
+
+export { 
+  calculateNewLastSawDate, 
+  calculateNextSeeDate, 
+  getDifferenceInDays,
+  isToday,
+};

@@ -17,7 +17,7 @@ import MobileMenuItem from '../components/mobile-menu/MobileMenuItem';
 import CustomizeForm from '../components/forms/CustomizeForm';
 import './test.css';
 import { convertNewLineToHtmlBreak, sanitizeHtml, shuffle } from '../logic/utils';
-import { calculateNextSeeDate, calculateNewLastSawDate } from '../logic/questionAnswer';
+import { calculateNextSeeDate, calculateNewLastSawDate, isToday } from '../logic/questionAnswer';
 import useRecordAudio from '../logic/audio';
 
 const Test = (): ReactElement => {
@@ -97,7 +97,12 @@ const Test = (): ReactElement => {
         decksIds,
         coursesIds,
       });
-      setCards(cards.sort((c1, c2) => c1.orderId - c2.orderId));
+      
+      // Take the cards that have are required to be reviewed today
+      setCards(cards
+        .filter((c) => !c.nextSeeDate || isToday(c.nextSeeDate))
+        .sort((c1, c2) => c1.orderId - c2.orderId));
+
     } catch (err) {
       setError('Error getting cards');
     }
@@ -111,22 +116,24 @@ const Test = (): ReactElement => {
 
     let cardsNew = [...cards];
 
+    try {
+      const cards = await getAllCardsForTest({
+        cardsIds,
+        decksIds,
+        coursesIds,
+      });
+
+      cardsNew = [...cards];
+    
+    } catch (e) {
+      setError('Error getting cards');
+    }
+
     if (customSettings.levelFilterSettings.length) {
       cardsNew = [...cardsNew.filter((c) => customSettings.levelFilterSettings.includes(c.level))]
     } else {
-      
-      try {
-        const cards = await getAllCardsForTest({
-          cardsIds,
-          decksIds,
-          coursesIds,
-        });
-
-        cardsNew = [...cards];
-      
-      } catch (e) {
-        setError('Error getting cards');
-      }
+      // Take the cards that have are required to be reviewed today
+      cardsNew = cardsNew.filter((c) => !c.nextSeeDate || isToday(c.nextSeeDate));
     }
 
     if (customSettings.orderSettings === OrderSettings.none) {
