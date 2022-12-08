@@ -347,7 +347,7 @@ const Test = (): ReactElement => {
   const showNextBtn = currentCardIndex < cards.length - 1 && !isCustomizeFormShown && !endingTest;
 
   const total = cards.length.toString();
-  const current = (currentCardIndex + 1).toString();
+  const current = cards.length ? (currentCardIndex + 1).toString() : '0';
   const reviewed = reviewedCardsIds.length.toString();
 
   const mobileMenuWhenPlaying = () => {
@@ -442,7 +442,7 @@ const Test = (): ReactElement => {
           <Statistics description="reviewed" value={reviewed} />
         </StatisticsGroup>
       </div>
-      {cards.length && (
+      {Boolean(cards.length) && (
         <div 
           onTouchStart={onTouchStart} 
           onTouchMove={onTouchMove}
@@ -488,6 +488,8 @@ const Test = (): ReactElement => {
         </div>
       )}
 
+      {!Boolean(cards.length) && <div>There is no card to be reviewed</div>}
+    
       {isCustomizeFormShown && (
         <CustomizeForm
           play={onCustomizeFormPlay}
