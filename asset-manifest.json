@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/easy-learn/static/css/main.2c87206d.css",
-    "main.js": "/easy-learn/static/js/main.532dfd9e.js",
+    "main.css": "/easy-learn/static/css/main.e70e5b2f.css",
+    "main.js": "/easy-learn/static/js/main.bd79d9e5.js",
     "static/media/spreadsheet.png": "/easy-learn/static/media/spreadsheet.2007cd37448cd9bcc08f.png",
     "static/media/a.jpg": "/easy-learn/static/media/a.5785bd8091bef061e84a.jpg",
     "service-worker.js": "/easy-learn/service-worker.js",
@@ -26,11 +26,11 @@
     "static/media/index.cjs": "/easy-learn/static/media/index.cd351d7c31d0d3fccf96.cjs",
     "static/media/ok.svg": "/easy-learn/static/media/ok.6a82ba6901e6dfeb33c9.svg",
     "static/media/play-2.svg": "/easy-learn/static/media/play-2.b44a05943a4b643de15f.svg",
-    "main.2c87206d.css.map": "/easy-learn/static/css/main.2c87206d.css.map",
-    "main.532dfd9e.js.map": "/easy-learn/static/js/main.532dfd9e.js.map"
+    "main.e70e5b2f.css.map": "/easy-learn/static/css/main.e70e5b2f.css.map",
+    "main.bd79d9e5.js.map": "/easy-learn/static/js/main.bd79d9e5.js.map"
   },
   "entrypoints": [
-    "static/css/main.2c87206d.css",
-    "static/js/main.532dfd9e.js"
+    "static/css/main.e70e5b2f.css",
+    "static/js/main.bd79d9e5.js"
   ]
 }
