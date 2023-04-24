@@ -1,6 +1,4 @@
 /* eslint-disable */
-import sanitize from "sanitize-html";
-
 const formatDate = (time: string): string => {
   return new Date(parseFloat(time)).toDateString();
 };
@@ -48,21 +46,10 @@ function shuffle(array: number[]) {
   return array;
 }
 
-const sanitizeHtml = (text: string): string => {
-  return sanitize(text, {
-    allowedTags: ['br'],
-  })
-};
-
-const convertNewLineToHtmlBreak = (text: string): string => {
-  return text.replaceAll("\n", "<br/>");
-};
 
 export { 
   formatDate, 
   isTruthyValue, 
   shuffle, 
-  formatToCalendarDate, 
-  sanitizeHtml,
-  convertNewLineToHtmlBreak,
+  formatToCalendarDate,
 };

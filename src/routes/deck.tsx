@@ -23,7 +23,6 @@ import {
 } from '../logic/menu-helpers';
 import ConfirmationForm from '../components/forms/ConfirmationForm';
 import ConfidenceLevelUpdateForm from '../components/forms/ConfidenceLevelUpdateForm';
-import { convertNewLineToHtmlBreak, sanitizeHtml } from '../logic/utils';
 
 const DeckPage = (): ReactElement => {
   /** ----------------- CUSTOM HOOK CALLS -------------------- */
@@ -521,12 +520,7 @@ const DeckPage = (): ReactElement => {
     <div className="page-wrapper deck-page-wrapper">
       <div className="top-section">
         <div className="deck-description">
-          <div 
-            className="text" 
-            dangerouslySetInnerHTML={{
-              __html: sanitizeHtml(convertNewLineToHtmlBreak(description)) 
-            }}
-          />
+          <div className="text">{description}</div>
           <ButtonsGroup className="margin-top-small">
             {editMenuButtons.map((btn, idx) => (
               <MobileMenuItem

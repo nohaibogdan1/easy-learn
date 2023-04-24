@@ -16,7 +16,7 @@ import MobileSubmenu from '../components/mobile-menu/MobileSubmenu';
 import MobileMenuItem from '../components/mobile-menu/MobileMenuItem';
 import CustomizeForm from '../components/forms/CustomizeForm';
 import './test.css';
-import { convertNewLineToHtmlBreak, sanitizeHtml, shuffle } from '../logic/utils';
+import { shuffle } from '../logic/utils';
 import { calculateNextSeeDate, calculateNewLastSawDate, isToday } from '../logic/questionAnswer';
 import useRecordAudio from '../logic/audio';
 
@@ -465,22 +465,12 @@ const Test = (): ReactElement => {
               </ButtonsGroup>
             }
 
-            <div 
-              className="question" 
-              dangerouslySetInnerHTML={{
-                __html: sanitizeHtml(convertNewLineToHtmlBreak(currentCard.question)) 
-              }}
-            />
+            <div className="question">{currentCard.question}</div>
 
             {isAnswerShown && 
               <div className='answer-wrapper'>
                 <div className='line'></div>
-                <div 
-                  className="answer" 
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizeHtml(convertNewLineToHtmlBreak(currentCard.answer)) 
-                  }}
-                />
+                <div className="answer">{currentCard.answer}</div>
               </div>
             }
 

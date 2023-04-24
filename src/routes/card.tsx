@@ -15,7 +15,6 @@ import MobileSubmenu from '../components/mobile-menu/MobileSubmenu';
 import { BUTTONS_TEXT } from '../constants';
 import { getMenuStateForCardPage, getMenuStateForCardsPage, mapButtonsTextToHandlers } from '../logic/menu-helpers';
 import PrimaryButton from '../components/buttons/PrimaryButton';
-import { convertNewLineToHtmlBreak, sanitizeHtml } from '../logic/utils';
 
 const CardPage = (args: any) => {
 
@@ -217,9 +216,6 @@ const CardPage = (args: any) => {
     message = "Edit the answer";
   }
 
-  const questionHtml = sanitizeHtml(convertNewLineToHtmlBreak(question));
-  const answerHtml = sanitizeHtml(convertNewLineToHtmlBreak(answer));
-
   /** ----------------- RETURN --------------------------------- */
   if (!card) {
     return <div>Card Not Found</div>;
@@ -228,7 +224,7 @@ const CardPage = (args: any) => {
     <div className="card-page-wrapper">
       <h3>question</h3>
       <div className="question-wrapper">
-        <div className="text" dangerouslySetInnerHTML={{__html: questionHtml}}/>
+        <div className="text">{question}</div>
         <MobileMenuItem
           onClick={onClickEditQuestion}
           className={`icon-btn edit-btn`}
@@ -236,7 +232,8 @@ const CardPage = (args: any) => {
       </div>
       <h3>answer</h3>
       <div className="answer-wrapper">
-        <div className="text" dangerouslySetInnerHTML={{__html: answerHtml}}/>
+        <div className="text">{answer}</div>
+
         <MobileMenuItem
           onClick={onClickEditAnswer}
           className={`icon-btn edit-btn`}
