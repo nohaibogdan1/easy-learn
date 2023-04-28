@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/easy-learn/static/css/main.e70e5b2f.css",
+    "main.css": "/easy-learn/static/css/main.8edbaf63.css",
     "main.js": "/easy-learn/static/js/main.3f1fbb79.js",
     "static/media/spreadsheet.png": "/easy-learn/static/media/spreadsheet.2007cd37448cd9bcc08f.png",
     "static/media/a.jpg": "/easy-learn/static/media/a.5785bd8091bef061e84a.jpg",
@@ -25,11 +25,11 @@
     "static/media/edit.svg": "/easy-learn/static/media/edit.715c795178271dfa2a81.svg",
     "static/media/ok.svg": "/easy-learn/static/media/ok.6a82ba6901e6dfeb33c9.svg",
     "static/media/play-2.svg": "/easy-learn/static/media/play-2.b44a05943a4b643de15f.svg",
-    "main.e70e5b2f.css.map": "/easy-learn/static/css/main.e70e5b2f.css.map",
+    "main.8edbaf63.css.map": "/easy-learn/static/css/main.8edbaf63.css.map",
     "main.3f1fbb79.js.map": "/easy-learn/static/js/main.3f1fbb79.js.map"
   },
   "entrypoints": [
-    "static/css/main.e70e5b2f.css",
+    "static/css/main.8edbaf63.css",
     "static/js/main.3f1fbb79.js"
   ]
 }
